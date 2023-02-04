@@ -3,11 +3,13 @@ version: '3.7'
 services:
   vue_app:
     image: hunkicho/jg_front_vue:latest
+    command: sleep infinity
     ports:
       - '3000:3000'
 
   nginx:
     image: hunkicho/jg_front_nginx:latest
+    command: sleep infinity
     ports:
       - '80:80'
     volumes:
