@@ -15,11 +15,25 @@ ADD . /app/
 # RUN apt update && apt upgrade -y && apt install npm
 RUN yarn install && yarn build
 
-FROM nginx:1.18.0-alpine as production-stage
-RUN mkdir /app
-COPY --from=build-stage /app/dist /app
-COPY ./config/nginx/nginx.conf /etc/nginx/nginx.conf 
-RUN service nginx restart
+# FROM nginx:1.18.0-alpine as production-stage
+# RUN mkdir /app
+# COPY --from=build-stage /app/dist /app
+# COPY ./config/nginx/default.conf /etc/nginx/default.conf
+
+# FROM nginx:stable-alpine
+# RUN rm -rf /etc/nginx/conf.d/default.conf
+# COPY --from=build-stage /app/config/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# RUN rm -rf /usr/share/nginx/html/*
+# COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+FROM nginx:stable-alpine as production-stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+RUN rm /etc/nginx/conf.d/default.conf
+COPY ./config/nginx/default.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 3000 
+CMD [ "nginx", "-g", "daemon off;" ]
 
 #ENV HOST 0.0.0.0
 #EXPOSE 3000
