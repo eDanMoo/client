@@ -1,7 +1,7 @@
 name: Front_deploy
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 env:
   VERSION: ${{ github.sha }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
