@@ -11,7 +11,7 @@ ADD . /app/
 # RUN pnpm install
 # RUN pnpm build
 
-RUN rm yarn.lock || true && rm package-lock.json || true
+# RUN rm yarn.lock || true && rm package-lock.json || true
 RUN npm install -g yarn && yarn install && yarn build
 
 ENV HOST 0.0.0.0
