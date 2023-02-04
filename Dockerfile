@@ -1,5 +1,5 @@
 #도커 이미지를 노드 16.19 기반으로 만든다.
-FROM node:16.19.0-alpine as buid-stage
+FROM node:16.19.0-alpine as build-stage
 
 # app라는 디렉토리 만들고 워크 디렉토리로 지정
 # 파일들을 app 아래로 복사
