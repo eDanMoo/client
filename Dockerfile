@@ -12,8 +12,8 @@ ADD . /app/
 # RUN pnpm build
 
 # RUN rm yarn.lock || true && rm package-lock.json || true
-RUN apt update && apt upgrade -y && apt install npm
-RUN npm install -g yarn && yarn install && yarn build
+# RUN apt update && apt upgrade -y && apt install npm
+RUN yarn install && yarn build
 
 ENV HOST 0.0.0.0
 EXPOSE 3000
