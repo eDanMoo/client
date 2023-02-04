@@ -18,7 +18,7 @@ RUN yarn install && yarn build
 FROM nginx:1.18.0-alpine as production-stage
 RUN mkdir /app
 COPY --from=build-stage /app/dist /app
-COPY /app/config/nginx/default.conf /etc/nginx/default.conf 
+COPY ./config/nginx/default.conf /etc/nginx/default.conf 
 RUN service nginx restart
 
 #ENV HOST 0.0.0.0
