@@ -15,7 +15,15 @@ ADD . /app/
 # RUN apt update && apt upgrade -y && apt install npm
 RUN yarn install && yarn build
 
-ENV HOST 0.0.0.0
-EXPOSE 3000
+FROM nginx:1.18.0-alpine
+RUN mkdir /app
+COPY --from=build-stage /app/dist /app
+COPY /app/config/nginx/default.conf /etc/nginx/default.conf 
+RUN service nginx restart
 
-CMD ["yarn", "preview"]
+#ENV HOST 0.0.0.0
+#EXPOSE 3000
+
+#ENTRYPOINT [ "ngnix", "-g", "daemon off;" ]
+
+#CMD ["yarn", "preview"]

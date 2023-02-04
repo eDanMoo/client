@@ -120,7 +120,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            sh /home/${{ secrets.SERVER_USER }}/actions-runner/deploy.sh
+            docker pull hunkicho/jg_front_vue:latest && build -t hunkicho/jg_front_vue:latest .
 
       - name: Slack notification
         env:
