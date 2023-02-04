@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  vue_app:
+    image: hunkicho/jg_front_vue:latest
+    ports:
+      - '3000:3000'
+
+  nginx:
+    image: hunkicho/jg_front_nginx:latest
+    ports:
+      - '80:80'
+    volumes:
+      - /var/log/nginx:/var/log/nginx
+    depends_on:
+      - vue_app
