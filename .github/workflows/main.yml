@@ -120,7 +120,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
-            docker pull hunkicho/jg_front_vue:latest && docker run -it -v /home/${{ secrets.SERVER_USER }}/logs:/var/log/nginx jg_front_vue:latest
+            docker pull hunkicho/jg_front_vue:latest && docker run -it -p 80:2000 -v /home/${{ secrets.SERVER_USER }}/logs:/var/log/nginx jg_front_vue:latest
 
       - name: Slack notification
         env:
