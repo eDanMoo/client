@@ -46,7 +46,7 @@
 }
 </style>
 <script>
-import { io } from "socket.io-client";
+import io from "socket.io-client";
 
 ///////////////
 
@@ -135,7 +135,7 @@ navigator.mediaDevices
  * initialize the socket connections
  */
 function init() {
-  socket = io("https://1.223.174.170:3012/");
+  socket = io("https://1.223.174.170:3012");
 
   socket.on("initReceive", (socket_id) => {
     console.log("INIT RECEIVE " + socket_id);
