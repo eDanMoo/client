@@ -4,13 +4,13 @@
   </div>
   <br />
   <div style="display: block">
-    <button id="switchButton" class="settings" onclick="switchMedia()">
+    <button id="switchButton" class="settings" @click="switchMedia()">
       Switch Camera
     </button>
-    <button id="muteButton" class="settings" onclick="toggleMute()">
+    <button id="muteButton" class="settings" @click="toggleMute()">
       Unmuted
     </button>
-    <button id="vidButton" class="settings" onclick="toggleVid()">
+    <button id="vidButton" class="settings" @click="toggleVid()">
       Video Enabled
     </button>
   </div>
