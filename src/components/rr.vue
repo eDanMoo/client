@@ -1,242 +1,589 @@
 <template>
-  User
-	<input id="userName" type="text">
-	Room
-	<input id="roomId" type="text">
-	<button id="start">Connect</button><br>
-	<button id="muteVideo">Mute Video</button>
-	<button id="muteAudio">Mute Audio</button>
-	<button id="share">Share</button>
-
-	<div id="container" class="video-position">
-		<video id="localVideo" autoplay muted="true"></video>
-		<!-- <video id="remoteVideo" autoplay playsinline></video> -->
-	</div>
-    
+  <div id="videos" class="container">
+    <video id="localVideo" class="vid" autoplay muted></video>
+  </div>
+  <br />
+  <div style="display: block">
+    <button id="switchButton" class="settings" onclick="switchMedia()">
+      Switch Camera
+    </button>
+    <button id="muteButton" class="settings" onclick="toggleMute()">
+      Unmuted
+    </button>
+    <button id="vidButton" class="settings" onclick="toggleVid()">
+      Video Enabled
+    </button>
+  </div>
 </template>
+<style>
+.containers {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: repeat(auto-fit, 1fr);
+  grid-template-rows: repeat(auto-fit, 300px);
+}
+
+.container {
+  display: flex;
+}
+
+.vid {
+  flex: 0 1 auto;
+  height: 400px;
+}
+
+.settings {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 2px 2px;
+  cursor: pointer;
+}
+</style>
 <script>
 import { io } from "socket.io-client";
 
-//const peerConfig = {iceServers: [{urls: "stun:stun.l.google.com:19302"}]};	// No need to announce icecandidates. Only server do it
-const socket = io('https://54.180.123.117:3000/',{
-    cors: {origin: '*'},
-    extraHeaders: {
-    "my-custom-header": "abcd"
-  }
-});
-const constraints = {
-	audio: {echoCancellation: true, noiseSuppression: true, autoGainControl: false}, 
-	video: {width:{max: "150"}, frameRate:{max:"20"} }
-	}
-const maxBitrate = 45000
-//const maxBitrate2 = 35
+///////////////
 
-let localVideo, remoteVideo;
-let localStream, localScreen;
-let userName, roomId, peer;
-let clients = new Map();
-let streamIds = new Set();
+/**
+ * Socket.io socket
+ */
+let socket;
+/**
+ * The stream object used to send media
+ */
+let localStream = null;
+/**
+ * All peer connections
+ */
+let peers = {};
 
-window.onload = async () => {
-	// DOM elements
-	localVideo = document.getElementById('localVideo');
-	remoteVideo = document.getElementById('remoteVideo');
+// redirect if not https
+if (location.href.substr(0, 5) !== "https")
+  location.href = "https" + location.href.substr(4, location.href.length - 4);
 
-	// DOM elements listeners
-	document.getElementById('muteAudio').addEventListener('click', (e) => {
-		if(localStream)
-			localStream.getAudioTracks()[0].enabled ^= true
-		document.getElementById('muteAudio').innerHTML = (localStream.getAudioTracks()[0].enabled) ? 'Mute Audio' : 'Unmute Audio'
-	})
-	document.getElementById('muteVideo').addEventListener('click', (e) => {
-		if(localStream)
-			localStream.getVideoTracks()[0].enabled ^= true
-		document.getElementById('muteVideo').innerHTML = (localStream.getVideoTracks()[0].enabled) ? 'Mute Video' : 'Unmute Video'
-	})	
-	document.getElementById('start').addEventListener('click', async (e) => {
-		userName = document.getElementById('userName').value;
-		roomId = document.getElementById('roomId').value;
+//////////// CONFIGURATION //////////////////
 
-		socket.emit('join', userName, roomId);
-	})
-	document.getElementById('share').addEventListener('click', async (e) => {
-		localScreen = await navigator.mediaDevices.getDisplayMedia({video: true, audio: true})
-        console.log("asdasd")
-		console.log(localScreen.id)
-		localScreen.getTracks().forEach(track => peer.addTransceiver( track, {direction:'sendonly', streams:[localScreen]}))
-		//localScreen.getAudioTracks().forEach(track => peer.addTrack(track, localScreen))
-		//localScreen.getVideoTracks().forEach(track => peer.addTrack(track, localScreen))
-		localScreen.getVideoTracks()[0].addEventListener('ended', () => {					
-			localScreen.getTracks().forEach(track => track.enabled = false)
-			console.log('ended')
-			socket.emit('endScreen', localScreen.id)		
-		})
-		
-	})
-}
+/**
+ * RTCPeerConnection configuration
+ */
 
+const configuration = {
+  // Using From https://www.metered.ca/tools/openrelay/
+  iceServers: [
+    {
+      urls: "stun:openrelay.metered.ca:80",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:80",
+      username: "openrelayproject",
+      credential: "openrelayproject",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:443",
+      username: "openrelayproject",
+      credential: "openrelayproject",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:443?transport=tcp",
+      username: "openrelayproject",
+      credential: "openrelayproject",
+    },
+  ],
+};
 
-// SOCKET EVENT CALLBACKS =====================================================
+/**
+ * UserMedia constraints
+ */
+let constraints = {
+  audio: true,
+  video: {
+    width: {
+      max: 300,
+    },
+    height: {
+      max: 300,
+    },
+  },
+};
 
-socket.on('join_answer', async (res) => {	
-		console.log(`Socket event callback: join_answer. msg: ${res.joined}`);
-		if(res.joined) {
-			console.log(`This peer has been joined to the room: ${res.roomId}. SocketId: ${socket.id}`)
-			peer = await newPeer(socket.id)
-			console.log(localStream.id)	
-			localVideo.srcObject = localStream;
-			localVideo.style.width = 'auto';
-			//localVideo.style.width = '100%';
-		}	
-		else {
-			alert(`Room is full`)
-		}
-})
-socket.on('webrtc_offer', async (msg) => {				// Acting as remote responser
-	const offer = new RTCSessionDescription(msg.offer);	
-	peer.setRemoteDescription(offer);
+/////////////////////////////////////////////////////////
 
-	const answer = await peer.createAnswer();
-	//answer.sdp = updateBandwidthRestriction(answer.sdp, 'video', maxBitrate2)
-	await peer.setLocalDescription(answer);
-	socket.emit('webrtc_answer', {
-		answer: answer,
-	});
-})
-socket.on('webrtc_answer', (msg) => {					// Acting as offerer initiator
-	const sdp = new RTCSessionDescription(msg.answer)
-	peer.setRemoteDescription(sdp)
-})
-socket.on('webrtc_icecandidate', async (msg) => {	
-	const candidate = (msg.candidate) ? new RTCIceCandidate(msg.candidate) : msg.candidate;
-	await peer.addIceCandidate(candidate);
-})
-socket.on('webrtc_disconnection', (msg) => {
-	msg.forEach(streamId => {
-		document.getElementById(streamId).remove();
-	})
-})
-socket.on('removeStream', (msg) => {
-	msg.forEach(streamId => {
-		document.getElementById(streamId).remove();
-	})
-})
+constraints.video.facingMode = {
+  ideal: "user",
+};
 
-// FUNCTIONS ==================================================================
-async function newPeer(socketId) {
-	const peer = new RTCPeerConnection()
-	// Needed to send a correct offer
-	
-	localStream = await navigator.mediaDevices.getUserMedia(constraints);  	
-	//localStream.getTracks().forEach(track => peer.addTrack(track, localStream));	// (addTrack() looks for unused transceivers to usurp) https://blog.mozilla.org/webrtc/rtcrtptransceiver-explored/
-	localStream.getTracks().forEach(track => {
-		const transceiver = peer.addTransceiver( track, {direction:'sendonly', streams:[localStream]})	// Same as previous line without usurpation
-	})
+// enabling the camera at startup
+navigator.mediaDevices
+  .getUserMedia(constraints)
+  .then((stream) => {
+    console.log("Received local stream");
 
-	peer.addEventListener('negotiationneeded', async (e) => {
-		console.log('Negotiation Needed')
-		const offer = await peer.createOffer();		// Acting as offerer initiator
-		//offer.sdp = updateBandwidthRestriction(offer.sdp, 'video', maxBitrate2)
-		await peer.setLocalDescription(offer);
-		socket.emit('webrtc_offer', {
-			offer: offer,
-		})
-	})
-	peer.addEventListener('icecandidate', (e) => {})		// Never used because remote peer should be always at public ip (remote peer is the one that announces candidates)
-	peer.addEventListener('connectionstatechange', async (e) => {
-		if (peer.connectionState === 'connected') {					
-			peer.getSenders().forEach( sender => {				
-				if (sender.track && sender.track.kind === 'video') {
-					console.log('recoding with maxbitrate: '+maxBitrate)
-					let params = sender.getParameters();
-					params.encodings.forEach(encoding => {
-						encoding.maxBitrate = maxBitrate;
-					})
-					sender.setParameters(params);
-				}
-			})    	
-		}
-		else if(peer.connectionState === 'failed') {
-			console.log(`client peer.connectionState='failed'. It should never reach here`)
-		}
-	})	
-	peer.addEventListener('track', ({transceiver, receiver, streams: [stream], track}) => {
-		console.log('Received a track !!!!. Stream: '+stream.id)	
-		if(!streamIds.has(stream.id)) {
-			const newVideo = document.createElement('video');
-			newVideo.id = stream.id
-			newVideo.autoplay = true;
-			newVideo.playsInline = true;
-			newVideo.muted = true;
-			newVideo.srcObject = stream
-			const container = document.getElementById('container');
-			container.appendChild(newVideo);
-			streamIds.add(stream.id)
-		}	
-	})
-	return peer
-}
+    localVideo.srcObject = stream;
+    localStream = stream;
 
+    init();
+  })
+  .catch((e) => alert(`getusermedia error ${e.name}`));
 
-// FUNCTIONS NOT NEEDED =========================================================
+/**
+ * initialize the socket connections
+ */
+function init() {
+  socket = io("https://1.223.174.170:3012/");
 
-function updateBandwidthRestriction(sdp, media, bitrate) {
-  var lines = sdp.split("\n");
-  var line = -1;
-  for (var i = 0; i < lines.length; i++) {
-    if (lines[i].indexOf("m="+media) === 0) {
-      line = i;
-      break;
+  socket.on("initReceive", (socket_id) => {
+    console.log("INIT RECEIVE " + socket_id);
+    addPeer(socket_id, false);
+
+    socket.emit("initSend", socket_id);
+  });
+
+  socket.on("initSend", (socket_id) => {
+    console.log("INIT SEND " + socket_id);
+    addPeer(socket_id, true);
+  });
+
+  socket.on("removePeer", (socket_id) => {
+    console.log("removing peer " + socket_id);
+    removePeer(socket_id);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("GOT DISCONNECTED");
+    for (let socket_id in peers) {
+      removePeer(socket_id);
     }
-  }
-  if (line === -1) {
-    console.debug("Could not find the m line for", media);
-    return sdp;
-  }
-  console.debug("Found the m line for", media, "at line", line);
- 
-  // Pass the m line
-  line++;
- 
-  // Skip i and c lines
-  while(lines[line].indexOf("i=") === 0 || lines[line].indexOf("c=") === 0) {
-    line++;
-  }
- 
-  // If we're on a b line, replace it
-  if (lines[line].indexOf("b") === 0) {
-    console.debug("Replaced b line at line", line);
-    lines[line] = "b=AS:"+bitrate;
-    return lines.join("\n");
-  }
-  
-  // Add a new b line
-  console.debug("Adding new b line before line", line);
-  var newLines = lines.slice(0, line)
-  newLines.push("b=AS:"+bitrate)
-  newLines = newLines.concat(lines.slice(line, lines.length))
-  return newLines.join("\n")
+  });
+
+  socket.on("signal", (data) => {
+    peers[data.socket_id].signal(data.signal);
+  });
 }
 
-function updateBandwidthRestriction2(sdp, media, bandwidth) {
-  let modifier = 'AS';
-  /*
-  if (adapter.browserDetails.browser === 'firefox') {
-    bandwidth = (bandwidth >>> 0) * 1000;
-    modifier = 'TIAS';
+/**
+ * Remove a peer with given socket_id.
+ * Removes the video element and deletes the connection
+ * @param {String} socket_id
+ */
+function removePeer(socket_id) {
+  let videoEl = document.getElementById(socket_id);
+  if (videoEl) {
+    const tracks = videoEl.srcObject.getTracks();
+
+    tracks.forEach(function (track) {
+      track.stop();
+    });
+
+    videoEl.srcObject = null;
+    videoEl.parentNode.removeChild(videoEl);
   }
-  */
-  
-  if (sdp.indexOf('b=' + modifier + ':') === -1) {
-    // insert b= after c= line.
-    sdp = sdp.replace(/c=IN (.*)\r\n/, 'c=IN $1\r\nb=' + modifier + ':' + bandwidth + '\r\n');
+  if (peers[socket_id]) peers[socket_id].destroy();
+  delete peers[socket_id];
+}
+
+/**
+ * Creates a new peer connection and sets the event listeners
+ * @param {String} socket_id
+ *                 ID of the peer
+ * @param {Boolean} am_initiator
+ *                  Set to true if the peer initiates the connection process.
+ *                  Set to false if the peer receives the connection.
+ */
+function addPeer(socket_id, am_initiator) {
+  peers[socket_id] = new SimplePeer({
+    initiator: am_initiator,
+    stream: localStream,
+    config: configuration,
+  });
+
+  peers[socket_id].on("signal", (data) => {
+    socket.emit("signal", {
+      signal: data,
+      socket_id: socket_id,
+    });
+  });
+
+  peers[socket_id].on("stream", (stream) => {
+    let newVid = document.createElement("video");
+    newVid.srcObject = stream;
+    newVid.id = socket_id;
+    newVid.playsinline = false;
+    newVid.autoplay = true;
+    newVid.className = "vid";
+    newVid.onclick = () => openPictureMode(newVid);
+    newVid.ontouchstart = (e) => openPictureMode(newVid);
+    videos.appendChild(newVid);
+  });
+}
+
+/**
+ * Opens an element in Picture-in-Picture mode
+ * @param {HTMLVideoElement} el video element to put in pip mode
+ */
+function openPictureMode(el) {
+  console.log("opening pip");
+  el.requestPictureInPicture();
+}
+
+/**
+ * Switches the camera between user and environment. It will just enable the camera 2 cameras not supported.
+ */
+function switchMedia() {
+  if (constraints.video.facingMode.ideal === "user") {
+    constraints.video.facingMode.ideal = "environment";
   } else {
-    sdp = sdp.replace(new RegExp('b=' + modifier + ':.*\r\n'), 'b=' + modifier + ':' + bandwidth + '\r\n');
+    constraints.video.facingMode.ideal = "user";
   }
-  return sdp;
+
+  const tracks = localStream.getTracks();
+
+  tracks.forEach(function (track) {
+    track.stop();
+  });
+
+  localVideo.srcObject = null;
+  navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+    for (let socket_id in peers) {
+      for (let index in peers[socket_id].streams[0].getTracks()) {
+        for (let index2 in stream.getTracks()) {
+          if (
+            peers[socket_id].streams[0].getTracks()[index].kind ===
+            stream.getTracks()[index2].kind
+          ) {
+            peers[socket_id].replaceTrack(
+              peers[socket_id].streams[0].getTracks()[index],
+              stream.getTracks()[index2],
+              peers[socket_id].streams[0]
+            );
+            break;
+          }
+        }
+      }
+    }
+
+    localStream = stream;
+    localVideo.srcObject = stream;
+
+    updateButtons();
+  });
 }
 
-function removeBandwidthRestriction(sdp) {
-  return sdp.replace(/b=AS:.*\r\n/, '').replace(/b=TIAS:.*\r\n/, '');
+/**
+ * Enable screen share
+ */
+function setScreen() {
+  navigator.mediaDevices.getDisplayMedia().then((stream) => {
+    for (let socket_id in peers) {
+      for (let index in peers[socket_id].streams[0].getTracks()) {
+        for (let index2 in stream.getTracks()) {
+          if (
+            peers[socket_id].streams[0].getTracks()[index].kind ===
+            stream.getTracks()[index2].kind
+          ) {
+            peers[socket_id].replaceTrack(
+              peers[socket_id].streams[0].getTracks()[index],
+              stream.getTracks()[index2],
+              peers[socket_id].streams[0]
+            );
+            break;
+          }
+        }
+      }
+    }
+    localStream = stream;
+
+    localVideo.srcObject = localStream;
+    socket.emit("removeUpdatePeer", "");
+  });
+  updateButtons();
 }
+
+/**
+ * Disables and removes the local stream and all the connections to other peers.
+ */
+function removeLocalStream() {
+  if (localStream) {
+    const tracks = localStream.getTracks();
+
+    tracks.forEach(function (track) {
+      track.stop();
+    });
+
+    localVideo.srcObject = null;
+  }
+
+  for (let socket_id in peers) {
+    removePeer(socket_id);
+  }
+}
+
+/**
+ * Enable/disable microphone
+ */
+function toggleMute() {
+  for (let index in localStream.getAudioTracks()) {
+    localStream.getAudioTracks()[index].enabled =
+      !localStream.getAudioTracks()[index].enabled;
+    muteButton.innerText = localStream.getAudioTracks()[index].enabled
+      ? "Unmuted"
+      : "Muted";
+  }
+}
+/**
+ * Enable/disable video
+ */
+function toggleVid() {
+  for (let index in localStream.getVideoTracks()) {
+    localStream.getVideoTracks()[index].enabled =
+      !localStream.getVideoTracks()[index].enabled;
+    vidButton.innerText = localStream.getVideoTracks()[index].enabled
+      ? "Video Enabled"
+      : "Video Disabled";
+  }
+}
+
+/**
+ * updating text of buttons
+ */
+function updateButtons() {
+  for (let index in localStream.getVideoTracks()) {
+    vidButton.innerText = localStream.getVideoTracks()[index].enabled
+      ? "Video Enabled"
+      : "Video Disabled";
+  }
+  for (let index in localStream.getAudioTracks()) {
+    muteButton.innerText = localStream.getAudioTracks()[index].enabled
+      ? "Unmuted"
+      : "Muted";
+  }
+}
+
+//////////////
+
+// //const peerConfig = {iceServers: [{urls: "stun:stun.l.google.com:19302"}]};	// No need to announce icecandidates. Only server do it
+// const socket = io('https://54.180.123.117:3000/',{
+//     cors: {origin: '*'},
+//     extraHeaders: {
+//     "my-custom-header": "abcd"
+//   }
+// });
+// const constraints = {
+// 	audio: {echoCancellation: true, noiseSuppression: true, autoGainControl: false},
+// 	video: {width:{max: "150"}, frameRate:{max:"20"} }
+// 	}
+// const maxBitrate = 45000
+// //const maxBitrate2 = 35
+
+// let localVideo, remoteVideo;
+// let localStream, localScreen;
+// let userName, roomId, peer;
+// let clients = new Map();
+// let streamIds = new Set();
+
+// window.onload = async () => {
+// 	// DOM elements
+// 	localVideo = document.getElementById('localVideo');
+// 	remoteVideo = document.getElementById('remoteVideo');
+
+// 	// DOM elements listeners
+// 	document.getElementById('muteAudio').addEventListener('click', (e) => {
+// 		if(localStream)
+// 			localStream.getAudioTracks()[0].enabled ^= true
+// 		document.getElementById('muteAudio').innerHTML = (localStream.getAudioTracks()[0].enabled) ? 'Mute Audio' : 'Unmute Audio'
+// 	})
+// 	document.getElementById('muteVideo').addEventListener('click', (e) => {
+// 		if(localStream)
+// 			localStream.getVideoTracks()[0].enabled ^= true
+// 		document.getElementById('muteVideo').innerHTML = (localStream.getVideoTracks()[0].enabled) ? 'Mute Video' : 'Unmute Video'
+// 	})
+// 	document.getElementById('start').addEventListener('click', async (e) => {
+// 		userName = document.getElementById('userName').value;
+// 		roomId = document.getElementById('roomId').value;
+
+// 		socket.emit('join', userName, roomId);
+// 	})
+// 	document.getElementById('share').addEventListener('click', async (e) => {
+// 		localScreen = await navigator.mediaDevices.getDisplayMedia({video: true, audio: true})
+//         console.log("asdasd")
+// 		console.log(localScreen.id)
+// 		localScreen.getTracks().forEach(track => peer.addTransceiver( track, {direction:'sendonly', streams:[localScreen]}))
+// 		//localScreen.getAudioTracks().forEach(track => peer.addTrack(track, localScreen))
+// 		//localScreen.getVideoTracks().forEach(track => peer.addTrack(track, localScreen))
+// 		localScreen.getVideoTracks()[0].addEventListener('ended', () => {
+// 			localScreen.getTracks().forEach(track => track.enabled = false)
+// 			console.log('ended')
+// 			socket.emit('endScreen', localScreen.id)
+// 		})
+
+// 	})
+// }
+
+// // SOCKET EVENT CALLBACKS =====================================================
+
+// socket.on('join_answer', async (res) => {
+// 		console.log(`Socket event callback: join_answer. msg: ${res.joined}`);
+// 		if(res.joined) {
+// 			console.log(`This peer has been joined to the room: ${res.roomId}. SocketId: ${socket.id}`)
+// 			peer = await newPeer(socket.id)
+// 			console.log(localStream.id)
+// 			localVideo.srcObject = localStream;
+// 			localVideo.style.width = 'auto';
+// 			//localVideo.style.width = '100%';
+// 		}
+// 		else {
+// 			alert(`Room is full`)
+// 		}
+// })
+// socket.on('webrtc_offer', async (msg) => {				// Acting as remote responser
+// 	const offer = new RTCSessionDescription(msg.offer);
+// 	peer.setRemoteDescription(offer);
+
+// 	const answer = await peer.createAnswer();
+// 	//answer.sdp = updateBandwidthRestriction(answer.sdp, 'video', maxBitrate2)
+// 	await peer.setLocalDescription(answer);
+// 	socket.emit('webrtc_answer', {
+// 		answer: answer,
+// 	});
+// })
+// socket.on('webrtc_answer', (msg) => {					// Acting as offerer initiator
+// 	const sdp = new RTCSessionDescription(msg.answer)
+// 	peer.setRemoteDescription(sdp)
+// })
+// socket.on('webrtc_icecandidate', async (msg) => {
+// 	const candidate = (msg.candidate) ? new RTCIceCandidate(msg.candidate) : msg.candidate;
+// 	await peer.addIceCandidate(candidate);
+// })
+// socket.on('webrtc_disconnection', (msg) => {
+// 	msg.forEach(streamId => {
+// 		document.getElementById(streamId).remove();
+// 	})
+// })
+// socket.on('removeStream', (msg) => {
+// 	msg.forEach(streamId => {
+// 		document.getElementById(streamId).remove();
+// 	})
+// })
+
+// // FUNCTIONS ==================================================================
+// async function newPeer(socketId) {
+// 	const peer = new RTCPeerConnection()
+// 	// Needed to send a correct offer
+
+// 	localStream = await navigator.mediaDevices.getUserMedia(constraints);
+// 	//localStream.getTracks().forEach(track => peer.addTrack(track, localStream));	// (addTrack() looks for unused transceivers to usurp) https://blog.mozilla.org/webrtc/rtcrtptransceiver-explored/
+// 	localStream.getTracks().forEach(track => {
+// 		const transceiver = peer.addTransceiver( track, {direction:'sendonly', streams:[localStream]})	// Same as previous line without usurpation
+// 	})
+
+// 	peer.addEventListener('negotiationneeded', async (e) => {
+// 		console.log('Negotiation Needed')
+// 		const offer = await peer.createOffer();		// Acting as offerer initiator
+// 		//offer.sdp = updateBandwidthRestriction(offer.sdp, 'video', maxBitrate2)
+// 		await peer.setLocalDescription(offer);
+// 		socket.emit('webrtc_offer', {
+// 			offer: offer,
+// 		})
+// 	})
+// 	peer.addEventListener('icecandidate', (e) => {})		// Never used because remote peer should be always at public ip (remote peer is the one that announces candidates)
+// 	peer.addEventListener('connectionstatechange', async (e) => {
+// 		if (peer.connectionState === 'connected') {
+// 			peer.getSenders().forEach( sender => {
+// 				if (sender.track && sender.track.kind === 'video') {
+// 					console.log('recoding with maxbitrate: '+maxBitrate)
+// 					let params = sender.getParameters();
+// 					params.encodings.forEach(encoding => {
+// 						encoding.maxBitrate = maxBitrate;
+// 					})
+// 					sender.setParameters(params);
+// 				}
+// 			})
+// 		}
+// 		else if(peer.connectionState === 'failed') {
+// 			console.log(`client peer.connectionState='failed'. It should never reach here`)
+// 		}
+// 	})
+// 	peer.addEventListener('track', ({transceiver, receiver, streams: [stream], track}) => {
+// 		console.log('Received a track !!!!. Stream: '+stream.id)
+// 		if(!streamIds.has(stream.id)) {
+// 			const newVideo = document.createElement('video');
+// 			newVideo.id = stream.id
+// 			newVideo.autoplay = true;
+// 			newVideo.playsInline = true;
+// 			newVideo.muted = true;
+// 			newVideo.srcObject = stream
+// 			const container = document.getElementById('container');
+// 			container.appendChild(newVideo);
+// 			streamIds.add(stream.id)
+// 		}
+// 	})
+// 	return peer
+// }
+
+// // FUNCTIONS NOT NEEDED =========================================================
+
+// function updateBandwidthRestriction(sdp, media, bitrate) {
+//   var lines = sdp.split("\n");
+//   var line = -1;
+//   for (var i = 0; i < lines.length; i++) {
+//     if (lines[i].indexOf("m="+media) === 0) {
+//       line = i;
+//       break;
+//     }
+//   }
+//   if (line === -1) {
+//     console.debug("Could not find the m line for", media);
+//     return sdp;
+//   }
+//   console.debug("Found the m line for", media, "at line", line);
+
+//   // Pass the m line
+//   line++;
+
+//   // Skip i and c lines
+//   while(lines[line].indexOf("i=") === 0 || lines[line].indexOf("c=") === 0) {
+//     line++;
+//   }
+
+//   // If we're on a b line, replace it
+//   if (lines[line].indexOf("b") === 0) {
+//     console.debug("Replaced b line at line", line);
+//     lines[line] = "b=AS:"+bitrate;
+//     return lines.join("\n");
+//   }
+
+//   // Add a new b line
+//   console.debug("Adding new b line before line", line);
+//   var newLines = lines.slice(0, line)
+//   newLines.push("b=AS:"+bitrate)
+//   newLines = newLines.concat(lines.slice(line, lines.length))
+//   return newLines.join("\n")
+// }
+
+// function updateBandwidthRestriction2(sdp, media, bandwidth) {
+//   let modifier = 'AS';
+//   /*
+//   if (adapter.browserDetails.browser === 'firefox') {
+//     bandwidth = (bandwidth >>> 0) * 1000;
+//     modifier = 'TIAS';
+//   }
+//   */
+
+//   if (sdp.indexOf('b=' + modifier + ':') === -1) {
+//     // insert b= after c= line.
+//     sdp = sdp.replace(/c=IN (.*)\r\n/, 'c=IN $1\r\nb=' + modifier + ':' + bandwidth + '\r\n');
+//   } else {
+//     sdp = sdp.replace(new RegExp('b=' + modifier + ':.*\r\n'), 'b=' + modifier + ':' + bandwidth + '\r\n');
+//   }
+//   return sdp;
+// }
+
+// function removeBandwidthRestriction(sdp) {
+//   return sdp.replace(/b=AS:.*\r\n/, '').replace(/b=TIAS:.*\r\n/, '');
+// }
 </script>

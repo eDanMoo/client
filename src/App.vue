@@ -3,7 +3,6 @@ import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
 import qq from "./components/rr.vue";
 //import "./stores/client.js";
-import "https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js";
 </script>
 
 <template>
