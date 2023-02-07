@@ -74,7 +74,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(stream => {
     localVideo.srcObject = stream;
     localStream = stream;
 
-    init()
+    init();
 
 }).catch(e => alert(`getusermedia error ${e.name}`))
 
@@ -82,6 +82,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(stream => {
  * initialize the socket connections
  */
 function init() {
+    console.log("is it work?");
     socket = io("https://1.223.174.170:3012/");
 
     socket.on('initReceive', socket_id => {
