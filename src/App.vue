@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
 import CamComp from "./components/cam.vue";
+import WordCard from "./components/WordCard.vue";
 </script>
 
 <template>
@@ -23,7 +24,8 @@ import CamComp from "./components/cam.vue";
             </nav>
         </div>
     </header> -->
-    <CamComp />
+    <div><CamComp /></div>
+    <div><WordCard />여기다</div>
 
     <!-- <RouterView /> -->
 </template>
