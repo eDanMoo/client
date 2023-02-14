@@ -24,10 +24,10 @@ import WordCard from "./components/WordCard.vue";
             </nav>
         </div>
     </header> -->
-    <div><CamComp /></div>
-    <div><WordCard />여기다</div>
+    <!-- <div><CamComp /></div>
+    <div><WordCard />여기다</div> -->
 
-    <!-- <RouterView /> -->
+    <RouterView />
 </template>
 
 <!-- <style scoped>

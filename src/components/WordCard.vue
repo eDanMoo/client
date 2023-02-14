@@ -1,25 +1,18 @@
 <template>
-    <input type="text" style="font-size: 3rem" v-model="answer" />
-    <button @click="check" style="">(임시)체크</button>
+
     <div class="example">
-        <transition-group
-            mode="in-out"
-            tag="div"
-            class="list"
-            v-for="n in 7"
-            :key="n"
-        >
-            <div
-                v-for="(item, index) in col[n - 1]"
-                :data-index="index"
-                :key="item.id"
-                class="item"
-                @click="doRemove(n - 1, index)"
-            >
+        <transition-group mode="in-out" tag="div" class="list" v-for="n in this.width" :key="n">
+            <div v-for="(item, index) in col[n - 1]" :data-index="index" :key="item.id" class="item">
                 {{ item.value }}
             </div>
         </transition-group>
     </div>
+
+    <div style="display: flex;">
+        <input type="text"  style="font-size: 3rem" v-model="answer" @keydown.enter="check"/>
+        <button @click="check" style="font-size: 2rem">(임시)정답제출</button>
+    </div>
+
 </template>
 
 <script>
@@ -32,6 +25,7 @@ export default {
             col: [],
             answer: "",
             globalId: 0, //카드의 key가 중복되지 않게 해야 하는데 임시로 계속 증가하는 수를 부여
+            width: 11
         };
     },
     created() {
@@ -58,13 +52,14 @@ export default {
             this.col[a].splice(index, 1);
         },
         async apitest() {
-            let words = await this.$api("http://127.0.0.1:8000/init/7", "get");
+            let words = await this.$api(`http://127.0.0.1:8000/init/` + this.width, "get");
 
             let ids = Object.keys(words);
             let values = Object.values(words);
-            // console.log(words)
+            console.log(words)
 
             let mtxSize = Math.sqrt(ids.length);
+            console.log(mtxSize)
 
             for (let j = 0; j < mtxSize; j++) {
                 this.col.push([]);
@@ -83,15 +78,15 @@ export default {
             let words = Object.values(
                 await this.$api(
                     `http://127.0.0.1:8000/check/` + this.answer, "get"));
-            // console.log(words)
+            console.log(words)
             let deletebuff = [];
             let indexOf = null;
-
+            const length = this.width;
             //Delete
             words.forEach((word) => {
-                if (word[1] > 48) {
-                    indexOf = 6 - parseInt(word[0] / 7);
-                    deletebuff.push([word[0] % 7, indexOf]);
+                if (word[1] > (length ** 2) - 1) {
+                    indexOf = (this.width - 1) - parseInt(word[0] / length);
+                    deletebuff.push([word[0] % length, indexOf]);
                     // this.col[word[0] % 7].splice(indexOf, 1)
                 }
             });
@@ -106,15 +101,15 @@ export default {
             words.forEach((word) => {
                 if (word[0] < 0) {
                     // wordEelmIndex = this.col[word[1] % 7]
-                    this.col[word[1] % 7].push({
+                    this.col[word[1] % length].push({
                         id: this.globalId,
                         value: word[2],
                     });
                     this.globalId++;
                 }
             });
-
-            // console.log(this.col)
+            this.answer="";
+            console.log(this.col)
         },
     },
 };
@@ -123,7 +118,7 @@ export default {
 <style scoped>
 @font-face {
     font-family: "tests";
-    src: url(../../fonts/D2Coding-Ver1.3.2-20180524.ttf);
+    src: url(../fonts/BMYEONSUNG_ttf.ttf);
 }
 
 .example {
@@ -138,10 +133,10 @@ export default {
 }
 
 .item {
-    width: 100px;
-    height: 100px;
-    margin-right: 1px;
-    margin-bottom: 1px;
+    width: 62px;
+    height: 62px;
+    margin-right: 5px;
+    margin-bottom: 5px;
     border-radius: 10px;
 
     display: flex;
@@ -153,8 +148,8 @@ export default {
     box-shadow: inset -2px -2px 0px #262626, inset 2px 2px 0px #f0f0f0,
         inset -4px -4px 0px #7e7e7e;
 
-    font-family: "tests";
-    font-size: 2rem;
+    /* font-family: "tests"; */
+    font-size: 3rem;
 }
 
 /* 트랜지션 전용 스타일 */
@@ -208,4 +203,5 @@ export default {
         transform: scale(1);
     }
 }
+
 </style>
