@@ -1,8 +1,8 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
-import HelloWorld from "./components/HelloWorld.vue";
-import CamComp from "./components/cam.vue";
-import WordCard from "./components/WordCard.vue";
+// import HelloWorld from "./components/HelloWorld.vue";
+// import CamComp from "./components/cam.vue";
+// import WordCard from "./components/WordCard.vue";
 </script>
 
 <template>

@@ -1,6 +1,8 @@
 <script>
 import { onMounted, ref } from "vue";
 import VueSocketIO from "vue-socket.io";
+
+import WordCard from "../components/WordCard.vue";
 // import test from "../stores/cam.js";
 
 // let url_segs = window.location.pathname.split("/");
@@ -45,7 +47,7 @@ let ctx = "";
 
 export default {
     name: "cam_comp",
-    components: {},
+    components: { WordCard },
     data() {
         return {
             data: null,
@@ -303,16 +305,9 @@ export default {
     <head>
         <title>Chat</title>
     </head>
-    <body>
-        <!-- <nav id="header" style="height: 70px; overflow: hidden">
-            <div class="nav-wrapper" style="background: #4a85d9; height: 100%">
-                <div class="container" style="width: 70%; height: 100%">
-                    <a href="#" class="brand-logo"
-                        >{{ user_name }} in {{ room_name }}</a
-                    >
-                </div>
-            </div>
-        </nav> -->
+    <body class="containerBody">
+        <!-- <div > -->
+    <div class="item" >
         <div class="container" id="videoFrame">
             <div id="{{ my_cam }}">
                 <article>
@@ -342,6 +337,26 @@ export default {
                 </article>
             </div> -->
         </div>
+    
+    </div>
+        <!-- ############게임화면################# -->
+        <div class="gameBox">
+            <div><WordCard /></div>
+
+            <div>
+                <div class="progressBar">
+                <div id="bar" class="innerbar"></div>
+                </div>
+            </div>
+
+            <div class="answerBox">
+                <input style=" width: 250px; font-size: 2rem;"/><button style="margin-left:10px; font-size: 2rem;">제출</button>
+            </div>
+
+        </div>
+
+        <!-- ############오른쪽 화면################# -->
+        <div class="item" >
         <div class="container">
             <ul id="messages"></ul>
             <div class="row" id="footer">
@@ -377,6 +392,9 @@ export default {
                 </form>
             </div>
         </div>
+    </div>
+
+    <!-- </div> -->
     </body>
 </template>
 
@@ -451,7 +469,7 @@ nav a:first-of-type {
     }
 }
 
-.item1 {
+/* .item1 {
     order: 1;
 }
 .item2 {
@@ -462,5 +480,52 @@ nav a:first-of-type {
 }
 .item4 {
     order: 4;
+} */
+
+.containerBody{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.item{
+    background: rgba(red, green, blue, alpha);
+}
+
+.gameBox{
+    display: flex;
+    flex-direction: column;
+}
+
+.progressBar {
+    max-width: 600px;
+    width: 90%;
+    margin: 10px auto;
+    /* margin-top: 100px; */
+    height: 20px;
+
+    border-radius: 3px;
+    background: linear-gradient(#ffffff, #fffffff9);
+}
+
+.innerbar {
+    max-width: 600px;
+    height: 100%;
+    text-align: right;
+    height: 20px;
+    /* same as #progressBar height if we want text middle aligned */
+    width: 100%;
+    border-radius: 3px;
+    background: linear-gradient(#f1f80f, #c9d51a);
+}
+
+.answerBox {
+    max-width: 600px;
+    margin: 10px auto;
+    /* margin-top: 100px; */
+    height: 60px;
+    display: flex;
+    justify-items: center;
+    border-radius: 3px;
+
 }
 </style>

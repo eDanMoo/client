@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ingame from "../views/InGame.vue";
+import ingame from "../views/cam.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),

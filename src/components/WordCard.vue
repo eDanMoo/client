@@ -8,10 +8,10 @@
         </transition-group>
     </div>
 
-    <div style="display: flex;">
+    <!-- <div style="display: flex;">
         <input type="text"  style="font-size: 3rem" v-model="answer" @keydown.enter="check"/>
         <button @click="check" style="font-size: 2rem">(임시)정답제출</button>
-    </div>
+    </div> -->
 
 </template>
 
