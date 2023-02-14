@@ -45,6 +45,8 @@ let canvas = "";
 // var ctx = canvas.getContext("2d");
 let ctx = "";
 
+let cur_timer = 0;
+
 export default {
     name: "cam_comp",
     components: { WordCard },
@@ -53,6 +55,7 @@ export default {
             data: null,
             my_cam: current_user,
             toggle_text: "카메라 비활성화",
+            time: 5,
         };
     },
     created() {},
@@ -219,9 +222,11 @@ export default {
                 if (userid_str != current_user) {
                     input.disabled = true;
                     btn.disabled = true;
+                    this.time = 5;
                 } else {
                     input.disabled = false;
                     btn.disabled = false;
+                    this.timer(userid_str);
                 }
             }
         };
@@ -296,6 +301,18 @@ export default {
                 userid: current_user,
             });
             connection.send(jsonData);
+            clearTimeout(cur_timer);
+        },
+        timer(check_user) {
+            if (this.time <= 0) {
+                this.time = 5;
+                if (this.current_user == check_user) {
+                    this.send_user_turn();
+                }
+            } else {
+                this.time--;
+                cur_timer = setTimeout(this.timer, 1000);
+            }
         },
     },
 };
@@ -320,7 +337,7 @@ export default {
                 <article>
                     <video id="videoInput"></video><br />
                     <button class="btn waves-effect" @click="send_user_turn()">
-                        게임시작
+                        게임시작 {{ time }}
                     </button>
                     <button
                         class="btn waves-effect"
