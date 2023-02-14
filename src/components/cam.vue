@@ -50,6 +50,7 @@ export default {
         return {
             data: null,
             my_cam: current_user,
+            toggle_text: "카메라 비활성화",
         };
     },
     created() {},
@@ -65,11 +66,21 @@ export default {
                 ws_scheme = "ws://";
             }
 
-            const socket = new WebSocket(ws_scheme + "webdev-test.site/ws/1");
+            url_segs = window.location.pathname.split("/");
+            console.log(url_segs);
+
+            room_name = url_segs[1];
+
+            uniqCode = this.getRandomInt(10000, 100000);
+            current_user = url_segs[2] + "#" + uniqCode;
+            //let send_url = room_name + "/" + current_user;
+            //console.log(send_url);
+
+            const socket = new WebSocket(
+                ws_scheme + "webdev-test.site/ws/" + room_name
+            );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
-                url_segs = window.location.pathname.split("/");
-                console.log(url_segs);
                 resolve(socket);
             });
             socket.addEventListener("error", (error) => {
@@ -81,10 +92,6 @@ export default {
             });
         });
 
-        room_name = url_segs[1];
-
-        uniqCode = this.getRandomInt(10000, 100000);
-        current_user = url_segs[2] + "#" + uniqCode;
         isStreaming = 1;
 
         intervalVid = setInterval(this.sendImage, 15);
@@ -117,6 +124,12 @@ export default {
         canvas.height = h;
 
         ctx = canvas.getContext("2d");
+
+        const info_obj = {
+            type: "info",
+            userid: current_user,
+        };
+        connection.send(JSON.stringify(info_obj));
 
         connection.onmessage = (event) => {
             // Get message back from websocket and display
@@ -159,11 +172,33 @@ export default {
                 if (userid_str == current_user) {
                     0;
                 } else {
-                    console.log(current_user);
+                    //console.log(current_user);
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
                         subFrame.setAttribute("src", event_data.video);
                     } else {
+                        //console.log("New video is created");
+                        // const videoFrame =
+                        //     document.getElementById("videoFrame");
+                        // const newFrame = document.createElement("img");
+                        // const div = document.createElement("div");
+                        // newFrame.setAttribute("id", userid_str);
+                        // newFrame.setAttribute("src", event_data.video);
+                        // div.setAttribute("id", "grid" + userid_str);
+                        // videoFrame.appendChild(newFrame);
+                    }
+                }
+            } else if (event_data.type == "info") {
+                //console.log(userid_str + "  -- " + current_user);
+                if (userid_str == current_user) {
+                    0;
+                } else {
+                    const subFrame = document.getElementById(userid_str);
+                    //console.log(subFrame);
+                    if (subFrame) {
+                        subFrame.setAttribute("src", event_data.video);
+                    } else {
+                        connection.send(JSON.stringify(info_obj));
                         console.log("New video is created");
                         const videoFrame =
                             document.getElementById("videoFrame");
@@ -174,6 +209,17 @@ export default {
                         div.setAttribute("id", "grid" + userid_str);
                         videoFrame.appendChild(newFrame);
                     }
+                }
+            } else if (event_data.type == "send_user_turn") {
+                console.log("now turn " + userid_str);
+                const input = document.getElementById("messageText");
+                const btn = document.getElementById("send_message");
+                if (userid_str != current_user) {
+                    input.disabled = true;
+                    btn.disabled = true;
+                } else {
+                    input.disabled = false;
+                    btn.disabled = false;
                 }
             }
         };
@@ -208,6 +254,7 @@ export default {
                 connection.send(JSON.stringify(message_obj));
                 input.value = "";
             }
+            this.send_user_turn();
             event.preventDefault();
         },
         processImage() {
@@ -224,13 +271,29 @@ export default {
             connection.send(jsonData);
         },
         toggleVideoCamera() {
+            console.log(isStreaming);
             if (!isStreaming) {
-                this.isStreaming = 1;
+                console.log("활성화");
+                isStreaming = 1;
+                this.toggle_text = "카메라 비활성화";
                 intervalVid = setInterval(this.sendImage, 15);
             } else {
-                this.isStreaming = 0;
+                console.log("비활성화");
+                isStreaming = 0;
+                this.toggle_text = "카메라 활성화";
                 clearInterval(intervalVid);
             }
+        },
+        send_user_turn() {
+            // console.log(user_tunrs);
+            // console.log(user_tunrs[user_turn_count]);
+            // console.log("여긴오니?");
+            console.log("서버에 턴 요청합니다.");
+            const jsonData = JSON.stringify({
+                type: "send_user_turn",
+                userid: current_user,
+            });
+            connection.send(jsonData);
         },
     },
 };
@@ -261,11 +324,14 @@ export default {
             <div>
                 <article>
                     <video id="videoInput"></video><br />
+                    <button class="btn waves-effect" @click="send_user_turn()">
+                        게임시작
+                    </button>
                     <button
                         class="btn waves-effect"
                         @click="toggleVideoCamera()"
                     >
-                        Toggle Video
+                        {{ toggle_text }}
                     </button>
                 </article>
             </div>
@@ -301,6 +367,7 @@ export default {
                                 class="btn waves-effect waves-light send-button"
                                 type="submit"
                                 name="action"
+                                id="send_message"
                                 style="background-color: #4a85d9"
                             >
                                 <i class="material-icons right">send</i>
