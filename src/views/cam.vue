@@ -59,7 +59,7 @@ export default {
             ScoreVisible: true,
             LogVisible: true,
             ChatVisible: true,
-            wordUpdate: null, // 여기에 단어리스트를 넣어주세요.
+            wordUpdate: null,
         };
     },
     watch: {
@@ -386,7 +386,13 @@ export default {
     <body class="containerBody">
         <!-- <div > -->
         <div>
-            <div class="item">
+            <div class="camContainer">
+                <div class="cambarcover">
+                    <div class="cambar">
+                        <span><b>ID :</b></span>
+                        <button class="_button"></button>
+                    </div>
+                </div>
                 <div class="container" id="videoFrame">
                     <div id="{{ my_cam }}">
                         <article>
@@ -406,13 +412,13 @@ export default {
                 </div> -->
                     <!-- img -->
                 </div>
-                <button class="btn waves-effect" @click="send_user_turn()">
-                    게임시작 {{ time }}
-                </button>
-                <button class="btn waves-effect" @click="toggleVideoCamera()">
-                    {{ toggle_text }}
-                </button>
             </div>
+            <button class="btn waves-effect" @click="send_user_turn()">
+                게임시작 {{ time }}
+            </button>
+            <button class="btn waves-effect" @click="toggleVideoCamera()">
+                {{ toggle_text }}
+            </button>
         </div>
         <!-- ############게임화면################# -->
         <div class="gameBox">
@@ -471,8 +477,7 @@ export default {
                 <div class="barcover">
                     <div class="bar">
                         <span><b>점수</b></span
-                        ><button @click="ScoreVisible = !ScoreVisible">
-                            x
+                        ><button class="_button" @click="ScoreVisible = !ScoreVisible">
                         </button>
                     </div>
                 </div>
@@ -487,7 +492,7 @@ export default {
                 <div class="barcover">
                     <div class="bar">
                         <span><b>정답</b></span
-                        ><button @click="LogVisible = !LogVisible">x</button>
+                        ><button class="_button" @click="LogVisible = !LogVisible"></button>
                     </div>
                 </div>
                 <div v-show="LogVisible" class="outer"></div>
@@ -498,7 +503,7 @@ export default {
                 <div class="barcover">
                     <div class="bar">
                         <span><b>대화</b></span
-                        ><button @click="ChatVisible = !ChatVisible">x</button>
+                        ><button class="_button" @click="ChatVisible = !ChatVisible"></button>
                     </div>
                 </div>
                 <div v-show="ChatVisible" class="chatBox">
@@ -635,8 +640,51 @@ nav a:first-of-type {
     grid-template-columns: 1fr 2fr 1fr;
 }
 
-.item {
-    background: rgba(red, green, blue, alpha);
+.camContainer {
+    width: 330px;
+    height: 600px;
+
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    flex-direction: column;
+
+    margin-right: 50px;
+    margin-left: 70px;
+
+    background: #d9d9d9;
+    border: 1px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
+}
+
+.cambar {
+    width: 320px;
+    height: 30px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cambarcover {
+    width: 330px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #000000;
+
+    background: linear-gradient(
+        351.27deg,
+        #ffffff -854.98%,
+        #eeeeee -854.98%,
+        #cacaca -91.55%
+    );
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
+    border: 1px solid #000000;
 }
 
 .gameBox {
@@ -733,5 +781,13 @@ img {
     border: 1px solid #000000;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
         inset 3px 3px 0px #ffffff;
+}
+
+._button {
+    width: 22px;
+    height: 20px;
+    background-image: url("/root/myWeapon/client/src/assets/_button.png");
+    background-size: cover;
+    /* object-fit:contain; */
 }
 </style>

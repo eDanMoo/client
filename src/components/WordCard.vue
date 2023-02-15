@@ -29,7 +29,7 @@
 import axios from "axios";
 
 export default {
-    name: "wordgame",
+    name: "wordGame",
     props: {
         msg: {},
     },
@@ -44,13 +44,9 @@ export default {
     },
     watch: {
         msg(message) {
-            console.log("캠에서 데이터 오나?");
-            console.log(typeof message);
-            console.log(message.length);
             this.words = this.msg;
             if (this.words != null) {
                 if (message.type == "init") {
-                    console.log("오브젝트 안으로 오나?");
                     this.createTable();
                 } else if (message.type == "check") {
                     this.check();
@@ -68,20 +64,6 @@ export default {
         },
     },
     methods: {
-        async $api(url, methods, data) {
-            return (
-                await axios({
-                    method: methods,
-                    url,
-                    data,
-                }).catch((e) => {
-                    console.log(e);
-                })
-            ).data;
-        },
-        doRemove(a, index) {
-            this.col[a].splice(index, 1);
-        },
         async createTable() {
             // let words = await this.$api(`http://127.0.0.1:8000/init/` + this.width, "get");
             let words = this.words.wordTable;
@@ -93,7 +75,7 @@ export default {
 
             let mtxSize = Math.sqrt(ids.length);
             // console.log(mtxSize);
-
+            this.col = [];
             for (let j = 0; j < mtxSize; j++) {
                 this.col.push([]);
             }
@@ -158,20 +140,23 @@ export default {
 
 .example {
     display: flex;
-    width: 700px;
-    height: 700px;
+    width: 720px;
+    height: 720px;
+    align-items: center;
+    justify-content: center;
+    background: rgb(32, 32, 32);
 }
 
 .list {
     display: flex;
     flex-direction: column-reverse;
-    align-items: flex-end;
-    align-content: flex-end;
+    align-items: center;
+    align-content: center;
 }
 
 .item {
-    width: 62px;
-    height: 62px;
+    width: 60px;
+    height: 60px;
     margin-right: 5px;
     margin-bottom: 5px;
     border-radius: 10px;
@@ -182,7 +167,7 @@ export default {
 
     /* mono 100 */
     background: #f6f3f3;
-    box-shadow: inset -2px -2px 0px #262626, inset 2px 2px 0px #f0f0f0,
+    box-shadow: inset -2px -2px 0px #262626, inset 5px 50px 50px #f0f0f0,
         inset -4px -4px 0px #7e7e7e;
 
     /* font-family: "tests"; */
