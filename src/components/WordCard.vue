@@ -7,7 +7,8 @@
             </div>
         </transition-group>
     </div>
-
+    <!-- <p style="color:aliceblue;">I am {{ msg }}</p>
+    <p style="color:aliceblue;">I am {{ testa }} eather!!!</p> -->
     <!-- <div style="display: flex;">
         <input type="text"  style="font-size: 3rem" v-model="answer" @keydown.enter="check"/>
         <button @click="check" style="font-size: 2rem">(임시)정답제출</button>
@@ -19,17 +20,31 @@
 import axios from "axios";
 
 export default {
+    name: "wordgame",
+    props:{
+        msg: null,
+    },
     data() {
         return {
-            words: [],
+            words: this.msg,
             col: [],
             answer: "",
             globalId: 0, //카드의 key가 중복되지 않게 해야 하는데 임시로 계속 증가하는 수를 부여
-            width: 11
+            width: 11,
         };
     },
-    created() {
+    whatch:{
+        testmsg(message){
+            if(message == Object) this.apitest();
+            else this.check();
+        }
+    },
+    mounted(){
         this.apitest();
+        this.check();
+    },
+    created() {
+        
     },
     computed: {
         filteredList() {
@@ -52,8 +67,8 @@ export default {
             this.col[a].splice(index, 1);
         },
         async apitest() {
-            let words = await this.$api(`http://127.0.0.1:8000/init/` + this.width, "get");
-
+            // let words = await this.$api(`http://127.0.0.1:8000/init/` + this.width, "get");
+            let words = this.words;
             let ids = Object.keys(words);
             let values = Object.values(words);
             console.log(words)
@@ -75,9 +90,10 @@ export default {
             }
         },
         async check() {
-            let words = Object.values(
-                await this.$api(
-                    `http://127.0.0.1:8000/check/` + this.answer, "get"));
+            // let words = Object.values(
+            //     await this.$api(
+            //         `http://127.0.0.1:8000/check/` + this.answer, "get"));
+            let words = this.words;
             console.log(words)
             let deletebuff = [];
             let indexOf = null;
@@ -123,6 +139,8 @@ export default {
 
 .example {
     display: flex;
+    width: 700px;
+    height: 700px;
 }
 
 .list {
@@ -159,6 +177,7 @@ export default {
 
 /* 진입 애니메이션 */
 .v-enter-from {
+    transform: translateY(-1000px);
     position: static;
     opacity: 0;
 }
