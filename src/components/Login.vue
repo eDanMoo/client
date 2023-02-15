@@ -11,12 +11,16 @@
                 type="text"
                 v-model="room_code"
                 placeholder="입장코드 or 만들기"
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = '입장코드 or 만들기'"
             />
             <input
                 id="input-user-id"
                 type="text"
                 v-model="user_id"
                 placeholder="닉네임 입력"
+                onfocus="this.placeholder = ''"
+                onblur="this.placeholder = '닉네임 입력'"
             />
             <!-- <div> {{  room_code }}</div>
       <div> {{  user_id }}</div> -->
@@ -118,15 +122,21 @@ export default {
 #input-room-id {
     margin: 5px;
     box-shadow: 1px 1px black, inset 2px 2px white;
-    width: 250px;
-    height: 40px;
+    width: 325px;
+    height: 50px;
+    font-family: "DungGeunMo";
+    font-size: large;
+    text-align: center;
 }
 
 #input-user-id {
     margin: 5px;
     box-shadow: 1px 1px black, inset 2px 2px white;
-    width: 250px;
-    height: 40px;
+    width: 325px;
+    height: 50px;
+    font-family: "DungGeunMo";
+    font-size: large;
+    text-align: center;
 }
 
 #create-button {
@@ -137,7 +147,7 @@ export default {
         #dbdbdb 100%
     );
     width: 160px;
-    height: 40px;
+    height: 50px;
     display: inline-block;
     border: 1px solid rgb(80, 80, 80);
     box-shadow: 1px 1px black, inset 2px 2px white;
@@ -155,7 +165,7 @@ export default {
         #dbdbdb 100%
     );
     width: 160px;
-    height: 40px;
+    height: 50px;
     display: inline-block;
     border: 1px solid rgb(80, 80, 80);
     margin-top: 10px;

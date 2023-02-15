@@ -28,22 +28,30 @@ export default {
                 "나침반",
                 "정글",
                 "코드리뷰",
-                "숲",
-                "병아리",
                 "피드백",
                 "몰입",
-                "부족",
+                "유사도",
                 "최선",
-                "주인",
+                "눈물",
                 "인생",
-                "구급상자",
+                "빈백",
+                "머신러닝",
                 "크래프톤",
                 "진통제",
-                "전경",
-                "학습량",
-                "동료",
+                "커피",
+                "학습량", 
+                "동료", 
                 "정답",
                 "오답",
+                "박정은",
+                "손창한",
+                "조훈기",
+                "이상준",
+                "이현홍",
+                "문해력",
+                "나만의무기",
+                "핀토스",
+                "연수동",
             ];
 
             // 밑에 선언한 tajaContents 안에 글자로 된 Div를 넣어주게 됩니다.
@@ -125,7 +133,7 @@ export default {
 
             function downTaja() {
                 // 글자가 뿌려진 이후에는 일정한 간격으로 글자를 내려줘야 합니다.
-                setInterval(function () {
+                var downInterval = setInterval(function () {
                     for (let i = 0; i < taja.length; i++) {
                         if (i < newObj.length) {
                             newObj[i].style.top = plusTop[i] + "px";
@@ -150,6 +158,12 @@ export default {
                                 }
                             }
                             plusTop[i] += 30;
+                        }   
+                        // 반복 clearInterval을 안하니 plutTop 증가 속도가 점점 빨라진다
+                        if (newObj.length === taja.length) {    
+                            if (!tajaContents.hasChildNodes()) {
+                                clearInterval(downInterval);
+                            }
                         }
                     }
                 }, DOWNTIME);
@@ -196,9 +210,21 @@ export default {
             //     }
             //     count++;
             //     });
-
             drawTaja();
             downTaja();
+            
+            setInterval(function() {
+                idx = 0;
+                newObj = [];
+                plusTop = new Array(taja.length);
+                for (let i = 0; i < plusTop.length; i++) {
+                    plusTop[i] = 0;
+                 }
+                drawTaja();
+                downTaja();
+            // 시간 간격 임의로 설정. 단어 추가할 때마다 고치기 or 개선
+            },DRAWTIME * taja.length * 1.7)
+            
 
             // while (True) {
             //   if (newObj.length === taja.length) { // 화면에 단어가 다 뿌려진 이후
@@ -213,6 +239,7 @@ export default {
             //       }
             //   }
             // }
+            
         });
 
         return { setInterval };
@@ -223,7 +250,7 @@ export default {
 <style scoped>
 /* #info{float:left; margin-left: 50px; font-size : 30px;} */
 #contents {
-    background-color: rgba(125, 155, 155, 0.623);
+    background-color: rgba(228, 226, 226, 0.507);
     width: 62vw;
     height: 80%;
     margin-right: 5px;
@@ -241,8 +268,9 @@ export default {
     text-align: center;
     border-top-style: solid;
     border-top-color: black;
-    background-color: rgba(125, 155, 155, 0.623);
+    background-color: rgba(228, 226, 226, 0.507);
     padding-top: 2px;
+    /* border: 1px solid black; */
 }
 #inputText {
     display: inline-block;
@@ -252,6 +280,7 @@ export default {
     width: 100%;
     height: 100%;
     border: 1px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
 }
 /* #inputBtn{
   display:inline-block;

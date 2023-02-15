@@ -477,8 +477,10 @@ export default {
                 <div class="barcover">
                     <div class="bar">
                         <span><b>점수</b></span
-                        ><button class="_button" @click="ScoreVisible = !ScoreVisible">
-                        </button>
+                        ><button
+                            class="_button"
+                            @click="ScoreVisible = !ScoreVisible"
+                        ></button>
                     </div>
                 </div>
 
@@ -492,7 +494,10 @@ export default {
                 <div class="barcover">
                     <div class="bar">
                         <span><b>정답</b></span
-                        ><button class="_button" @click="LogVisible = !LogVisible"></button>
+                        ><button
+                            class="_button"
+                            @click="LogVisible = !LogVisible"
+                        ></button>
                     </div>
                 </div>
                 <div v-show="LogVisible" class="outer"></div>
@@ -503,7 +508,10 @@ export default {
                 <div class="barcover">
                     <div class="bar">
                         <span><b>대화</b></span
-                        ><button class="_button" @click="ChatVisible = !ChatVisible"></button>
+                        ><button
+                            class="_button"
+                            @click="ChatVisible = !ChatVisible"
+                        ></button>
                     </div>
                 </div>
                 <div v-show="ChatVisible" class="chatBox">
