@@ -31,7 +31,7 @@ import axios from "axios";
 export default {
     name: "wordgame",
     props: {
-        msg: null,
+        msg: {},
     },
     data() {
         return {
@@ -42,15 +42,24 @@ export default {
             width: 11,
         };
     },
-    whatch: {
-        testmsg(message) {
-            if (message == Object) this.apitest();
-            else this.check();
+    watch: {
+        msg(message) {
+            console.log("캠에서 데이터 오나?");
+            console.log(typeof message);
+            this.words = this.msg;
+            if (this.words != null) {
+                if (typeof message == "object" && message["roomId"]) {
+                    console.log("오브젝트 안으로 오나?");
+                    this.apitest();
+                } else {
+                    this.check();
+                }
+            }
         },
     },
     mounted() {
-        this.apitest();
-        this.check();
+        // this.apitest();
+        // this.check();
     },
     created() {},
     computed: {
@@ -76,6 +85,7 @@ export default {
         async apitest() {
             // let words = await this.$api(`http://127.0.0.1:8000/init/` + this.width, "get");
             let words = this.words;
+            console.log(words);
             let ids = Object.keys(words);
             let values = Object.values(words);
             console.log(words);
@@ -89,6 +99,7 @@ export default {
 
             for (let i = ids.length - 1; i > -1; i--) {
                 let colsOrder = i % mtxSize;
+                console.log(this.col[colsOrder]);
                 this.col[colsOrder].push({
                     id: this.globalId,
                     value: values[i],

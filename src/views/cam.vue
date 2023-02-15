@@ -224,24 +224,37 @@ export default {
                         videoFrame.appendChild(newFrame);
                     }
                 }
-                // } else if (event_data.type == "send_user_turn") {
-                //     console.log("now turn " + userid_str);
-                //     const input = document.getElementById("messageText");
-                //     const btn = document.getElementById("send_message");
-                //     if (userid_str != current_user) {
-                //         input.disabled = true;
-                //         btn.disabled = true;
-                //         this.time = 5;
-                //     } else {
-                //         input.disabled = false;
-                //         btn.disabled = false;
-                //         this.timer(userid_str);
-                //     }
+            } else if (event_data.type == "send_user_turn") {
+                console.log("now turn " + userid_str);
+                const input = document.getElementById("messageText");
+                const btn = document.getElementById("send_message");
+                if (userid_str != current_user) {
+                    input.disabled = true;
+                    btn.disabled = true;
+                    this.time = 5;
+                } else {
+                    input.disabled = false;
+                    btn.disabled = false;
+                    this.timer(userid_str);
+                }
+            } else if (event_data.type == "delete_frame") {
+                const delete_frame = document.getElementById(userid_str);
+                if (delete_frame) {
+                    delete_frame.parentNode.removeChild(delete_frame);
+                }
+            } else if (event_data.roomId) {
+                console.log(typeof event_data);
+                console.log(event_data);
+                this.wordUpdate = event_data;
+            } else {
+                console.log(typeof event_data);
+                console.log(event_data);
+                this.wordUpdate = event_data;
             }
         };
 
         this.processImage();
-        updateProgressbar();
+        //this.updateProgressbar();
     },
     methods: {
         testbutton() {
@@ -327,12 +340,7 @@ export default {
                 cur_timer = setTimeout(this.timer, 1000);
             }
         },
-
         // progressbar
-        start() {
-            let el = document.getElementById("timerbar");
-            el.style.width = "%";
-        },
         updateProgressbar() {
             let el = document.getElementById("timerbar");
             let width = (this.time / 5) * 100 + "%";
@@ -340,6 +348,32 @@ export default {
 
             let widthStr = width + "%";
             el.style.width = widthStr;
+        },
+        boardInit() {
+            const jsonData = JSON.stringify({
+                type: "game_server",
+                method: "POST",
+                path: "init",
+                params: {
+                    type: "init",
+                },
+            });
+            connection.send(jsonData);
+        },
+        answerCheck() {
+            const answer_text_box = document.getElementById("input_answer");
+            const user_answer = answer_text_box.value;
+            const jsonData = JSON.stringify({
+                type: "game_server",
+                method: "POST",
+                path: "check",
+                params: {
+                    type: "check",
+                    answer: user_answer,
+                    user: current_user,
+                },
+            });
+            connection.send(jsonData);
         },
     },
 };
@@ -388,11 +422,41 @@ export default {
                 <div class="progressBar">
                     <div id="timerbar" class="innerbar"></div>
                 </div>
+                <!-- <article>
+                    <video id="videoInput"></video><br />
+                    <button class="btn waves-effect" @click="send_user_turn()">
+                        게임시작 {{ time }}
+                    </button>
+                    <button
+                        class="btn waves-effect"
+                        @click="toggleVideoCamera()"
+                    >
+                        {{ toggle_text }}
+                    </button>
+                    <button class="btn waves-effect" @click="boardInit()">
+                        호출테스트
+                    </button>
+                    <button class="btn waves-effect" @click="answerCheck()">
+                        답 체크
+                    </button>
+                </article>  -->
             </div>
 
             <div class="answerBox">
-                <input style="width: 250px; font-size: 2rem" /><button
+                <input
+                    type="text"
+                    id="input_answer"
+                    style="width: 250px; font-size: 2rem"
+                />
+                <button
                     style="margin-left: 10px; font-size: 2rem"
+                    @click="boardInit()"
+                >
+                    보드만들기
+                </button>
+                <button
+                    style="margin-left: 10px; font-size: 2rem"
+                    @click="answerCheck()"
                 >
                     제출
                 </button>
