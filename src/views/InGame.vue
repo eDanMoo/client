@@ -3,13 +3,13 @@ import CamComp from "../components/cam.vue";
 import WordCard from "../components/WordCard.vue";
 import RightView from "../components/RightView.vue";
 export default {
-    name: 'InGame',
+    name: "InGame",
     components: {
         CamComp,
         WordCard,
-        RightView
-    }
-}
+        RightView,
+    },
+};
 </script>
 
 <template>
@@ -24,8 +24,6 @@ export default {
             <RightView />
         </div>
     </div>
-
-
 </template>
 
 <style scoped>

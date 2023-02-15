@@ -4,13 +4,13 @@ import logbox from "./InGameComp/LogBox.vue";
 import scorebox from "./InGameComp/ScoreBox.vue";
 
 export default {
-    name: 'RightView',
+    name: "RightView",
     components: {
         chatbox,
         logbox,
-        scorebox
-    }
-}
+        scorebox,
+    },
+};
 </script>
 
 <template>

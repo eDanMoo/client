@@ -59,13 +59,13 @@ export default {
             ScoreVisible: true,
             LogVisible: true,
             ChatVisible: true,
-            wordUpdate: null // 여기에 단어리스트를 넣어주세요.
+            wordUpdate: null, // 여기에 단어리스트를 넣어주세요.
         };
     },
-    watch: { 
+    watch: {
         time() {
             this.updateProgressbar();
-        }
+        },
     },
     created() {},
 
@@ -224,19 +224,19 @@ export default {
                         videoFrame.appendChild(newFrame);
                     }
                 }
-            // } else if (event_data.type == "send_user_turn") {
-            //     console.log("now turn " + userid_str);
-            //     const input = document.getElementById("messageText");
-            //     const btn = document.getElementById("send_message");
-            //     if (userid_str != current_user) {
-            //         input.disabled = true;
-            //         btn.disabled = true;
-            //         this.time = 5;
-            //     } else {
-            //         input.disabled = false;
-            //         btn.disabled = false;
-            //         this.timer(userid_str);
-            //     }
+                // } else if (event_data.type == "send_user_turn") {
+                //     console.log("now turn " + userid_str);
+                //     const input = document.getElementById("messageText");
+                //     const btn = document.getElementById("send_message");
+                //     if (userid_str != current_user) {
+                //         input.disabled = true;
+                //         btn.disabled = true;
+                //         this.time = 5;
+                //     } else {
+                //         input.disabled = false;
+                //         btn.disabled = false;
+                //         this.timer(userid_str);
+                //     }
             }
         };
 
@@ -244,7 +244,9 @@ export default {
         updateProgressbar();
     },
     methods: {
-        testbutton(){this.time--},
+        testbutton() {
+            this.time--;
+        },
         /** 클라이언트 구분을 위해 아이디에 부여할 난수 생성 */
         getRandomInt(min, max) {
             min = Math.ceil(min);
@@ -330,8 +332,6 @@ export default {
         start() {
             let el = document.getElementById("timerbar");
             el.style.width = "%";
-
-            
         },
         updateProgressbar() {
             let el = document.getElementById("timerbar");
@@ -340,7 +340,7 @@ export default {
 
             let widthStr = width + "%";
             el.style.width = widthStr;
-        }, 
+        },
     },
 };
 </script>
@@ -351,127 +351,134 @@ export default {
     </head>
     <body class="containerBody">
         <!-- <div > -->
-    <div>
-        <div class="item" >
-            <div class="container" id="videoFrame">
-                <div id="{{ my_cam }}">
-                    <article>
-                        <div style="width: 300px; height: 300px">
-                            <canvas id="videoOutput"></canvas>
-                        </div>
-                    </article>
-                </div>
-                <div>
-                    <article>
-                        <video id="videoInput"></video><br />
-
-                    </article>
-                </div>
-                <br />
-                <!-- <div>
+        <div>
+            <div class="item">
+                <div class="container" id="videoFrame">
+                    <div id="{{ my_cam }}">
+                        <article>
+                            <div style="width: 300px; height: 300px">
+                                <canvas id="videoOutput"></canvas>
+                            </div>
+                        </article>
+                    </div>
+                    <div>
+                        <article><video id="videoInput"></video><br /></article>
+                    </div>
+                    <br />
+                    <!-- <div>
                     <article>
                         <div id="videoFrame"></div>
                     </article>
                 </div> -->
-                <!-- img -->
-
+                    <!-- img -->
+                </div>
+                <button class="btn waves-effect" @click="send_user_turn()">
+                    게임시작 {{ time }}
+                </button>
+                <button class="btn waves-effect" @click="toggleVideoCamera()">
+                    {{ toggle_text }}
+                </button>
             </div>
-            <button class="btn waves-effect" @click="send_user_turn()">
-                게임시작 {{ time }}
-            </button>
-            <button class="btn waves-effect" @click="toggleVideoCamera()">
-                {{ toggle_text }}
-            </button>
-        
         </div>
-    </div>
         <!-- ############게임화면################# -->
         <div class="gameBox">
-            <div><WordCard :msg="wordUpdate"/></div>
+            <div><WordCard :msg="wordUpdate" /></div>
 
             <div>
                 <div class="progressBar">
-                <div id="timerbar" class="innerbar"></div>
+                    <div id="timerbar" class="innerbar"></div>
                 </div>
             </div>
 
             <div class="answerBox">
-                <input style=" width: 250px; font-size: 2rem;"/><button style="margin-left:10px; font-size: 2rem;">제출</button>
+                <input style="width: 250px; font-size: 2rem" /><button
+                    style="margin-left: 10px; font-size: 2rem"
+                >
+                    제출
+                </button>
             </div>
             <!-- <button @click="testbutton" >test</button> -->
         </div>
 
         <!-- ############오른쪽 화면################# -->
-        <div class="rightBox" >
-        
-        <!---------------------점수화면--------------------->
-        <div style="height: 200px; ">
-            <div class="barcover">
-                <div class="bar"><span><b>점수</b></span><button @click="ScoreVisible=!ScoreVisible">x</button>
+        <div class="rightBox">
+            <!---------------------점수화면--------------------->
+            <div style="height: 200px">
+                <div class="barcover">
+                    <div class="bar">
+                        <span><b>점수</b></span
+                        ><button @click="ScoreVisible = !ScoreVisible">
+                            x
+                        </button>
+                    </div>
+                </div>
+
+                <div v-show="ScoreVisible" class="outer">
+                    <div class="blackbox"></div>
                 </div>
             </div>
 
-            <div v-show="ScoreVisible" class="outer">
-                <div class="blackbox"></div>
+            <!---------------------로그화면--------------------->
+            <div style="height: 200px">
+                <div class="barcover">
+                    <div class="bar">
+                        <span><b>정답</b></span
+                        ><button @click="LogVisible = !LogVisible">x</button>
+                    </div>
+                </div>
+                <div v-show="LogVisible" class="outer"></div>
             </div>
-        </div>
+            <!---------------------채팅화면--------------------->
 
-        <!---------------------로그화면--------------------->
-    <div style="height: 200px; ">
-            <div class="barcover">
-            <div class="bar"><span><b>정답</b></span><button @click="LogVisible = !LogVisible">x</button></div>
-        </div>
-        <div v-show="LogVisible"  class="outer">
-            
-        </div>
-    </div>
-        <!---------------------채팅화면--------------------->
-
-    <div style="height: 500px; ">
-        <div class="barcover">
-            <div class="bar"><span><b>대화</b></span><button @click="ChatVisible = !ChatVisible">x</button>
-            </div>
-        </div>
-        <div v-show="ChatVisible"  class="chatBox">
-            <div class="container">
-                <ul id="messages"></ul>
-                <div class="row" id="footer">
-                    <form
-                        name="chat-form"
-                        action=""
-                        @submit.prevent="sendMessage"
-                        class="col s12"
-                    >
-                        <div class="row">
-                            <div
-                                class="input-field col s12"
-                                style="display: inline-flex"
+            <div style="height: 500px">
+                <div class="barcover">
+                    <div class="bar">
+                        <span><b>대화</b></span
+                        ><button @click="ChatVisible = !ChatVisible">x</button>
+                    </div>
+                </div>
+                <div v-show="ChatVisible" class="chatBox">
+                    <div class="container">
+                        <ul id="messages"></ul>
+                        <div class="row" id="footer">
+                            <form
+                                name="chat-form"
+                                action=""
+                                @submit.prevent="sendMessage"
+                                class="col s12"
                             >
-                                <input
-                                    type="text"
-                                    autocomplete="off"
-                                    id="messageText"
-                                    class="materialize-textarea"
-                                    @click="checkWebSocket(event)"
-                                />
-                                <button
-                                    class="btn waves-effect waves-light send-button"
-                                    type="submit"
-                                    name="action"
-                                    id="send_message"
-                                    style="background-color: #4a85d9"
-                                >
-                                    <i class="material-icons right">send</i>
-                                </button>
-                            </div>
+                                <div class="row">
+                                    <div
+                                        class="input-field col s12"
+                                        style="display: inline-flex"
+                                    >
+                                        <input
+                                            type="text"
+                                            autocomplete="off"
+                                            id="messageText"
+                                            class="materialize-textarea"
+                                            @click="checkWebSocket(event)"
+                                        />
+                                        <button
+                                            class="btn waves-effect waves-light send-button"
+                                            type="submit"
+                                            name="action"
+                                            id="send_message"
+                                            style="background-color: #4a85d9"
+                                        >
+                                            <i class="material-icons right"
+                                                >send</i
+                                            >
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-    </div>
-    </div>
-</div>
-    <!-- </div> -->
+        </div>
+        <!-- </div> -->
     </body>
 </template>
 
@@ -559,16 +566,16 @@ nav a:first-of-type {
     order: 4;
 } */
 
-.containerBody{
+.containerBody {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
 }
 
-.item{
+.item {
     background: rgba(red, green, blue, alpha);
 }
 
-.gameBox{
+.gameBox {
     display: flex;
     flex-direction: column;
 }
@@ -603,24 +610,23 @@ nav a:first-of-type {
     display: flex;
     justify-items: center;
     border-radius: 3px;
-
 }
 
-.chatBox{
+.chatBox {
     display: flex;
-    align-items: flex-end ;
+    align-items: flex-end;
     flex-direction: row;
     width: 300px;
     height: 400px;
     overflow-y: auto;
-    
-    background: #D9D9D9;
-    border: 1px solid #000000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000, inset 3px 3px 0px #FFFFFF;
 
+    background: #d9d9d9;
+    border: 1px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
 }
 
- img{
+img {
     margin: 500px;
 }
 
@@ -643,20 +649,25 @@ nav a:first-of-type {
     align-items: center;
     border: 1px solid #000000;
 
-    background: linear-gradient(351.27deg, #FFFFFF -854.98%, #EEEEEE -854.98%, #CACACA -91.55%);
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000, inset 3px 3px 0px #FFFFFF;
+    background: linear-gradient(
+        351.27deg,
+        #ffffff -854.98%,
+        #eeeeee -854.98%,
+        #cacaca -91.55%
+    );
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
     border: 1px solid #000000;
 }
 
 .outer {
-
     width: 300px;
     height: 150px;
     margin-bottom: 10px;
 
-    background: #D9D9D9;
+    background: #d9d9d9;
     border: 1px solid #000000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000, inset 3px 3px 0px #FFFFFF;
-
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
 }
 </style>

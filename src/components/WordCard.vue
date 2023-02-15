@@ -1,8 +1,18 @@
 <template>
-
     <div class="example">
-        <transition-group mode="in-out" tag="div" class="list" v-for="n in this.width" :key="n">
-            <div v-for="(item, index) in col[n - 1]" :data-index="index" :key="item.id" class="item">
+        <transition-group
+            mode="in-out"
+            tag="div"
+            class="list"
+            v-for="n in this.width"
+            :key="n"
+        >
+            <div
+                v-for="(item, index) in col[n - 1]"
+                :data-index="index"
+                :key="item.id"
+                class="item"
+            >
                 {{ item.value }}
             </div>
         </transition-group>
@@ -13,7 +23,6 @@
         <input type="text"  style="font-size: 3rem" v-model="answer" @keydown.enter="check"/>
         <button @click="check" style="font-size: 2rem">(임시)정답제출</button>
     </div> -->
-
 </template>
 
 <script>
@@ -21,7 +30,7 @@ import axios from "axios";
 
 export default {
     name: "wordgame",
-    props:{
+    props: {
         msg: null,
     },
     data() {
@@ -33,19 +42,17 @@ export default {
             width: 11,
         };
     },
-    whatch:{
-        testmsg(message){
-            if(message == Object) this.apitest();
+    whatch: {
+        testmsg(message) {
+            if (message == Object) this.apitest();
             else this.check();
-        }
+        },
     },
-    mounted(){
+    mounted() {
         this.apitest();
         this.check();
     },
-    created() {
-        
-    },
+    created() {},
     computed: {
         filteredList() {
             return 0;
@@ -71,10 +78,10 @@ export default {
             let words = this.words;
             let ids = Object.keys(words);
             let values = Object.values(words);
-            console.log(words)
+            console.log(words);
 
             let mtxSize = Math.sqrt(ids.length);
-            console.log(mtxSize)
+            console.log(mtxSize);
 
             for (let j = 0; j < mtxSize; j++) {
                 this.col.push([]);
@@ -94,14 +101,14 @@ export default {
             //     await this.$api(
             //         `http://127.0.0.1:8000/check/` + this.answer, "get"));
             let words = this.words;
-            console.log(words)
+            console.log(words);
             let deletebuff = [];
             let indexOf = null;
             const length = this.width;
             //Delete
             words.forEach((word) => {
-                if (word[1] > (length ** 2) - 1) {
-                    indexOf = (this.width - 1) - parseInt(word[0] / length);
+                if (word[1] > length ** 2 - 1) {
+                    indexOf = this.width - 1 - parseInt(word[0] / length);
                     deletebuff.push([word[0] % length, indexOf]);
                     // this.col[word[0] % 7].splice(indexOf, 1)
                 }
@@ -124,8 +131,8 @@ export default {
                     this.globalId++;
                 }
             });
-            this.answer="";
-            console.log(this.col)
+            this.answer = "";
+            console.log(this.col);
         },
     },
 };
@@ -222,5 +229,4 @@ export default {
         transform: scale(1);
     }
 }
-
 </style>
