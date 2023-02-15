@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ingame from "../views/cam.vue";
+import Home from '../views/Home.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: "/ws/1",
+            // path: "/ws/1",
+            path: "/:room_code/:user_id",
             name: "ingame",
             component: ingame,
         },
@@ -17,6 +19,12 @@ const router = createRouter({
             // which is lazy-loaded when the route is visited.
             component: () => import("../views/AboutView.vue"),
         },
+        {
+            path: '/',
+            name: 'home',
+            component: Home
+        },
+
     ],
 });
 
