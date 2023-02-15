@@ -46,19 +46,19 @@ export default {
         msg(message) {
             console.log("캠에서 데이터 오나?");
             console.log(typeof message);
+            console.log(message.length);
             this.words = this.msg;
             if (this.words != null) {
-                if (typeof message == "object" && message["roomId"]) {
+                if (message.type == "init") {
                     console.log("오브젝트 안으로 오나?");
-                    this.apitest();
-                } else {
+                    this.createTable();
+                } else if (message.type == "check") {
                     this.check();
                 }
             }
         },
     },
     mounted() {
-        // this.apitest();
         // this.check();
     },
     created() {},
@@ -82,16 +82,17 @@ export default {
         doRemove(a, index) {
             this.col[a].splice(index, 1);
         },
-        async apitest() {
+        async createTable() {
             // let words = await this.$api(`http://127.0.0.1:8000/init/` + this.width, "get");
-            let words = this.words;
-            console.log(words);
+            let words = this.words.wordTable;
+            this.globalId = 0;
+            // console.log(words);
             let ids = Object.keys(words);
             let values = Object.values(words);
-            console.log(words);
+            // console.log(words);
 
             let mtxSize = Math.sqrt(ids.length);
-            console.log(mtxSize);
+            // console.log(mtxSize);
 
             for (let j = 0; j < mtxSize; j++) {
                 this.col.push([]);
@@ -111,7 +112,7 @@ export default {
             // let words = Object.values(
             //     await this.$api(
             //         `http://127.0.0.1:8000/check/` + this.answer, "get"));
-            let words = this.words;
+            let words = this.words.moveInfo;
             console.log(words);
             let deletebuff = [];
             let indexOf = null;
