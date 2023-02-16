@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import VueSocketIO from "vue-socket.io";
 
 import WordCard from "../components/WordCard.vue";
+// import MusicPlayer from "../components/MusicPlayer.vue";
 // import test from "../stores/cam.js";
 
 // let url_segs = window.location.pathname.split("/");
@@ -386,6 +387,7 @@ export default {
     <body class="containerBody">
         <!-- <div > -->
         <div>
+            <!-- <Musicplayer /> -->
             <div class="camContainer">
                 <div class="cambarcover">
                     <div class="cambar">
@@ -794,7 +796,7 @@ img {
 ._button {
     width: 22px;
     height: 20px;
-    background-image: url("/root/myWeapon/client/src/assets/_button.png");
+    background-image: url("../assets/gamecomp/_button.png");
     background-size: cover;
     /* object-fit:contain; */
 }

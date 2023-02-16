@@ -1,9 +1,9 @@
 <template>
-    <div class="example">
+    <div class="gamebackgroud">
         <transition-group
             mode="in-out"
             tag="div"
-            class="list"
+            class="wordlist"
             v-for="n in this.width"
             :key="n"
         >
@@ -11,23 +11,15 @@
                 v-for="(item, index) in col[n - 1]"
                 :data-index="index"
                 :key="item.id"
-                class="item"
+                class="wordelem"
             >
                 {{ item.value }}
             </div>
         </transition-group>
     </div>
-    <!-- <p style="color:aliceblue;">I am {{ msg }}</p>
-    <p style="color:aliceblue;">I am {{ testa }} eather!!!</p> -->
-    <!-- <div style="display: flex;">
-        <input type="text"  style="font-size: 3rem" v-model="answer" @keydown.enter="check"/>
-        <button @click="check" style="font-size: 2rem">(임시)정답제출</button>
-    </div> -->
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
     name: "wordGame",
     props: {
@@ -38,7 +30,7 @@ export default {
             words: this.msg,
             col: [],
             answer: "",
-            globalId: 0, //카드의 key가 중복되지 않게 해야 하는데 임시로 계속 증가하는 수를 부여
+            globalId: 0,
             width: 11,
         };
     },
@@ -54,9 +46,7 @@ export default {
             }
         },
     },
-    mounted() {
-        // this.check();
-    },
+    mounted() {},
     created() {},
     computed: {
         filteredList() {
@@ -65,16 +55,13 @@ export default {
     },
     methods: {
         async createTable() {
-            // let words = await this.$api(`http://127.0.0.1:8000/init/` + this.width, "get");
             let words = this.words.wordTable;
             this.globalId = 0;
-            // console.log(words);
+
             let ids = Object.keys(words);
             let values = Object.values(words);
-            // console.log(words);
 
             let mtxSize = Math.sqrt(ids.length);
-            // console.log(mtxSize);
             this.col = [];
             for (let j = 0; j < mtxSize; j++) {
                 this.col.push([]);
@@ -82,7 +69,6 @@ export default {
 
             for (let i = ids.length - 1; i > -1; i--) {
                 let colsOrder = i % mtxSize;
-                console.log(this.col[colsOrder]);
                 this.col[colsOrder].push({
                     id: this.globalId,
                     value: values[i],
@@ -91,11 +77,7 @@ export default {
             }
         },
         async check() {
-            // let words = Object.values(
-            //     await this.$api(
-            //         `http://127.0.0.1:8000/check/` + this.answer, "get"));
             let words = this.words.moveInfo;
-            console.log(words);
             let deletebuff = [];
             let indexOf = null;
             const length = this.width;
@@ -104,12 +86,10 @@ export default {
                 if (word[1] > length ** 2 - 1) {
                     indexOf = this.width - 1 - parseInt(word[0] / length);
                     deletebuff.push([word[0] % length, indexOf]);
-                    // this.col[word[0] % 7].splice(indexOf, 1)
                 }
             });
 
             deletebuff.sort((a, b) => b[1] - a[1]);
-            console.log(deletebuff);
             deletebuff.forEach((buff) => {
                 this.col[buff[0]].splice(buff[1], 1);
             });
@@ -117,7 +97,6 @@ export default {
             //Add
             words.forEach((word) => {
                 if (word[0] < 0) {
-                    // wordEelmIndex = this.col[word[1] % 7]
                     this.col[word[1] % length].push({
                         id: this.globalId,
                         value: word[2],
@@ -126,7 +105,7 @@ export default {
                 }
             });
             this.answer = "";
-            console.log(this.col);
+            // console.log(this.col);
         },
     },
 };
@@ -138,7 +117,7 @@ export default {
     src: url(../fonts/BMYEONSUNG_ttf.ttf);
 }
 
-.example {
+.gamebackgroud {
     display: flex;
     width: 720px;
     height: 720px;
@@ -147,14 +126,14 @@ export default {
     background: rgb(32, 32, 32);
 }
 
-.list {
+.wordlist {
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
     align-content: center;
 }
 
-.item {
+.wordelem {
     width: 60px;
     height: 60px;
     margin-right: 5px;
@@ -165,6 +144,8 @@ export default {
     justify-content: center;
     align-items: center;
 
+    /* background-image: url("../assets/gamecomp/rectangle1.png");
+    background-size: cover; */
     /* mono 100 */
     background: #f6f3f3;
     box-shadow: inset -2px -2px 0px #262626, inset 5px 50px 50px #f0f0f0,

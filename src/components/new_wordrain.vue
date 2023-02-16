@@ -39,8 +39,8 @@ export default {
                 "크래프톤",
                 "진통제",
                 "커피",
-                "학습량", 
-                "동료", 
+                "학습량",
+                "동료",
                 "정답",
                 "오답",
                 "박정은",
@@ -158,9 +158,9 @@ export default {
                                 }
                             }
                             plusTop[i] += 30;
-                        }   
+                        }
                         // 반복 clearInterval을 안하니 plutTop 증가 속도가 점점 빨라진다
-                        if (newObj.length === taja.length) {    
+                        if (newObj.length === taja.length) {
                             if (!tajaContents.hasChildNodes()) {
                                 clearInterval(downInterval);
                             }
@@ -212,19 +212,18 @@ export default {
             //     });
             drawTaja();
             downTaja();
-            
-            setInterval(function() {
+
+            setInterval(function () {
                 idx = 0;
                 newObj = [];
                 plusTop = new Array(taja.length);
                 for (let i = 0; i < plusTop.length; i++) {
                     plusTop[i] = 0;
-                 }
+                }
                 drawTaja();
                 downTaja();
-            // 시간 간격 임의로 설정. 단어 추가할 때마다 고치기 or 개선
-            },DRAWTIME * taja.length * 1.7)
-            
+                // 시간 간격 임의로 설정. 단어 추가할 때마다 고치기 or 개선
+            }, DRAWTIME * taja.length * 1.7);
 
             // while (True) {
             //   if (newObj.length === taja.length) { // 화면에 단어가 다 뿌려진 이후
@@ -239,7 +238,6 @@ export default {
             //       }
             //   }
             // }
-            
         });
 
         return { setInterval };
