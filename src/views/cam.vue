@@ -282,7 +282,8 @@ export default {
                 const my_score = document.getElementById(
                     event_data.user + "_score_val"
                 );
-                my_score.value = parseInt(my_score.value) + parseInt(event_data.increment);
+                my_score.value =
+                    parseInt(my_score.value) + parseInt(event_data.increment);
             } else if (event_data.type == "game_start") {
                 const game_start = document.getElementById("game_tart");
                 const game_box = document.getElementById("game_box");
@@ -466,12 +467,13 @@ export default {
                 </div> -->
                     <!-- img -->
                 </div>
-                <!-- <button class="btn waves-effect" @click="send_user_turn()">
+            </div>
+            <!-- <button class="btn waves-effect" @click="send_user_turn()">
                     게임시작 {{ time }}
                 </button> -->
-                <button class="btn waves-effect" @click="toggleVideoCamera()">
-                    {{ toggle_text }}
-                </button>
+            <button class="btn waves-effect" @click="toggleVideoCamera()">
+                {{ toggle_text }}
+            </button>
         </div>
         <!-- ############게임화면################# -->
         <div class="gameBox" id="game_box">
