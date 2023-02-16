@@ -44,7 +44,7 @@ let canvas = "";
 // canvas.width = w;
 // canvas.height = h;
 // var ctx = canvas.getContext("2d");
-// 주석추가
+// 주석추가111
 let ctx = "";
 
 let cur_timer = 0;
