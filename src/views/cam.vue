@@ -55,7 +55,7 @@ export default {
             data: null,
             my_cam: current_user,
             toggle_text: "카메라 비활성화",
-            time: 5,
+            time: 100,
             ScoreVisible: true,
             LogVisible: true,
             ChatVisible: true,
@@ -204,6 +204,29 @@ export default {
                 }
             } else if (event_data.type == "info") {
                 //console.log(userid_str + "  -- " + current_user);
+                const check_score_input = document.getElementById(
+                    userid_str + "_score"
+                );
+                if (!check_score_input) {
+                    const score_board = document.getElementById("score_board");
+                    const score = document.createElement("div");
+                    const span = document.createElement("span");
+                    const input = document.createElement("input");
+                    score.setAttribute("id", userid_str + "_score");
+                    span.setAttribute("id", userid_str + "_score_user");
+                    span.innerHTML = userid_str + "&nbsp";
+                    input.setAttribute("id", userid_str + "_score_val");
+                    input.setAttribute("class", "score_value");
+                    input.setAttribute("type", "text");
+                    input.setAttribute("readonly", "readonly");
+                    input.setAttribute("value", 100);
+                    input.style.border = "none";
+                    input.style.background = "transparent";
+                    score_board
+                        .appendChild(score)
+                        .appendChild(span)
+                        .appendChild(input);
+                }
                 if (userid_str == current_user) {
                     0;
                 } else {
@@ -226,12 +249,12 @@ export default {
                 }
             } else if (event_data.type == "send_user_turn") {
                 console.log("now turn " + userid_str);
-                const input = document.getElementById("messageText");
-                const btn = document.getElementById("send_message");
+                const input = document.getElementById("submit_answer");
+                const btn = document.getElementById("input_answer");
                 if (userid_str != current_user) {
                     input.disabled = true;
                     btn.disabled = true;
-                    this.time = 5;
+                    this.time = 100;
                 } else {
                     input.disabled = false;
                     btn.disabled = false;
@@ -242,14 +265,29 @@ export default {
                 if (delete_frame) {
                     delete_frame.parentNode.removeChild(delete_frame);
                 }
-            } else if (event_data.roomId) {
-                console.log(typeof event_data);
-                console.log(event_data);
+            } else if (event_data.type == "init") {
+                // console.log(typeof event_data);
+                // console.log(event_data);
                 this.wordUpdate = event_data;
-            } else {
-                console.log(typeof event_data);
-                console.log(event_data);
+            } else if (event_data.type == "check") {
+                console.log(event_data.increment);
                 this.wordUpdate = event_data;
+                // if (event_data.user == current_user) {
+                //     const my_score = document.getElementById(
+                //         event_data.user + "_score_val"
+                //     );
+                //     my_score.value = parseInt(my_score.value) + parseInt(event_data.increment);
+                // }
+                const my_score = document.getElementById(
+                    event_data.user + "_score_val"
+                );
+                my_score.value = parseInt(my_score.value) + parseInt(event_data.increment);
+            } else if (event_data.type == "game_start") {
+                const game_start = document.getElementById("game_tart");
+                const game_box = document.getElementById("game_box");
+                console.log(game_box);
+                game_start.style.display = "none";
+                game_box.style.position = "position";
             }
         };
 
@@ -331,25 +369,27 @@ export default {
         },
         timer(check_user) {
             if (this.time <= 0) {
-                this.time = 5;
+                this.time = 100;
                 if (this.current_user == check_user) {
                     this.send_user_turn();
                 }
             } else {
                 this.time--;
-                cur_timer = setTimeout(this.timer, 1000);
+                cur_timer = setTimeout(this.timer, 50);
             }
         },
         // progressbar
         updateProgressbar() {
             let el = document.getElementById("timerbar");
-            let width = (this.time / 5) * 100 + "%";
+            let width = (this.time / 100) * 100 + "%";
             width = parseFloat(width).toFixed(2);
 
             let widthStr = width + "%";
             el.style.width = widthStr;
         },
         boardInit() {
+            this.GameStart();
+
             const jsonData = JSON.stringify({
                 type: "game_server",
                 method: "POST",
@@ -358,7 +398,9 @@ export default {
                     type: "init",
                 },
             });
+
             connection.send(jsonData);
+            this.send_user_turn();
         },
         answerCheck() {
             const answer_text_box = document.getElementById("input_answer");
@@ -372,6 +414,16 @@ export default {
                     answer: user_answer,
                     user: current_user,
                 },
+            });
+            connection.send(jsonData);
+            this.send_user_turn();
+        },
+        GameStart() {
+            const jsonData = JSON.stringify({
+                type: "game_start",
+                method: "POST",
+                path: "check",
+                params: {},
             });
             connection.send(jsonData);
         },
@@ -406,17 +458,20 @@ export default {
                 </div> -->
                     <!-- img -->
                 </div>
-                <button class="btn waves-effect" @click="send_user_turn()">
+                <!-- <button class="btn waves-effect" @click="send_user_turn()">
                     게임시작 {{ time }}
-                </button>
+                </button> -->
                 <button class="btn waves-effect" @click="toggleVideoCamera()">
                     {{ toggle_text }}
                 </button>
             </div>
         </div>
         <!-- ############게임화면################# -->
-        <div class="gameBox">
-            <div><WordCard :msg="wordUpdate" /></div>
+        <div class="gameBox" id="game_box">
+            <div>
+                <WordCard :msg="wordUpdate" />
+                <button id="game_tart" @click="boardInit()">게임 시작</button>
+            </div>
 
             <div>
                 <div class="progressBar">
@@ -448,13 +503,14 @@ export default {
                     id="input_answer"
                     style="width: 250px; font-size: 2rem"
                 />
-                <button
+                <!-- <button
                     style="margin-left: 10px; font-size: 2rem"
                     @click="boardInit()"
                 >
                     보드만들기
-                </button>
+                </button> -->
                 <button
+                    id="submit_answer"
                     style="margin-left: 10px; font-size: 2rem"
                     @click="answerCheck()"
                 >
@@ -477,7 +533,7 @@ export default {
                     </div>
                 </div>
 
-                <div v-show="ScoreVisible" class="outer">
+                <div v-show="ScoreVisible" class="outer" id="score_board">
                     <div class="blackbox"></div>
                 </div>
             </div>
@@ -642,6 +698,7 @@ nav a:first-of-type {
 .gameBox {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .progressBar {
@@ -733,5 +790,16 @@ img {
     border: 1px solid #000000;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
         inset 3px 3px 0px #ffffff;
+}
+
+#game_tart {
+    font-size: 2rem;
+    position: absolute;
+    left: 40%;
+    top: 40%;
+}
+
+.score_value:focus {
+    outline: none;
 }
 </style>
