@@ -419,6 +419,7 @@ export default {
             });
             connection.send(jsonData);
             this.send_user_turn();
+            answer_text_box.value = "";
         },
         GameStart() {
             const jsonData = JSON.stringify({
@@ -510,6 +511,7 @@ export default {
                 <input
                     type="text"
                     id="input_answer"
+                    @keyup.enter="answerCheck()"
                     style="width: 250px; font-size: 2rem"
                 />
                 <!-- <button
