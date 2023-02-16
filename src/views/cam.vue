@@ -220,7 +220,7 @@ export default {
                     input.setAttribute("class", "score_value");
                     input.setAttribute("type", "text");
                     input.setAttribute("readonly", "readonly");
-                    input.setAttribute("value", 100);
+                    input.setAttribute("value", 0);
                     input.style.border = "none";
                     input.style.background = "transparent";
                     score_board
