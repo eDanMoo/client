@@ -49,7 +49,7 @@ export default {
 
         const joinPage = () => {
             router.push({
-                name: "ingame",
+                name: "inGame",
                 params: {
                     room_code: `${room_code.value}`,
                     user_id: `${user_id.value}`,
@@ -77,7 +77,7 @@ export default {
             console.log(new_room_code);
             // router.push(`/${new_room_code}/${user_id.value}`)
             router.push({
-                name: "ingame",
+                name: "inGame",
                 params: {
                     room_code: `${new_room_code}`,
                     user_id: `${user_id.value}`,
