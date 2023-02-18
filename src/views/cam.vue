@@ -101,10 +101,14 @@ export default {
             });
             socket.addEventListener("error", (error) => {
                 console.log("Websocket connect error");
+                alert("게임서버와의 연결이 종료되었습니다.");
+                location.href = "/";
                 reject(error);
             });
             socket.addEventListener("close", (event) => {
                 console.log("WebSocket connection closed:", event);
+                alert("게임서버와의 연결이 종료되었습니다.");
+                location.href = "/";
             });
         });
 
@@ -300,6 +304,9 @@ export default {
                 console.log(game_box);
                 game_start.style.display = "none";
                 game_box.style.position = "position";
+            } else if (event_data.type == "game_ing") {
+                alert("이미 진행중인 게임입니다.");
+                connection.close();
             }
         };
 
