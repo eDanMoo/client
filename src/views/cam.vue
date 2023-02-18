@@ -253,6 +253,7 @@ export default {
                 console.log("now turn " + userid_str);
                 const input = document.getElementById("submit_answer");
                 const btn = document.getElementById("input_answer");
+                //this.time = 100;
                 if (userid_str != current_user) {
                     input.disabled = true;
                     btn.disabled = true;
@@ -264,8 +265,16 @@ export default {
                 }
             } else if (event_data.type == "delete_frame") {
                 const delete_frame = document.getElementById(userid_str);
+                const delete_score = document.getElementById(
+                    userid_str + "_score"
+                );
+                const delete_score_val = document.getElementById(
+                    userid_str + "_score_val"
+                );
                 if (delete_frame) {
                     delete_frame.parentNode.removeChild(delete_frame);
+                    delete_score.parentNode.removeChild(delete_score);
+                    delete_score_val.parentNode.removeChild(delete_score_val);
                 }
             } else if (event_data.type == "init") {
                 // console.log(typeof event_data);
@@ -512,7 +521,7 @@ export default {
                 <input
                     type="text"
                     id="input_answer"
-                    @keyup.enter="answerCheck()"
+                    @keypress.enter="answerCheck()"
                     style="width: 250px; font-size: 2rem"
                 />
                 <!-- <button
