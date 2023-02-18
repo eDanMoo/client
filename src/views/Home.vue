@@ -40,7 +40,7 @@ export default {
 <style scoped>
 @font-face {
     font-family: "DungGeunMo";
-    src: url(../assets/font/DungGeunMo.woff);
+    src: url(../assets/font/DungGeunMo.ttf);
 }
 
 .container {

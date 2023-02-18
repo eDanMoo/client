@@ -1,8 +1,102 @@
 <template>
-    <nav>
+    <!-- Music Player -->
+    <div id="floatWindow" ref="floatWindow" @mousedown="dragMouseDown" v-show="openMusicPlayer">
+        <div id="playerHeader">
+            <span style="margin-left:10px">음악 재생기</span>
+            <img src="../assets/gamecomp/Xbutton.png" style="width:22px; height:22px; margin-right:10px; cursor: pointer;" alt="" @click="closePlayer()">
+        </div>
+        <div id="audioPlayer">
+            <audio ref="playAudio" loop volume="0.6">
+                <source
+                    v-for="(source, index) in musicSources"
+                    :key="index"
+                    :src="source.src"
+                    :type="source.type"
+                />
+            </audio>
+            <div id="radioPannel">
+                <div id="flowBoxWrapper">
+                    <div id="flowBox">
+                        <span class="musicTitle" id="musicTitle1">{{
+                            musicSources[musicIndex].fileName
+                        }}</span>
+                        <span class="musicTitle" id="musicTitle2">{{
+                            musicSources[musicIndex].fileName
+                        }}</span>
+                    </div>
+                </div>
+            </div>
+            <div id="radioBtnBox">
+                <div style="position: absolute; display: flex; margin: 6px">
+                    <button
+                        class="radioBtn"
+                        @click="playMusic()"
+                        id="radioPlayBtn"
+                    >
+                        <img
+                            class="btnMark"
+                            src="../assets/image/btn_play.png"
+                            alt=""
+                        />
+                    </button>
+                    <button
+                        class="radioBtn"
+                        @click="pauseMusic()"
+                        id="radioPauseBtn"
+                    >
+                        <img
+                            class="btnMark"
+                            src="../assets/image/btn_pause.png"
+                            alt=""
+                        />
+                    </button>
+                    <button
+                        class="radioBtn"
+                        @click="prevMusic()"
+                        id="radioPrevBtn"
+                    >
+                        <img
+                            class="btnMark"
+                            src="../assets/image/btn_prev.png"
+                            alt=""
+                        />
+                    </button>
+                    <button
+                        class="radioBtn"
+                        @click="nextMusic()"
+                        id="radioNextBtn"
+                    >
+                        <img
+                            class="btnMark"
+                            src="../assets/image/btn_next.png"
+                            alt=""
+                        />
+                    </button>
+                </div>
+            </div>
+            <div id="radioVolume">
+                <input
+                    type="range"
+                    ref="volumeSlider"
+                    id="volume-slider"
+                    max="100"
+                    value="60"
+                    @input="onVolumeChange"
+                />
+            </div>
+        </div>
+    </div>
+    <nav style="display: flex; justify-content: space-between;">
         <h1 id="enterCode" style="color: white">
             방 입장 코드: {{ enterCode }}
         </h1>
+        <div style="display: flex; align-items: center;">
+            <div style="width:80px; height:80px; overflow: hidden;">
+                <img v-show="isPlaying" src="../assets/image/playerIcon.png" alt="cdP" id="playerIcon" @click="toggleMusicBox()">
+                <img v-show="!isPlaying" src="../assets/image/playerIcon.png" alt="cdP" id="playerIconStop" @click="toggleMusicBox()">
+            </div>
+            <img src="../assets/image/questionIcon.png" alt="" style="width:100px; height:100px; cursor:pointer">
+        </div>
     </nav>
     <div>
         <div class="containerBody">
@@ -20,7 +114,7 @@
                             <canvas
                                 v-show="isStreaming"
                                 class="videoOutput"
-                                id="videoOutput myVideoFrame"
+                                id="videoOutput"
                             ></canvas>
                             <div v-show="!isStreaming">
                                 <img
@@ -124,7 +218,7 @@
                     </div>
                     <div v-show="ChatVisible" class="chatBoxOuter">
                         <div class="chatBox">
-                            <div style="width: 100%;">
+                            <div style="width: 100%">
                                 <ul id="messages"></ul>
                                 <div class="chatRow" id="footer">
                                     <form
@@ -174,11 +268,7 @@
 <script>
 // import { onMounted, ref } from "vue";
 // import VueSocketIO from "vue-socket.io";
-
 import WordCard from "../components/WordCard.vue";
-// import MusicPlayer from "../components/MusicPlayer.vue";
-// import test from "../stores/cam.js";
-
 // let url_segs = window.location.pathname.split("/");
 let url_segs = "";
 // var room_name = url_segs[1];
@@ -187,7 +277,7 @@ let room_name = "";
 let uniqCode = 0;
 // let current_user = url_segs[2] + "#" + uniqCode;
 let current_user = "";
-let isStreaming = 1;
+let isStreaming = 0; // Test잠금
 // var intervalVid = this.setInterval(this.sendImage, 15);
 let intervalVid = "";
 
@@ -237,6 +327,142 @@ export default {
             ChatVisible: true,
             wordUpdate: null,
             isStreaming: 1,
+            // musicPlayer
+            openMusicPlayer: 1,
+            musicSources: [
+                {
+                    fileName: "Welcome Player! - Visager.ogg",
+                    src: "../src/assets/music/Welcome Player! - Visager.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Kevin MacLeod - Pixelland.ogg",
+                    src: "../src/assets/music/Kevin MacLeod - Pixelland.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "The Whole Other - 8-Bit Dreamscape.ogg",
+                    src: "../src/assets/music/The Whole Other - 8-Bit Dreamscape.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Kubbi - Up In My Jam.ogg",
+                    src: "../src/assets/music/Kubbi - Up In My Jam.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Kevin MacLeod - 8bit Dungeon Boss.ogg",
+                    src: "../src/assets/music/Kevin MacLeod - 8bit Dungeon Boss.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Move Along - SpaceRazzer.ogg",
+                    src: "../src/assets/music/Move Along - SpaceRazzer.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "SPring - RoccoW.ogg",
+                    src: "../src/assets/music/SPring - RoccoW.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "17092017 - RoccoW.ogg",
+                    src: "../src/assets/music/17092017 - RoccoW.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Kevin MacLeod - Itty Bitty 8 Bit.ogg",
+                    src: "../src/assets/music/Kevin MacLeod - Itty Bitty 8 Bit.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Splash - Spiff Tune.ogg",
+                    src: "../src/assets/music/Splash - Spiff Tune.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Monplaisir - Soundtrack.ogg",
+                    src: "../src/assets/music/Monplaisir - Soundtrack.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Vibe Mountain - Operatic 3.ogg",
+                    src: "../src/assets/music/Vibe Mountain - Operatic 3.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "8 Bit Win! - HeatleyBros.ogg",
+                    src: "../src/assets/music/8 Bit Win! - HeatleyBros.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "PhilosophicalSongTitle - RoccoW.ogg",
+                    src: "../src/assets/music/PhilosophicalSongTitle - RoccoW.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "F cking Moths - RoccoW.ogg",
+                    src: "../src/assets/music/F cking Moths - RoccoW.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Jeremy Blake - Powerup!.ogg",
+                    src: "../src/assets/music/Jeremy Blake - Powerup!.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName:
+                        "Jam Jam Jam Said The Owner Of The Shop - RoccoW.ogg",
+                    src: "../src/assets/music/Jam Jam Jam Said The Owner Of The Shop - RoccoW.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Quincas Moreira - Robot City.ogg",
+                    src: "../src/assets/music/Quincas Moreira - Robot City.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Green Greens' Starry Skies - RoccoW.ogg",
+                    src: "../src/assets/music/Green Greens' Starry Skies - RoccoW.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Messeah - RoccoW.ogg",
+                    src: "../src/assets/music/Messeah - RoccoW.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Chiptune Dream - Tim Beek.ogg",
+                    src: "../src/assets/music/Chiptune Dream - Tim Beek.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Krayzius & Brainstorm - Virtual Boy.ogg",
+                    src: "../src/assets/music/Krayzius & Brainstorm - Virtual Boy.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "Wasted Panther - HolFix.ogg",
+                    src: "../src/assets/music/Wasted Panther - HolFix.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "RGB - Stevia Sphere.ogg",
+                    src: "../src/assets/music/RGB - Stevia Sphere.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "William Rosati - Floating Also.ogg",
+                    src: "../src/assets/music/William Rosati - Floating Also.ogg",
+                    type: "audio/ogg",
+                },
+            ],
+            musicIndex: 0,
+            isPlaying: 0,
+            pos1: 0,
+            pos2: 0,
+            pos3: 0,
+            pos4: 0,
         };
     },
     watch: {
@@ -286,7 +512,8 @@ export default {
 
         isStreaming = 1;
 
-        intervalVid = setInterval(this.sendImage, 150);
+        // Test잠금
+        // intervalVid = setInterval(this.sendImage, 150);
 
         messages = document.getElementById("messages");
 
@@ -481,7 +708,6 @@ export default {
                 game_box.style.position = "position";
             }
         };
-
         this.processImage();
         //this.updateProgressbar();
     },
@@ -622,6 +848,111 @@ export default {
             });
             connection.send(jsonData);
         },
+        // musicPlayer Methods
+        musicPlay() {
+            this.$refs.playAudio.play();
+        },
+        musicPause() {
+            this.$refs.playAudio.pause();
+        },
+        playMusic() {
+            this.isPlaying = 1;
+            document.getElementById("radioPlayBtn").style.backgroundImage =
+                "url('../src/assets/image/btn_insert.png')";
+            document.getElementById("radioPauseBtn").style.backgroundImage =
+                "url('../src/assets/image/btn_pop.png')";
+            this.musicPlay();
+        },
+        pauseMusic() {
+            this.isPlaying = 0;
+            document.getElementById("radioPlayBtn").style.backgroundImage =
+                "url('../src/assets/image/btn_pop.png')";
+            document.getElementById("radioPauseBtn").style.backgroundImage =
+                "url('../src/assets/image/btn_insert.png')";
+            this.musicPause();
+        },
+        reloadMusic() {
+            this.$refs.playAudio.src = this.musicSources[this.musicIndex].src;
+            this.$refs.playAudio.load();
+            if (this.isPlaying) {
+                this.musicPlay();
+            }
+        },
+        nextMusic() {
+            if (this.musicIndex == 24) {
+                this.musicIndex = 0;
+            } else {
+                this.musicIndex++;
+            }
+            this.reloadMusic();
+        },
+        prevMusic() {
+            if (this.musicIndex == 0) {
+                this.musicIndex = 24;
+            } else {
+                this.musicIndex--;
+            }
+            this.reloadMusic();
+        },
+        onVolumeChange(event) {
+            const audio = this.$refs.playAudio;
+            const gradientValue = 100 / event.target.max;
+            audio.volume = (gradientValue * event.target.value) / 100;
+            event.target.style.background = `linear-gradient(to right, #0054e6 0%, #0054e6 ${
+                gradientValue * event.target.value
+            }%, rgb(62, 62, 62) ${
+                gradientValue * event.target.value
+            }%, rgb(62, 62, 62) 100%)`;
+        },
+        dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // get the mouse cursor position at startup:
+            this.pos3 = e.clientX;
+            this.pos4 = e.clientY;
+            document.onmouseup = this.closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = this.elementDrag;
+        },
+        elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            this.pos1 = this.pos3 - e.clientX;
+            this.pos2 = this.pos4 - e.clientY;
+            this.pos3 = e.clientX;
+            this.pos4 = e.clientY;
+            // set the element's new position:
+            this.$refs.floatWindow.style.top =
+                Math.max(
+                    Math.min(
+                        this.$refs.floatWindow.offsetTop - this.pos2,
+                        window.innerHeight - 150
+                    ),
+                    -150
+                ) + "px";
+            this.$refs.floatWindow.style.left =
+                Math.max(
+                    Math.min(
+                        this.$refs.floatWindow.offsetLeft - this.pos1,
+                        window.innerWidth - 150
+                    ),
+                    -500
+                ) + "px";
+        },
+        closeDragElement() {
+            // stop moving when mouse button is released:
+            document.onmouseup = null;
+            document.onmousemove = null;
+        },
+        toggleMusicBox() {
+            this.openMusicPlayer = (this.openMusicPlayer + 1) % 2;
+            this.$refs.floatWindow.style.top = '50px';
+            this.$refs.floatWindow.style.left = '50px';
+        },
+        closePlayer() {
+            this.openMusicPlayer = 0;
+        },
     },
 };
 </script>
@@ -634,7 +965,9 @@ export default {
     justify-content: space-around;
 }
 
-#leftBox, #centerBox, #rightBox {
+#leftBox,
+#centerBox,
+#rightBox {
     flex-basis: 100%;
     margin-bottom: 20px;
 }
@@ -681,7 +1014,6 @@ export default {
     float: right;
 }
 
-
 .videoWindow {
     width: 320px;
     display: flex;
@@ -724,7 +1056,6 @@ export default {
         inset 3px 3px 0px #ffffff;
     border: 1px solid #000000;
 }
-
 
 .progressBar {
     max-width: 660px;
@@ -900,5 +1231,181 @@ export default {
 }
 #send_message {
     width: 20%;
+}
+/*############################### Music Player */
+@font-face {
+    font-family: "retroFont";
+    src: url("../assets/font/digital.ttf") format("truetype");
+}
+
+@keyframes scrollText {
+    from {
+        transform: translateX(0px);
+        -moz-transform: translateX(0px);
+        -webkit-transform: translateX(0px);
+        -o-transform: translateX(0px);
+        -ms-transform: translateX(0px);
+    }
+    to {
+        transform: translateX(-697px);
+        -moz-transform: translateX(-697px);
+        -webkit-transform: translateX(-697px);
+        -o-transform: translateX(-697px);
+        -ms-transform: translateX(-697px);
+    }
+}
+
+#floatWindow {
+    position: absolute;
+    z-index: 9;
+    background-color: #f1f1f1;
+    border: 1px solid #d3d3d3;
+    text-align: center;
+}
+
+#playerHeader {
+    width: 755px;
+    height: 30px;
+    cursor: move;
+    z-index: 10;
+    background-color: #003a9f;
+    color: #fff;
+    border-width: 3px 5px 0px 3px;
+    border-style: solid;
+    border-color: #000000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#flowBoxWrapper {
+    width: 697px;
+    overflow: hidden;
+    word-break: nowrap;
+}
+
+#flowBox {
+    width: 1394px;
+    display: flex;
+    justify-content: space-between;
+    word-break: nowrap;
+    animation: scrollText 10s linear infinite;
+}
+
+.musicTitle {
+    width: 697px;
+    color: #afffb3;
+    font-family: "retroFont";
+    font-size: 1.2rem;
+    word-break: nowrap;
+    text-shadow: -1px 0 #d0ffd2, 0 1px #d0ffd2, 1px 0 #d0ffd2, 0 -1px #d0ffd2;
+}
+
+.time {
+    color: #ffffff;
+}
+
+#audioPlayer {
+    width: 755px;
+    height: 307.3px;
+    background: linear-gradient(180deg, #c6c6c6 -15.29%, #ffffff 116.66%);
+    border-width: 3px 5px 7px 3px;
+    border-style: solid;
+    border-color: #000000;
+}
+#radioPannel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 709px;
+    height: 102px;
+    margin: 0 auto;
+    margin-top: 20px;
+    background-image: url("../assets/image/radio_pannel.png");
+    background-size: cover;
+}
+#radioBtnBox {
+    width: 709px;
+    height: 87px;
+    margin: 0 auto;
+    margin-top: 15px;
+    background-image: url("../assets/image/radio_btnBox.png");
+    background-size: cover;
+}
+#radioVolume {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 709px;
+    height: 42px;
+    margin: 0 auto;
+    margin-top: 15px;
+    background-image: url("../assets/image/radio_volume.png");
+    background-size: cover;
+}
+.radioBtn {
+    width: 174px;
+    height: 74px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url("../assets/image/btn_pop.png");
+    background-size: cover;
+}
+
+#volume-slider {
+    -webkit-appearance: none; /* 기본 적용 CSS 방지 */
+    width: 98%;
+    border-radius: 1px; /* 슬라이더 모서리 */
+    float: left;
+    outline: none;
+    height: 70%;
+    cursor: pointer;
+    background: linear-gradient(
+        to right,
+        #0054e6 0%,
+        #0054e6 60%,
+        #3e3e3e 60%,
+        #3e3e3e 100%
+    );
+    outline: none; /* 슬라이더 테두리 없이 */
+}
+
+#volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+    appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+    width: 25px; /* 슬라이더 핸들 길이 */
+    height: 29.5px; /* 슬라이더 핸들 높이 */
+    border-radius: 0%; /* 핸들 모양을 원모양으로 만들기 위함 */
+    background: url("../assets/image/slider_btn.png"); /* 슬라이더 핸들 색상 */
+    cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
+}
+#volume-slider::-moz-ramge-thumb {
+    -webkit-appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+    appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+    width: 25px; /* 슬라이더 핸들 길이 */
+    height: 29.5px; /* 슬라이더 핸들 높이 */
+    border-radius: 0%; /* 핸들 모양을 원모양으로 만들기 위함 */
+    background: url("../assets/image/slider_btn.png"); /* 슬라이더 핸들 색상 */
+    cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
+}
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
+#playerIcon {
+    width: 80px;
+    height: 80px;
+    animation: rotation 2s infinite linear;
+    cursor: pointer;
+}
+#playerIconStop {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
 }
 </style>
