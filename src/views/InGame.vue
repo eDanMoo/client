@@ -16,12 +16,18 @@
                         </div>
                     </div>
                     <div class="videoFrame">
-                        <div>
+                        <div style="width: 300px; height: fit-content">
                             <canvas
                                 v-show="isStreaming"
                                 class="videoOutput"
-                                id="videoOutput"
+                                id="videoOutput myVideoFrame"
                             ></canvas>
+                            <div v-show="!isStreaming">
+                                <img
+                                    src="../assets/gamecomp/userBlank.jpg"
+                                    alt="Camera Off"
+                                />
+                            </div>
                             <button
                                 @click="toggleVideoCamera()"
                                 style="width: 90%; margin: 0 5% 5px 5%"
@@ -37,7 +43,7 @@
             <div class="centerBox" id="centerBox">
                 <div class="barCover">
                     <div class="windowBar">
-                        <span>내 영상</span>
+                        <span>놀이판</span>
                         <button class="minBtnDisabled"></button>
                     </div>
                 </div>
@@ -77,7 +83,7 @@
                 <div class="innerWindow">
                     <div class="barCover">
                         <div class="windowBar">
-                            <span><b>점수</b></span
+                            <span>점수</span
                             ><button
                                 class="minBtn"
                                 @click="ScoreVisible = !ScoreVisible"
@@ -85,7 +91,7 @@
                         </div>
                     </div>
                     <div v-show="ScoreVisible" class="windowOuter">
-                        <div class="blackBox" id="score_board"></div>
+                        <div class="blackBox" id="socreBoard"></div>
                     </div>
                 </div>
 
@@ -93,21 +99,23 @@
                 <div class="innerWindow">
                     <div class="barCover">
                         <div class="windowBar">
-                            <span><b>기록</b></span
+                            <span>기록</span
                             ><button
                                 class="minBtn"
                                 @click="LogVisible = !LogVisible"
                             ></button>
                         </div>
                     </div>
-                    <div v-show="LogVisible" class="windowOuter"></div>
+                    <div v-show="LogVisible" class="windowOuter">
+                        <div class="blackBox" id="logBoard"></div>
+                    </div>
                 </div>
                 <!---------------------채팅화면--------------------->
 
                 <div class="innerWindow">
                     <div class="barCover">
                         <div class="windowBar">
-                            <span><b>대화</b></span
+                            <span>대화</span
                             ><button
                                 class="minBtn"
                                 @click="ChatVisible = !ChatVisible"
@@ -381,7 +389,7 @@ export default {
                     userid_str + "_score"
                 );
                 if (!check_score_input) {
-                    const score_board = document.getElementById("score_board");
+                    const socreBoard = document.getElementById("socreBoard");
                     const scoreTab = document.createElement("div");
                     const spanUserId = document.createElement("span");
                     const spanScore = document.createElement("span");
@@ -396,7 +404,7 @@ export default {
                     spanScore.innerText = 0;
                     scoreTab.appendChild(spanUserId);
                     scoreTab.appendChild(spanScore);
-                    score_board.appendChild(scoreTab);
+                    socreBoard.appendChild(scoreTab);
                 }
                 if (userid_str == current_user) {
                     0;
@@ -631,7 +639,7 @@ export default {
     margin-bottom: 20px;
 }
 
-@media screen and (min-width: 1500px) {
+@media screen and (min-width: 1560px) {
     #leftBox {
         flex-basis: 25%;
     }
@@ -644,7 +652,7 @@ export default {
     }
 }
 
-@media screen and (max-width: 1500px) {
+@media screen and (max-width: 1560px) {
     #rightBox {
         flex-basis: 45%;
         width: 300px;
@@ -692,10 +700,9 @@ export default {
 .videoBar {
     width: 90%;
     height: 30px;
-
     display: flex;
     justify-content: space-between;
-    align-items:baseline;
+    align-items: center;
 }
 
 .videoBarCover {
@@ -760,13 +767,16 @@ export default {
     background-color: #000000;
     width: 95%;
     height: 99%;
+    min-height: 290px;
 }
 
 .chatBoxOuter {
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 500px;
+    height: fit-content;
+    min-height: 300px;
+    max-height: 40vh;
     background: #d9d9d9;
     border: 1px solid #000000;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
@@ -851,8 +861,8 @@ export default {
 }
 
 #leftBox {
-    width: 350px;
-    min-width: 350px;
+    width: 370px;
+    min-width: 370px;
     max-height: 80vh;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -891,5 +901,4 @@ export default {
 #send_message {
     width: 20%;
 }
-
 </style>

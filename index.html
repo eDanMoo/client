@@ -9,6 +9,349 @@
   </head>
   <body>
     <div id="app" style="min-width: 90vw;"></div>
+    <div id="floatWindow">
+      <div id="playerHeader"></div>
+      <div id="audioPlayer">
+          <audio id="playAudio" src="./src/assets/musics/8 Bit Win! - HeatleyBros.ogg" loop></audio>
+          <div id="radioPannel">
+              <div id="flowBoxWrapper">
+                  <div id="flowBox">
+                      <span class="musicTitle" id="musicTitle1">Welcome Player! - Visager.ogg</span>
+                      <span class="musicTitle" id="musicTitle2">Welcome Player! - Visager.ogg</span>
+                  </div>
+              </div>
+          </div>
+          <div id="radioBtnBox">
+              <div style="position:absolute; display:flex; margin:6px;">
+                  <button class="radioBtn" onclick="playMusic()" id="radioPlayBtn">
+                      <img class="btnMark" src="./src/assets/image/btn_play.png" alt="">
+                  </button>
+                  <button class="radioBtn" onclick="pauseMusic()" id="radioPauseBtn">
+                      <img class="btnMark" src="./src/assets/image/btn_pause.png" alt="">
+                  </button>
+                  <button class="radioBtn" onclick="prevMusic()" id="radioPrevBtn">
+                      <img class="btnMark" src="./src/assets/image/btn_prev.png" alt="">
+                  </button>
+                  <button class="radioBtn" onclick="nextMusic()" id="radioNextBtn">
+                      <img class="btnMark" src="./src/assets/image/btn_next.png" alt="">
+                  </button>
+              </div>
+          </div>
+          <div id="radioVolume">
+  
+              <input type="range" id="volume-slider" max="100" value="60">
+          </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
-  </body>
+    <script>
+      const audio = document.getElementById("playAudio");
+      audio.volume = 0.6;
+      let musicIdx = 0;
+      const musicList = [
+          'Welcome Player! - Visager.ogg', 
+          'Kevin MacLeod - Pixelland.ogg', 
+          'The Whole Other - 8-Bit Dreamscape.ogg', 
+          'Kubbi - Up In My Jam.ogg', 
+          'Kevin MacLeod - 8bit Dungeon Boss.ogg', 
+          'Move Along - SpaceRazzer.ogg', 
+          'SPring - RoccoW.ogg', 
+          '17092017 - RoccoW.ogg', 
+          'Kevin MacLeod - Itty Bitty 8 Bit.ogg', 
+          'Splash - Spiff Tune.ogg', 
+          'Monplaisir - Soundtrack.ogg', 
+          'Vibe Mountain - Operatic 3.ogg', 
+          '8 Bit Win! - HeatleyBros.ogg', 
+          'PhilosophicalSongTitle - RoccoW.ogg', 
+          'F cking Moths - RoccoW.ogg', 
+          'Jeremy Blake - Powerup!.ogg', 
+          'Jam Jam Jam Said The Owner Of The Shop - RoccoW.ogg', 
+          'Quincas Moreira - Robot City.ogg', 
+          "Green Greens' Starry Skies - RoccoW.ogg", 
+          'Messeah - RoccoW.ogg', 
+          'Chiptune Dream - Tim Beek.ogg', 
+          'Krayzius & Brainstorm - Virtual Boy.ogg',
+          'Wasted Panther - HolFix.ogg',
+          'RGB - Stevia Sphere.ogg',
+          'William Rosati - Floating Also.ogg'];
+      const musicLen = musicList.length;
+      const musicTitle1 = document.getElementById('musicTitle1');
+      const musicTitle2 = document.getElementById('musicTitle2');
+      const flowBox = document.getElementById('flowBox');
+      let isPlaying = 0;
+
+      function changeTitle(idx) {
+          let text = musicList[idx]
+          musicTitle1.innerText=text;
+          musicTitle2.innerText=text;
+      }
+
+      function musicPlay(){
+          audio.play();
+      }
+      function musicPause(){
+          audio.pause();
+      }
+      function playMusic() {
+          isPlaying = 1;
+          const button = document.getElementById('radioPlayBtn');
+          const target = document.getElementById('radioPauseBtn');
+          button.style.backgroundImage = "url('src/assets/image/btn_insert.png')";
+          target.style.backgroundImage = "url('src/assets/image/btn_pop.png')";
+          musicPlay();
+      }
+      function pauseMusic() {
+          isPlaying = 0;
+          const button = document.getElementById('radioPauseBtn');
+          const target = document.getElementById('radioPlayBtn');
+          button.style.backgroundImage = "url('src/assets/image/btn_insert.png')";
+          target.style.backgroundImage = "url('src/assets/image/btn_pop.png')";
+          musicPause();
+      }
+      function reloadAudio(){
+          audio.src = ("./src/assets/musics/"+musicList[musicIdx]);
+          audio.load();
+          if (isPlaying){
+              musicPlay();
+          }
+      }
+
+      function prevMusic() {
+          if (musicIdx) {
+              musicIdx--;
+          } else {
+              musicIdx = musicLen-1;
+          }
+          changeTitle(musicIdx);
+          reloadAudio();
+      }
+      function nextMusic() {
+          musicIdx++;
+          if (musicIdx==musicLen) {
+              musicIdx = 0;
+          }
+          changeTitle(musicIdx);
+          reloadAudio();
+      }
+      document.getElementById('volume-slider').addEventListener('input',function(event){
+          var gradient_value = 100 / event.target.attributes.max.value;
+          audio.volume = gradient_value * event.target.value/100;
+          event.target.style.background = 'linear-gradient(to right, #0054e6 0%, #0054e6 '+gradient_value * event.target.value +'%, rgb(62, 62, 62) ' +gradient_value *  event.target.value + '%, rgb(62, 62, 62) 100%)';
+      });
+
+
+      dragElement(document.getElementById("floatWindow"));
+      function dragElement(elmnt) {
+          var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+          if (document.getElementById("playerHeader")) {
+              // if present, the header is where you move the DIV from:
+              document.getElementById("playerHeader").onmousedown = dragMouseDown;
+          } else {
+              // otherwise, move the DIV from anywhere inside the DIV:
+              elmnt.onmousedown = dragMouseDown;
+          }
+
+          function dragMouseDown(e) {
+              e = e || window.event;
+              e.preventDefault();
+              // get the mouse cursor position at startup:
+              pos3 = e.clientX;
+              pos4 = e.clientY;
+              document.onmouseup = closeDragElement;
+              // call a function whenever the cursor moves:
+              document.onmousemove = elementDrag;
+          }
+
+          function elementDrag(e) {
+              e = e || window.event;
+              e.preventDefault();
+              // calculate the new cursor position:
+              pos1 = pos3 - e.clientX;
+              pos2 = pos4 - e.clientY;
+              pos3 = e.clientX;
+              pos4 = e.clientY;
+              // set the element's new position:
+              elmnt.style.top = Math.max((Math.min(elmnt.offsetTop - pos2, window.innerHeight - 337)), 0) + "px";
+              elmnt.style.left = Math.max((Math.min(elmnt.offsetLeft - pos1, window.innerWidth - 755)), 0) + "px";
+          }
+
+          function closeDragElement() {
+              // stop moving when mouse button is released:
+              document.onmouseup = null;
+              document.onmousemove = null;
+              
+          }
+      }
+
+
+
+      
+
+  </script>
+</body>
+
+
+<script>
+</script>
+
+<style>
+
+@font-face {
+  font-family: 'retroFont';
+  src: url('./src/assets/font/digital.ttf') format('truetype');
+}
+
+@keyframes scrollText {
+from{
+  transform:translateX(0px);
+  -moz-transform:translateX(0px);
+  -webkit-transform:translateX(0px);
+  -o-transform:translateX(0px);
+  -ms-transform:translateX(0px);
+}
+to{
+  transform:translateX(-697px);
+  -moz-transform:translateX(-697px);
+  -webkit-transform:translateX(-697px);
+  -o-transform:translateX(-697px);
+  -ms-transform:translateX(-697px);
+}
+}
+
+
+#floatWindow {
+position: absolute;
+z-index: 9;
+background-color: #f1f1f1;
+border: 1px solid #d3d3d3;
+text-align: center;
+}
+
+
+#playerHeader {
+  width: 755px;
+  height: 30px;
+  cursor: move;
+  z-index: 10;
+  background-color: #003a9f;
+  color: #fff;
+  border-width: 3px 5px 0px 3px;
+  border-style: solid;
+  border-color: #000000;
+}
+
+
+#flowBoxWrapper {
+  width: 697px;
+  overflow: hidden;
+  word-break : nowrap;
+}
+
+#flowBox {
+  width: 1394px;
+  display: flex;
+  justify-content: space-between;
+  word-break : nowrap;
+  animation: scrollText 10s linear infinite;
+}
+
+.musicTitle {
+  width:697px;
+  color:#afffb3;
+  font-family: 'retroFont';
+  font-size: 1.2rem;
+  word-break : nowrap;
+  text-shadow: -1px 0 #d0ffd2, 0 1px #d0ffd2, 1px 0 #d0ffd2, 0 -1px #d0ffd2;
+  
+}
+
+
+
+
+.time {
+  color: #FFFFFF;
+}
+
+#audioPlayer {
+  width: 755px;
+  height: 307.3px;
+  background: linear-gradient(180deg, #C6C6C6 -15.29%, #FFFFFF 116.66%);
+  border-width: 3px 5px 7px 3px;
+  border-style: solid;
+  border-color: #000000;
+}
+#radioPannel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:709px;
+  height: 102px;
+  margin: 0 auto;
+  margin-top: 20px;
+  background-image: url("./src/assets/image/radio_pannel.png");
+  background-size: cover;
+}
+#radioBtnBox {
+  width:709px;
+  height: 87px;
+  margin: 0 auto;
+  margin-top: 15px;
+  background-image: url("./src/assets/image/radio_btnBox.png");
+  background-size: cover;
+}
+#radioVolume {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:709px;
+  height: 42px;
+  margin: 0 auto;
+  margin-top: 15px;
+  background-image: url("./src/assets/image/radio_volume.png");
+  background-size: cover;
+}
+.radioBtn {
+  width:174px;
+  height: 74px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("./src/assets/image/btn_pop.png");
+  background-size: cover;
+}
+
+
+
+#volume-slider {
+  -webkit-appearance: none; /* 기본 적용 CSS 방지 */
+  width: 98%;
+  border-radius: 1px; /* 슬라이더 모서리 */
+  float: left;
+  outline: none;
+  height: 70%;
+  cursor: pointer;
+  background: linear-gradient(to right, #0054e6 0%, #0054e6 60%, #3e3e3e 60%, #3e3e3e 100%);
+  outline: none; /* 슬라이더 테두리 없이 */
+}
+
+#volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+  appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+  width: 25px; /* 슬라이더 핸들 길이 */
+  height: 29.5px; /* 슬라이더 핸들 높이 */
+  border-radius: 0%; /* 핸들 모양을 원모양으로 만들기 위함 */
+  background: url('./src/assets/image/slider_btn.png'); /* 슬라이더 핸들 색상 */
+  cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
+}
+#volume-slider::-moz-ramge-thumb {
+  -webkit-appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+  appearance: none; /* 기본 CSS 스타일을 적용하지 않기 위해서 */
+  width: 25px; /* 슬라이더 핸들 길이 */
+  height: 29.5px; /* 슬라이더 핸들 높이 */
+  border-radius: 0%; /* 핸들 모양을 원모양으로 만들기 위함 */
+  background: url('./src/assets/image/slider_btn.png'); /* 슬라이더 핸들 색상 */
+  cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
+}
+
+</style>
 </html>
