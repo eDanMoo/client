@@ -113,8 +113,8 @@ export default {
 
 <style scoped>
 @font-face {
-    font-family: "tests";
-    src: url(../fonts/BMYEONSUNG_ttf.ttf);
+    font-family: "retro";
+    src: url(../fonts/DungGenMo.ttf);
 }
 
 .gameBackgroud {

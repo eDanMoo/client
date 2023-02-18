@@ -1237,7 +1237,6 @@ export default {
     font-family: "retroFont";
     src: url("../assets/font/digital.ttf") format("truetype");
 }
-
 @keyframes scrollText {
     from {
         transform: translateX(0px);
