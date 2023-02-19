@@ -313,6 +313,9 @@ export default {
         this.processImage();
         //this.updateProgressbar();
     },
+    unmounted() {
+        connection.close();
+    },
     methods: {
         testbutton() {
             this.time--;
