@@ -15,6 +15,9 @@
           </div> -->
         </div>
     </div>
+    <div id="wordExplain">
+        단어설명
+    </div>
 </template>
 
 <script>
@@ -213,26 +216,51 @@ export default {
             drawTaja();
             downTaja();
 
-            setInterval(function () {
-                idx = 0;
-                newObj = [];
-                plusTop = new Array(taja.length);
-                for (let i = 0; i < plusTop.length; i++) {
-                    plusTop[i] = 0;
-                }
-                drawTaja();
-                downTaja();
-                // 시간 간격 임의로 설정. 단어 추가할 때마다 고치기 or 개선
-            }, DRAWTIME * taja.length * 1.7);
+            setInterval(function() {
+                    console.log('안녕하세요');
+                    if (newObj.length === taja.length) {
+                        console.log('newObj 꽉 찼습니다');
+                        if (!tajaContents.hasChildNodes()) {
+                            console.log('childNodes 없습니다');
+                            idx = 0;
+                            newObj = [];
+                            plusTop = new Array(taja.length);
+                            for (let i = 0; i < plusTop.length; i++) {
+                            plusTop[i] = 0;
+                            }
+                            drawTaja();
+                            downTaja();
+                    }
 
-            // while (True) {
+             }
+            }, 5000)
+
+            // setInterval(function () {
+            //     idx = 0;
+            //     newObj = [];
+            //     plusTop = new Array(taja.length);
+            //     for (let i = 0; i < plusTop.length; i++) {
+            //         plusTop[i] = 0;
+            //     }
+            //     drawTaja();
+            //     downTaja();
+            //     // 시간 간격 임의로 설정. 단어 추가할 때마다 고치기 or 개선
+            // }, DRAWTIME * taja.length * 1.7);
+
+            // while (true) {
             //   if (newObj.length === taja.length) { // 화면에 단어가 다 뿌려진 이후
+            //         console.log('newObj 꽉 찼습니다')
             //       if (!tajaContents.hasChildNodes()) { // 뿌려진 단어가 화면에 존재하지 않을 경우
             //           // alert('다음 단계로 이동합니다.(준비중)');
             //           // alert('총 ' + score + '점을 획득하였습니다.');
             //           // location.reload();
+            //           console.log('childNodes 없습니다')
             //           idx = 0;
-            //           newObj = ["정글"];
+            //           newObj = [];
+            //           plusTop = new Array(taja.length);
+            //           for (let i = 0; i < plusTop.length; i++) {
+            //           plusTop[i] = 0;
+            //           }
             //           drawTaja();
             //           downTaja();
             //       }
@@ -250,30 +278,51 @@ export default {
 #contents {
     background-color: rgba(228, 226, 226, 0.507);
     width: 62vw;
-    height: 80%;
+    height: 75%;
     margin-right: 5px;
     margin-left: 5px;
-    border: 2px solid rgb(80, 80, 80);
+    /* border: 2px solid rgb(80, 80, 80); */
+    /* border: 2px solid yellow; */
     /* box-shadow: 2px 2px black;
   box-shadow: inset 2px 2px white; */
+/* 
+    display:flex;
+    flex-direction: column; */
 }
 #tajaContents {
     width: 100%;
     height: 90%;
     position: relative;
 }
+
 #inputContents {
     text-align: center;
     border-top-style: solid;
     border-top-color: black;
-    background-color: rgba(228, 226, 226, 0.507);
+    /* background-color: rgba(228, 226, 226, 0.507); */
     padding-top: 2px;
-    /* border: 1px solid black; */
+    /* border: 2px solid blue; */
+    /* position: static; */
+    bottom: 1px;
+    
 }
 #inputText {
     display: inline-block;
     height: 35px;
+    /* position: static; */
 }
+
+#wordExplain{
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
+    width: 62vw;
+    height: 50px;
+    margin-right: 5px;
+    margin-left: 5px;
+    padding-left: 20px;
+    padding-top: 4px;
+}
+
 #tajaText {
     width: 100%;
     height: 100%;

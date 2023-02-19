@@ -90,15 +90,17 @@ export default {
     padding-top: 4px;
 }
 
-#wordrain-wrapper {
+/* #wordrain-wrapper {
     background-color: #979899;
     height: 90%;
-    /* width: 900px; */
     padding: 50px;
     border: 2px solid rgb(80, 80, 80);
     box-shadow: 2px 2px black;
     box-shadow: inset 2px 2px white;
-}
+} */
+
+
+
 .slide-fade-enter-active {
     transition: all 0.3s ease-out;
 }

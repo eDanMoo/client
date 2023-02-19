@@ -1,7 +1,4 @@
 <template>
-    <!-- <main>
-    <TheWelcome />
-  </main> -->
     <main>
         <div class="container">
             <div class="introduction">
@@ -10,10 +7,18 @@
             <div class="login">
                 <Login />
             </div>
-            <!-- <div>
-        <wordrain/>
-      </div> -->
         </div>
+        <!-- <div class="modal-wrapper">
+            <div class="modal">
+              <h1>경고</h1>
+              <p>
+                    영문과 숫자만 입력 가능합니다!
+              </p>
+              <div class="close-modal">
+                <button id="close-modal">close</button>
+              </div>
+            </div>
+        </div> -->
     </main>
 </template>
 
@@ -67,10 +72,32 @@ export default {
     display: inline-block;
     /* border: 1px solid black; */
     opacity: 0.8;
-    width: 25vw;
+    width: 35vw;
     height: 100vh;
     /* margin : 5px; */
     vertical-align: auto;
     background-color: rgb(102, 98, 105);
 }
+
+/* .modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: #fff;
+  padding: 20px;
+
+}
+
+.close-modal {
+  text-align: right;
+} */
 </style>

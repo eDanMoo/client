@@ -1,53 +1,110 @@
 <template>
-    <div id="loginbox">
-        <div id="logo">
-            <div id="title">
-                <h1>로고</h1>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <div id="login-wrapper">
+        <div id="loginbox">
+            <div id="logo">
+                <!-- <div id="title"> -->
+                    <h1>로고</h1>
+                    <!-- <img alt="로고" src="../assets/image/logo.png"> -->
+                <!-- </div> -->
             </div>
+            <div id="entrance">
+                <input
+                    id="input-room-id"
+                    type="text"
+                    v-model="room_code"
+                    placeholder="입장코드 입력(영문, 숫자)"
+                    onfocus="this.placeholder = ''"
+                    onblur="this.placeholder = '입장코드 or 만들기(영문, 숫자)'"
+                    oninput="javascript: 
+                    if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
+
+                        this.value = ''; 
+                        const modal = document.querySelector('.modal-wrapper');
+                        modal.style.display = 'flex'; 
+                                                } "
+                    :maxlength="6"
+                />
+                <input
+                    id="input-user-id"
+                    type="text"
+                    v-model="user_id"
+                    placeholder="닉네임 입력(영문, 숫자)"
+                    onfocus="this.placeholder = ''"
+                    onblur="this.placeholder = '닉네임 입력(영문, 숫자)'"
+                    oninput="javascript: 
+                    if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
+
+                        this.value = ''; 
+                        const modal = document.querySelector('.modal-wrapper');
+                        modal.style.display = 'flex'; 
+                                                } "
+                    :maxlength="6"
+                />
+
+                <br />
+                <button @click="createPage" id="create-button">만들기</button>
+                <button @click="joinPage" id="join-buttom">입장</button>
+            </div>
+            <!-- <button id="open-modal">Open Modal</button>                       -->
         </div>
-        <div id="entrance">
-            <input
-                id="input-room-id"
-                type="text"
-                v-model="room_code"
-                placeholder="입장코드 or 만들기"
-                onfocus="this.placeholder = ''"
-                onblur="this.placeholder = '입장코드 or 만들기'"
-            />
-            <input
-                id="input-user-id"
-                type="text"
-                v-model="user_id"
-                placeholder="닉네임 입력"
-                onfocus="this.placeholder = ''"
-                onblur="this.placeholder = '닉네임 입력'"
-            />
-            <!-- <div> {{  room_code }}</div>
-      <div> {{  user_id }}</div> -->
-            <br />
-            <button @click="createPage" id="create-button">만들기</button>
-            <button @click="joinPage" id="join-buttom">입장</button>
-            <!-- <RouterLink to="/IngameIView"><button id="create-button">create</button></RouterLink>
-      <RouterLink to="/IngameView"><button id="join-buttom">join</button></RouterLink> -->
+    </div>
+    <div class="modal-wrapper">
+        <div class="modal">
+            <div id="modal-title">경고</div>
+            <div id="modal-content">
+                <div>영문과 숫자만 입력 가능합니다!</div>
+                <div class="close-modal">
+                    <button id="close-modal">알겠습니다</button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter, RouterLink, RouterView } from "vue-router";
 
 export default {
     setup() {
+        onMounted(() => {
+            //모달창
+            // const openModal = document.getElementById("open-modal");
+            const closeModal = document.getElementById("close-modal");
+
+            const modal = document.querySelector(".modal-wrapper");
+
+            closeModal.onclick = () => {
+                modal.style.display = "none";
+            };
+
+            // openModal.onclick = () => {
+            //     modal.style.display = "flex";
+            // };
+
+            // function enterkey() {
+            // if (window.event.keyCode == 13) {
+            //     if (modal.style.display === "flex")
+            //     modal.style.display = "none";
+            // }
+        });
+
         const router = useRouter();
-        // console.log(router);
 
         const room_code = ref("");
         const user_id = ref("");
-        // console.log(room_code.value);
-        // console.log(user_id.value);
 
         const joinPage = () => {
+            //     let check = (/[^A-Za-z]$/ig).test(room_code.value)
+            // if (check == false) {
+            //     console.log('범위 내 입니다')
+            //     room_code.value = "";
+            // }
+            // const name = document.getElementById('input-room-id').value;
+            // console.log(name);
+
+
             router.push({
                 name: "ingame",
                 params: {
@@ -55,9 +112,17 @@ export default {
                     user_id: `${user_id.value}`,
                 },
             });
-            // router.push(`/${room_code.value}/${user_id.value}`)
-            // console.log(room_code.value);
-            // console.log(user_id.value);
+        };
+
+        const createPage = () => {
+            const new_room_code = generateRandomCode(6);
+            router.push({
+                name: "ingame",
+                params: {
+                    room_code: `${new_room_code}`,
+                    user_id: `${user_id.value}`,
+                },
+            });
         };
 
         function generateRandomCode(n) {
@@ -72,30 +137,32 @@ export default {
             return randomcode;
         }
 
-        const createPage = () => {
-            const new_room_code = generateRandomCode(6);
-            console.log(new_room_code);
-            // router.push(`/${new_room_code}/${user_id.value}`)
-            router.push({
-                name: "ingame",
-                params: {
-                    room_code: `${new_room_code}`,
-                    user_id: `${user_id.value}`,
-                },
-            });
-        };
-
         return { room_code, user_id, joinPage, createPage, generateRandomCode };
     },
 };
 </script>
 
 <style scoped>
-#loginbox {
-    height: 100%;
+
+#login-wrapper {
+    height: 100vh;
     background-color: rgb(172, 172, 172);
-    vertical-align: auto;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+
+
+}
+#loginbox {
+    /* height: 100vh;
+    background-color: rgb(172, 172, 172);
+    vertical-align: auto; */
     /* border: solid black; */
+    width: 400px;
+    height: 800px;
+    /* position:fixed; */
+    /* border: 1px solid blue */
+    
 }
 
 #logo {
@@ -103,20 +170,27 @@ export default {
     /* margin: auto; */
     text-align: center;
     background-color: rgb(172, 172, 172);
-    /* border: solid black; */
+    /* border: 1px solid black; */
 }
 
+/* img {
+  width: 150px;
+  height: 150px;
+  margin:auto;
+} */
+
 #title {
-    padding-top: 50%;
+    /* padding-top: 40%; */
+    /* border: 1px solid black; */
     /* margin-top: 20%; */
 }
 
 #entrance {
     text-align: center;
     background-color: rgb(172, 172, 172);
-    height: 30%;
+    /* border: 1px solid black; */
+    height: 50%;
     padding-top: 20%;
-    /* border: solid black; */
 }
 
 #input-room-id {
@@ -172,5 +246,70 @@ export default {
     box-shadow: 1px 1px black, inset 2px 2px white;
     font-family: "DungGeunMo";
     font-size: x-large;
+}
+
+.modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* background: rgba(0, 0, 0, 0.5); */
+    display: none;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    font-family: "DungGeunMo";
+    font-size: x-large;
+}
+
+.modal {
+    background-color: rgb(172, 172, 172);
+    padding: 10px;
+    width: 25vw;
+    height: 30vh;
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#modal-title {
+    background-image: linear-gradient(270deg, #1085d2 0%, #00007b 100%);
+    flex-basis: 10%;
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
+    padding-left: 10px;
+    color: white;
+}
+
+#modal-content {
+    /* background-color: rgba(228, 226, 226, 0.507);
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: inset -1px -1px rgb(236, 236, 236); */
+    background-color: rgb(172, 172, 172);
+    flex-basis: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    font-size: large;
+}
+
+.close-modal {
+    /* text-align: right; */
+    /* justify-content: center; */
+    align-items: center;
+
+    flex-basis: 20%;
+
+    display: flex;
+    justify-content: center;
+}
+
+#close-modal {
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
 }
 </style>
