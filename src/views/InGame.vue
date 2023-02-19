@@ -308,7 +308,7 @@ let room_name = "";
 let uniqCode = 0;
 // let current_user = url_segs[2] + "#" + uniqCode;
 let current_user = "";
-let isStreaming = 0; // Test잠금
+let isStreaming = 1;
 // var intervalVid = this.setInterval(this.sendImage, 15);
 let intervalVid = "";
 
@@ -544,9 +544,8 @@ export default {
         });
 
         isStreaming = 1;
-
-        // Test잠금
-        // intervalVid = setInterval(this.sendImage, 150);
+        
+        intervalVid = setInterval(this.sendImage, 150);
 
         messages = document.getElementById("messages");
 
