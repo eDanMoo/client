@@ -44,6 +44,7 @@ let canvas = "";
 // canvas.width = w;
 // canvas.height = h;
 // var ctx = canvas.getContext("2d");
+// 주석추가33
 let ctx = "";
 
 let cur_timer = 0;
@@ -100,10 +101,14 @@ export default {
             });
             socket.addEventListener("error", (error) => {
                 console.log("Websocket connect error");
+                alert("게임서버와의 연결이 종료되었습니다.");
+                location.href = "/";
                 reject(error);
             });
             socket.addEventListener("close", (event) => {
                 console.log("WebSocket connection closed:", event);
+                alert("게임서버와의 연결이 종료되었습니다.");
+                location.href = "/";
             });
         });
 
@@ -220,7 +225,7 @@ export default {
                     input.setAttribute("class", "score_value");
                     input.setAttribute("type", "text");
                     input.setAttribute("readonly", "readonly");
-                    input.setAttribute("value", 100);
+                    input.setAttribute("value", 0);
                     input.style.border = "none";
                     input.style.background = "transparent";
                     score_board
@@ -252,6 +257,7 @@ export default {
                 console.log("now turn " + userid_str);
                 const input = document.getElementById("submit_answer");
                 const btn = document.getElementById("input_answer");
+                //this.time = 100;
                 if (userid_str != current_user) {
                     input.disabled = true;
                     btn.disabled = true;
@@ -263,8 +269,16 @@ export default {
                 }
             } else if (event_data.type == "delete_frame") {
                 const delete_frame = document.getElementById(userid_str);
+                const delete_score = document.getElementById(
+                    userid_str + "_score"
+                );
+                const delete_score_val = document.getElementById(
+                    userid_str + "_score_val"
+                );
                 if (delete_frame) {
                     delete_frame.parentNode.removeChild(delete_frame);
+                    delete_score.parentNode.removeChild(delete_score);
+                    delete_score_val.parentNode.removeChild(delete_score_val);
                 }
             } else if (event_data.type == "init") {
                 // console.log(typeof event_data);
@@ -290,11 +304,17 @@ export default {
                 console.log(game_box);
                 game_start.style.display = "none";
                 game_box.style.position = "position";
+            } else if (event_data.type == "game_ing") {
+                alert("이미 진행중인 게임입니다.");
+                connection.close();
             }
         };
 
         this.processImage();
         //this.updateProgressbar();
+    },
+    unmounted() {
+        connection.close();
     },
     methods: {
         testbutton() {
@@ -419,6 +439,7 @@ export default {
             });
             connection.send(jsonData);
             this.send_user_turn();
+            answer_text_box.value = "";
         },
         GameStart() {
             const jsonData = JSON.stringify({
@@ -510,6 +531,7 @@ export default {
                 <input
                     type="text"
                     id="input_answer"
+                    @keypress.enter="answerCheck()"
                     style="width: 250px; font-size: 2rem"
                 />
                 <!-- <button
