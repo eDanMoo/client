@@ -545,7 +545,7 @@ export default {
 
         isStreaming = 1;
         
-        intervalVid = setInterval(this.sendImage, 150);
+        intervalVid = setInterval(this.sendImage, 30);
 
         messages = document.getElementById("messages");
 
