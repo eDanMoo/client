@@ -1,9 +1,24 @@
 <template>
     <!-- Music Player -->
-    <div id="floatWindow" ref="floatWindow" @mousedown="dragMouseDown" v-show="openMusicPlayer">
+    <div
+        id="floatWindow"
+        ref="floatWindow"
+        @mousedown="dragMouseDown"
+        v-show="openMusicPlayer"
+    >
         <div id="playerHeader">
-            <span style="margin-left:10px">음악 재생기</span>
-            <img src="../assets/gamecomp/Xbutton.png" style="width:22px; height:22px; margin-right:10px; cursor: pointer;" alt="" @click="closePlayer()">
+            <span style="margin-left: 10px">음악 재생기</span>
+            <img
+                src="../assets/gamecomp/Xbutton.png"
+                style="
+                    width: 22px;
+                    height: 22px;
+                    margin-right: 10px;
+                    cursor: pointer;
+                "
+                alt=""
+                @click="closePlayer()"
+            />
         </div>
         <div id="audioPlayer">
             <audio ref="playAudio" loop volume="0.6">
@@ -86,16 +101,32 @@
             </div>
         </div>
     </div>
-    <nav style="display: flex; justify-content: space-between;">
+    <nav style="display: flex; justify-content: space-between">
         <h1 id="enterCode" style="color: white">
             방 입장 코드: {{ enterCode }}
         </h1>
-        <div style="display: flex; align-items: center;">
-            <div style="width:80px; height:80px; overflow: hidden;">
-                <img v-show="isPlaying" src="../assets/image/playerIcon.png" alt="cdP" id="playerIcon" @click="toggleMusicBox()">
-                <img v-show="!isPlaying" src="../assets/image/playerIcon.png" alt="cdP" id="playerIconStop" @click="toggleMusicBox()">
+        <div style="display: flex; align-items: center">
+            <div style="width: 80px; height: 80px; overflow: hidden">
+                <img
+                    v-show="isPlaying"
+                    src="../assets/image/playerIcon.png"
+                    alt="cdP"
+                    id="playerIcon"
+                    @click="toggleMusicBox()"
+                />
+                <img
+                    v-show="!isPlaying"
+                    src="../assets/image/playerIcon.png"
+                    alt="cdP"
+                    id="playerIconStop"
+                    @click="toggleMusicBox()"
+                />
             </div>
-            <img src="../assets/image/questionIcon.png" alt="" style="width:100px; height:100px; cursor:pointer">
+            <img
+                src="../assets/image/questionIcon.png"
+                alt=""
+                style="width: 100px; height: 100px; cursor: pointer"
+            />
         </div>
     </nav>
     <div>
@@ -471,7 +502,9 @@ export default {
         },
     },
     created() {},
-
+    unmounted() {
+        connection.close();
+    },
     async mounted() {
         // test.inintOutputVideo();
         // test.initInputVideo();
@@ -947,8 +980,8 @@ export default {
         },
         toggleMusicBox() {
             this.openMusicPlayer = (this.openMusicPlayer + 1) % 2;
-            this.$refs.floatWindow.style.top = '50px';
-            this.$refs.floatWindow.style.left = '50px';
+            this.$refs.floatWindow.style.top = "50px";
+            this.$refs.floatWindow.style.left = "50px";
         },
         closePlayer() {
             this.openMusicPlayer = 0;

@@ -14,9 +14,6 @@ export default defineConfig({
         },
     },
     server: {
-        proxy: {
-            // "/api": "https://webdev-test.site/",
-            "/api": "localhost:8000/",
-        },
+        proxy: {},
     },
 });
