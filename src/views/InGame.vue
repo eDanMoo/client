@@ -527,8 +527,8 @@ export default {
             //console.log(send_url);
 
             const socket = new WebSocket(
-                // ws_scheme + "webdev-test.site/ws/" + room_name
-                "ws://127.0.0.1:8000/ws/" + room_name
+                ws_scheme + "webdev-test.site/ws/" + room_name
+                // "ws://127.0.0.1:8000/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
