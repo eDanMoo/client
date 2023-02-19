@@ -1,9 +1,9 @@
 <template>
-    <div class="gamebackgroud">
+    <div class="gameBackgroud">
         <transition-group
             mode="in-out"
             tag="div"
-            class="wordlist"
+            class="wordList"
             v-for="n in this.width"
             :key="n"
         >
@@ -11,7 +11,7 @@
                 v-for="(item, index) in col[n - 1]"
                 :data-index="index"
                 :key="item.id"
-                class="wordelem"
+                class="wordElem"
             >
                 {{ item.value }}
             </div>
@@ -113,32 +113,35 @@ export default {
 
 <style scoped>
 @font-face {
-    font-family: "tests";
-    src: url(../fonts/BMYEONSUNG_ttf.ttf);
+    font-family: "retro";
+    src: url(../fonts/DungGenMo.ttf);
 }
 
-.gamebackgroud {
+.gameBackgroud {
+    min-width: 680px;
+    min-height: 680px;
     display: flex;
-    width: 720px;
-    height: 720px;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     background: rgb(32, 32, 32);
 }
 
-.wordlist {
+.wordList {
     display: flex;
+    width: fit-content;
     flex-direction: column-reverse;
     align-items: center;
     align-content: center;
 }
 
-.wordelem {
-    width: 60px;
-    height: 60px;
-    margin-right: 5px;
-    margin-bottom: 5px;
-    border-radius: 10px;
+.wordElem {
+    width: 100%;
+    height: 100%;
+    min-width: 55px;
+    min-height: 57px;
+    margin-right: 1px;
+    margin-bottom: 0.2vw;
+    border-radius: 5px;
 
     display: flex;
     justify-content: center;
@@ -152,10 +155,8 @@ export default {
         inset -4px -4px 0px #7e7e7e;
 
     /* font-family: "tests"; */
-    font-size: 3rem;
+    font-size: 2.2rem;
 }
-
-/* 트랜지션 전용 스타일 */
 .v-move {
     transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
 }

@@ -1,11 +1,10 @@
 <template>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <div id="login-wrapper">
         <div id="loginbox">
             <div id="logo">
                 <!-- <div id="title"> -->
-                    <h1>로고</h1>
-                    <!-- <img alt="로고" src="../assets/image/logo.png"> -->
+                <h1>로고</h1>
+                <!-- <img alt="로고" src="../assets/image/logo.png"> -->
                 <!-- </div> -->
             </div>
             <div id="entrance">
@@ -64,7 +63,7 @@
 
 <script>
 import { ref, onMounted } from "vue";
-import { useRouter, RouterLink, RouterView } from "vue-router";
+import { useRouter } from "vue-router";
 
 export default {
     setup() {
@@ -78,16 +77,6 @@ export default {
             closeModal.onclick = () => {
                 modal.style.display = "none";
             };
-
-            // openModal.onclick = () => {
-            //     modal.style.display = "flex";
-            // };
-
-            // function enterkey() {
-            // if (window.event.keyCode == 13) {
-            //     if (modal.style.display === "flex")
-            //     modal.style.display = "none";
-            // }
         });
 
         const router = useRouter();
@@ -106,7 +95,7 @@ export default {
 
 
             router.push({
-                name: "ingame",
+                name: "inGame",
                 params: {
                     room_code: `${room_code.value}`,
                     user_id: `${user_id.value}`,
@@ -117,7 +106,7 @@ export default {
         const createPage = () => {
             const new_room_code = generateRandomCode(6);
             router.push({
-                name: "ingame",
+                name: "inGame",
                 params: {
                     room_code: `${new_room_code}`,
                     user_id: `${user_id.value}`,
@@ -143,48 +132,23 @@ export default {
 </script>
 
 <style scoped>
-
 #login-wrapper {
     height: 100vh;
     background-color: rgb(172, 172, 172);
-    display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
-
-
 }
 #loginbox {
-    /* height: 100vh;
-    background-color: rgb(172, 172, 172);
-    vertical-align: auto; */
-    /* border: solid black; */
     width: 400px;
     height: 800px;
-    /* position:fixed; */
-    /* border: 1px solid blue */
-    
 }
 
 #logo {
     height: 40%;
-    /* margin: auto; */
     text-align: center;
     background-color: rgb(172, 172, 172);
-    /* border: 1px solid black; */
 }
-
-/* img {
-  width: 150px;
-  height: 150px;
-  margin:auto;
-} */
-
-#title {
-    /* padding-top: 40%; */
-    /* border: 1px solid black; */
-    /* margin-top: 20%; */
-}
-
 #entrance {
     text-align: center;
     background-color: rgb(172, 172, 172);
@@ -192,7 +156,6 @@ export default {
     height: 50%;
     padding-top: 20%;
 }
-
 #input-room-id {
     margin: 5px;
     box-shadow: 1px 1px black, inset 2px 2px white;
@@ -285,9 +248,6 @@ export default {
 }
 
 #modal-content {
-    /* background-color: rgba(228, 226, 226, 0.507);
-    border: 2px solid rgb(80, 80, 80);
-    box-shadow: inset -1px -1px rgb(236, 236, 236); */
     background-color: rgb(172, 172, 172);
     flex-basis: 80%;
     display: flex;
@@ -298,12 +258,8 @@ export default {
 }
 
 .close-modal {
-    /* text-align: right; */
-    /* justify-content: center; */
     align-items: center;
-
     flex-basis: 20%;
-
     display: flex;
     justify-content: center;
 }

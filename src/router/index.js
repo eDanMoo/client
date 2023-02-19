@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ingame from "../views/cam.vue";
+import inGame from "../views/InGame.vue";
 import Home from "../views/Home.vue";
 
 const router = createRouter({
@@ -8,16 +8,8 @@ const router = createRouter({
         {
             // path: "/ws/1",
             path: "/:room_code/:user_id",
-            name: "ingame",
-            component: ingame,
-        },
-        {
-            path: "/about",
-            name: "about",
-            // route level code-splitting
-            // this generates a separate chunk (About.[hash].js) for this route
-            // which is lazy-loaded when the route is visited.
-            component: () => import("../views/AboutView.vue"),
+            name: "inGame",
+            component: inGame,
         },
         {
             path: "/",

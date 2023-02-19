@@ -7,7 +7,7 @@
             <div id="hancom-menu">
                 <p>게임 소개 | 놀이 | 산성비</p>
             </div>
-            <new_wordrain />
+            <WordRain />
             <!-- <div id="wordrain-wrapper">
       </div> -->
 
@@ -28,11 +28,11 @@
 
 <script>
 import { ref } from "vue";
-import new_wordrain from "./new_wordrain.vue";
+import WordRain from "./WordRain.vue";
 
 export default {
     components: {
-        new_wordrain,
+        WordRain,
     },
 
     setup() {
@@ -46,16 +46,10 @@ export default {
 <style scoped>
 #hancom {
     background-color: rgb(172, 172, 172);
-    /* margin-top: 5%;
-  margin-left: 5%;
-  margin-right: 5%; */
     padding: 2vh;
     height: 100vh;
-
-    /* border: 2px solid rgb(80, 80, 80); */
     box-shadow: 1px 1px black, inset 2px 2px white;
     border: solid black;
-    /* box-shadow: inset 2px 2px white; */
     font-family: "DungGeunMo";
     font-size: x-large;
     color: black;
@@ -90,25 +84,21 @@ export default {
     padding-top: 4px;
 }
 
-/* #wordrain-wrapper {
+#wordrain-wrapper {
     background-color: #979899;
     height: 90%;
+    /* width: 900px; */
     padding: 50px;
     border: 2px solid rgb(80, 80, 80);
     box-shadow: 2px 2px black;
     box-shadow: inset 2px 2px white;
-} */
-
-
-
+}
 .slide-fade-enter-active {
     transition: all 0.3s ease-out;
 }
-
 .slide-fade-leave-active {
     transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
-
 .slide-fade-enter-from,
 .slide-fade-leave-to {
     transform: translateY(500px);
