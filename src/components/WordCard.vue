@@ -1,7 +1,7 @@
 <template>
     <div class="gameBackgroud">
         <transition-group
-            mode="in-out"
+           
             tag="div"
             class="wordList"
             v-for="n in this.width"
@@ -29,7 +29,6 @@ export default {
         return {
             words: this.msg,
             col: [],
-            answer: "",
             globalId: 0,
             width: 11,
         };
@@ -54,8 +53,9 @@ export default {
         },
     },
     methods: {
-        async createTable() {
+        createTable() {
             let words = this.words.wordTable;
+            // console.log(words)
             this.globalId = 0;
 
             let ids = Object.keys(words);
@@ -63,6 +63,7 @@ export default {
 
             let mtxSize = Math.sqrt(ids.length);
             this.col = [];
+
             for (let j = 0; j < mtxSize; j++) {
                 this.col.push([]);
             }
@@ -76,26 +77,33 @@ export default {
                 this.globalId++;
             }
         },
-        async check() {
+        /** 정답확인 */
+        check() {
             let words = this.words.moveInfo;
-            let deletebuff = [];
+            console.log(words);
+            let Dbuffer = [];
+            let Abuffer = [];
             let indexOf = null;
             const length = this.width;
+
             //Delete
             words.forEach((word) => {
                 if (word[1] > length ** 2 - 1) {
                     indexOf = this.width - 1 - parseInt(word[0] / length);
-                    deletebuff.push([word[0] % length, indexOf]);
+                    Dbuffer.push([word[0] % length, indexOf]);
                 }
             });
+            Dbuffer.sort((a, b) => b[1] - a[1]);
 
-            deletebuff.sort((a, b) => b[1] - a[1]);
-            deletebuff.forEach((buff) => {
-                this.col[buff[0]].splice(buff[1], 1);
+            Dbuffer.forEach((buffer) => {
+                this.col[buffer[0]].splice(buffer[1], 1);
             });
-
+            
             //Add
-            words.forEach((word) => {
+            Abuffer = words.filter(word => word[0] < 0);
+            Abuffer.sort((a, b) => b[1] - a[1]);
+            
+            Abuffer.forEach((word) => {
                 if (word[0] < 0) {
                     this.col[word[1] % length].push({
                         id: this.globalId,
@@ -104,7 +112,7 @@ export default {
                     this.globalId++;
                 }
             });
-            this.answer = "";
+
             // console.log(this.col);
         },
     },
@@ -113,8 +121,8 @@ export default {
 
 <style scoped>
 @font-face {
-    font-family: "retro";
-    src: url(../fonts/DungGenMo.ttf);
+    font-family: "tests";
+    src: url(../fonts/BMYEONSUNG_ttf.ttf);
 }
 
 .gameBackgroud {
@@ -123,6 +131,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    overflow: hidden;
     background: rgb(32, 32, 32);
 }
 
@@ -163,7 +172,7 @@ export default {
 
 /* 진입 애니메이션 */
 .v-enter-from {
-    transform: translateY(-1000px);
+    transform: translateY(-700px);
     position: static;
     opacity: 0;
 }
