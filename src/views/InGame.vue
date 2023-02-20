@@ -1,12 +1,7 @@
 <template>
     <!-- Music Player -->
-    <div
-        id="floatWindow"
-        ref="floatWindow"
-        @mousedown="dragMouseDown"
-        v-show="openMusicPlayer"
-    >
-        <div id="playerHeader">
+    <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
+        <div id="playerHeader" @mousedown="dragMouseDown">
             <span style="margin-left: 10px">음악 재생기</span>
             <img
                 src="../assets/gamecomp/Xbutton.png"
@@ -126,9 +121,38 @@
                 src="../assets/image/questionIcon.png"
                 alt=""
                 style="width: 100px; height: 100px; cursor: pointer"
+                @click="toggleHowTo()"
             />
         </div>
     </nav>
+    <div v-show="showHowTo" class="inGamePopup" id="howToPopup">
+        <div class="popupWrapper">
+            <div class="popupBar">
+                <p style="margin-left: 10px">설명</p>
+                <img
+                    src="../assets/gamecomp/Xbutton.png"
+                    style="
+                        width: 22px;
+                        height: 22px;
+                        margin-right: 10px;
+                        cursor: pointer;
+                    "
+                    alt=""
+                    @click="closeHowTo()"
+                />
+            </div>
+            <div class="popupContent">
+                <p style="margin: 10px 10px 0 10px;">
+                    본 게임은 놀이판 내에 존재하는 <br>
+                    단어를 없애는 게임입니다. <br>
+                    그러나, 놀이판 내에 있는 단어를 <br>
+                    직접 입력하면 1점만 얻을 수 있습니다. <br>
+                    가능한 많은 단어를 없애려면 <br>
+                    많은 단어와 연관있는 단어를 입력해보세요!
+                </p>
+            </div>
+        </div>
+    </div>
     <div>
         <div class="containerBody">
             <!-- 영상 재생부 -->
@@ -175,7 +199,9 @@
                 <div class="gameWindow" id="gameWindow">
                     <div id="gameBox">
                         <WordCard :msg="wordUpdate" />
-                        <button id="game_start" @click="boardInit()">
+                        <img id="initImage" src="../assets/image/kingSejong.png" alt="" v-show="!isGameStarted">
+                        <button id="game_start" @click="boardInit()" v-show="!isGameStarted"
+                        >
                             게임 시작
                         </button>
                     </div>
@@ -189,15 +215,8 @@
                             type="text"
                             id="input_answer"
                             @keyup.enter="answerCheck()"
-                            style="width: 250px; font-size: 2rem"
+                            style="width: 250px; height: 38px; font-size: 2rem"
                         />
-                        <button
-                            id="submit_answer"
-                            style="margin-left: 10px; font-size: 2rem"
-                            @click="answerCheck()"
-                        >
-                            제출
-                        </button>
                     </div>
                 </div>
             </div>
@@ -281,7 +300,7 @@
                                                         background-color: #4a85d9;
                                                     "
                                                 >
-                                                    send
+                                                    보내기
                                                 </button>
                                             </div>
                                         </div>
@@ -494,6 +513,8 @@ export default {
             pos2: 0,
             pos3: 0,
             pos4: 0,
+            showHowTo: 0,
+            isGameStarted: 0,
         };
     },
     watch: {
@@ -527,8 +548,8 @@ export default {
             //console.log(send_url);
 
             const socket = new WebSocket(
-                ws_scheme + "webdev-test.site/ws/" + room_name
-                // "ws://127.0.0.1:8000/ws/" + room_name
+                // ws_scheme + "webdev-test.site/ws/" + room_name
+                "ws://127.0.0.1:8000/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
@@ -544,7 +565,7 @@ export default {
         });
 
         isStreaming = 1;
-        
+
         intervalVid = setInterval(this.sendImage, 30);
 
         messages = document.getElementById("messages");
@@ -841,6 +862,9 @@ export default {
         },
         boardInit() {
             this.GameStart();
+            const audio = new Audio("../src/assets/soundEffect/gameStart.mp3");
+            audio.play();
+            this.isGameStarted = 1;
 
             const jsonData = JSON.stringify({
                 type: "game_server",
@@ -985,11 +1009,25 @@ export default {
         closePlayer() {
             this.openMusicPlayer = 0;
         },
+        toggleHowTo() {
+            this.showHowTo = (this.showHowTo + 1) % 2;
+        },
+        closeHowTo() {
+            this.showHowTo = 0;
+        },
     },
 };
 </script>
 
 <style scoped>
+@font-face {
+    font-family: 'Dunggeunmo';
+    src: url("../assets/font/DungGeunMo.ttf");
+}
+
+button {
+    font-family: 'Dunggeunmo';
+}
 .containerBody {
     min-width: fit-content;
     display: flex;
@@ -1088,14 +1126,13 @@ export default {
         inset 3px 3px 0px #ffffff;
     border: 1px solid #000000;
 }
-
 .progressBar {
     max-width: 660px;
     width: 90%;
     margin: 10px auto;
     /* margin-top: 100px; */
     height: 20px;
-
+    border-style: dashed;
     border-radius: 3px;
     background: linear-gradient(#ffffff, #fffffff9);
 }
@@ -1108,7 +1145,7 @@ export default {
     height: 20px;
     /* same as #progressBar height if we want text middle aligned */
     border-radius: 3px;
-    background: linear-gradient(#f1f80f, #c9d51a);
+    background: linear-gradient(#ffac2e, #ffcf3e, #ffac2e);
 }
 
 .answerBox {
@@ -1232,6 +1269,7 @@ export default {
 }
 #centerBox {
     width: fit-content;
+    max-width: 800px;
     max-height: 80vh;
     flex-direction: column;
     position: relative;
@@ -1290,8 +1328,9 @@ export default {
     position: absolute;
     z-index: 9;
     background-color: #f1f1f1;
-    border: 1px solid #d3d3d3;
+    border: 2px solid #000000;
     text-align: center;
+    box-shadow: 4px 4px 4px 2px #121212;
 }
 
 #playerHeader {
@@ -1438,5 +1477,53 @@ export default {
     width: 80px;
     height: 80px;
     cursor: pointer;
+}
+.inGamePopup {
+    position: absolute;
+    float: inline-start;
+    top: 80px;
+    right: 5vw;
+    width: 400px;
+    min-height: 200px;
+    height: fit-content;
+    max-height: 50vh;
+    overflow-y: scroll;
+    background-color: #cacaca;
+    border: 1px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
+    z-index: 10;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+}
+.popupBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    width: 100%;
+    background: linear-gradient(
+        351.27deg,
+        #ffffff -854.98%,
+        #eeeeee -854.98%,
+        #cacaca -91.55%
+    );
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
+    border: 1px solid #000000;
+}
+.popupWrapper {
+    width: 100%;
+    min-height: 200px;
+    height: 100%;
+}
+
+#initImage {
+    width: 600px;
+    height: 600px;
+    left: 3vw;
+    top: 120px;
+    position: absolute;
 }
 </style>
