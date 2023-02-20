@@ -12,15 +12,9 @@ export default {
     components: {
         WordRain,
     },
-
     setup() {
         const show = ref(true);
-
         return { show };
     },
 };
 </script>
-
-<style scoped>
-
-</style>

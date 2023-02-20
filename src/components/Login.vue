@@ -128,8 +128,15 @@ export default {
 <style scoped>
 #login-wrapper {
     height: 100vh;
-    max-width: 400px;
-    background-color: rgb(172, 172, 172);
+    max-width: 100%;
+    background: linear-gradient(
+        351.27deg,
+        #ffffff -854.98%,
+        #eeeeee -854.98%,
+        #cacaca -91.55%
+    );
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -142,11 +149,9 @@ export default {
 #logo {
     height: 40%;
     text-align: center;
-    background-color: rgb(172, 172, 172);
 }
 #entrance {
     text-align: center;
-    background-color: rgb(172, 172, 172);
     height: 50%;
     padding-top: 20%;
 }

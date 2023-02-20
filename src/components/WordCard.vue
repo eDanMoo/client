@@ -1,7 +1,6 @@
 <template>
     <div class="gameBackgroud">
         <transition-group
-           
             tag="div"
             class="wordList"
             v-for="n in this.width"
@@ -98,11 +97,11 @@ export default {
             Dbuffer.forEach((buffer) => {
                 this.col[buffer[0]].splice(buffer[1], 1);
             });
-            
+
             //Add
-            Abuffer = words.filter(word => word[0] < 0);
+            Abuffer = words.filter((word) => word[0] < 0);
             Abuffer.sort((a, b) => b[1] - a[1]);
-            
+
             Abuffer.forEach((word) => {
                 if (word[0] < 0) {
                     this.col[word[1] % length].push({

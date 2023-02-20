@@ -1,14 +1,14 @@
 <template>
-    <main>
-        <div class="container">
+    <div class="container">
+        <div class="windowsWindow">
             <div class="introduction">
                 <Introduction />
             </div>
-            <div class="login">
-                <Login />
-            </div>
         </div>
-    </main>
+        <div class="login">
+            <Login />
+        </div>
+    </div>
 </template>
 
 <script>
@@ -30,26 +30,25 @@ export default {
     font-family: "DungGeunMo";
     src: url(../assets/font/DungGeunMo.ttf);
 }
-.container {
-    width: 100vw;
+.windowsWindow {
+    width: 1200px;
     height: 100vh;
-    background-color: rgba(213, 218, 218, 0.658);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container {
+    width: 1600px;
+    height: 100vh;
+    display: flex;
+    background-color: rgb(32, 119, 93);
 }
 .introduction {
-    background-color: rgb(32, 119, 93);
-    display: inline-block;
-    opacity: 0.8;
-    width: 65vw;
-    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1160px;
+    height: 800px;
     vertical-align: top;
 }
-.login {
-    display: inline-block;
-    opacity: 0.8;
-    width: 35vw;
-    height: 100vh;
-    vertical-align: auto;
-    background-color: rgb(102, 98, 105);
-}
-
 </style>
