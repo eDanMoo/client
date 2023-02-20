@@ -1,9 +1,9 @@
 <template>
     <div class="gameBackgroud">
-        <transition-group
+        <transition-group name="wordBlock"
             tag="div"
             class="wordList"
-            v-for="n in this.width"
+            v-for="n in this.tableColumns"
             :key="n"
         >
             <div
@@ -29,7 +29,7 @@ export default {
             words: this.msg,
             col: [],
             globalId: 0,
-            width: 11,
+            tableColumns: 11,
         };
     },
     watch: {
@@ -39,7 +39,7 @@ export default {
                 if (message.type == "init") {
                     this.createTable();
                 } else if (message.type == "check") {
-                    this.check();
+                    this.answerCheck();
                 }
             }
         },
@@ -77,18 +77,18 @@ export default {
             }
         },
         /** 정답확인 */
-        check() {
+        answerCheck() {
             let words = this.words.moveInfo;
             console.log(words);
             let Dbuffer = [];
             let Abuffer = [];
             let indexOf = null;
-            const length = this.width;
+            const length = this.tableColumns;
 
             //Delete
             words.forEach((word) => {
                 if (word[1] > length ** 2 - 1) {
-                    indexOf = this.width - 1 - parseInt(word[0] / length);
+                    indexOf = this.tableColumns - 1 - parseInt(word[0] / length);
                     Dbuffer.push([word[0] % length, indexOf]);
                 }
             });
@@ -101,7 +101,6 @@ export default {
             //Add
             Abuffer = words.filter((word) => word[0] < 0);
             Abuffer.sort((a, b) => b[1] - a[1]);
-
             Abuffer.forEach((word) => {
                 if (word[0] < 0) {
                     this.col[word[1] % length].push({
@@ -126,7 +125,7 @@ export default {
 
 .gameBackgroud {
     min-width: 680px;
-    min-height: 680px;
+    height: 830px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -137,16 +136,22 @@ export default {
 .wordList {
     display: flex;
     width: 80%;
+    height: 1500px;
+    position: relative;
+    bottom: 335px;
+    overflow-y: hidden;
     flex-direction: column-reverse;
     align-items: center;
     align-content: center;
+    border-color: #5d5838;
+    border-style: dashed;
 }
 
 .wordElem {
     width: 90%;
-    height: 100%;
     min-width: 55px;
-    min-height: 57px;
+    max-width: 65px;
+    height: 70px;
     margin-right: 1px;
     margin-bottom: 0.2vw;
     border-radius: 5px;
@@ -165,42 +170,56 @@ export default {
     /* font-family: "tests"; */
     font-size: 2.2rem;
 }
-.v-move {
+
+.wordBlock-move {
     transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
 /* 진입 애니메이션 */
-.v-enter-from {
-    transform: translateY(-700px);
-    position: static;
-    opacity: 0;
-}
-
-.v-enter-active {
-    transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+.wordBlock-enter-from {
     transition-delay: 0.4s;
+    transform: translateY(-700px);
 }
 
-.v-enter-to {
-    position: static;
+.wordBlock-enter-active {
+    transition: 1s cubic-bezier(0.5, 0.84, 0.36, 1);
+    transition-delay: 1.5s;
 }
-
 /* 제거 애니메이션 */
 
-.v-leave-from {
-    opacity: 0;
-    /* transition: rotateY('-180deg'); */
+.wordBlock-leave-from {
+    background-color: rgb(180, 255, 67);
 }
 
-.v-leave-active {
-    /* opacity: 0; */
-    /* z-index: 1; */
-    position: absolute;
+@keyframes test {
+    0% {
+        width: 70px;
+        height: 70px;
+        background-color: greenyellow;
+    }
+    70%{
+        width: 100px;
+        height: 80px;
+        background-color: red;
+        position:static;
+        font-size: 2.2rem;
+    }
+    95%{
+        opacity: 1;
+    }
+    100%{
+        height: 0px;
+        opacity: 0;
+        font-size: 0.1rem;
+    }
 }
 
-.v-leave-to {
-    opacity: 0;
+.wordBlock-leave-active {
+    animation: test 2s;
+    z-index: 3;
+    top: 1000px;
 }
+
 
 /* 자작 애니메이션 */
 @keyframes bounce-in {
