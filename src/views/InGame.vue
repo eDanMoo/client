@@ -97,9 +97,12 @@
         </div>
     </div>
     <nav style="display: flex; justify-content: space-between">
-        <h1 id="enterCode" style="color: white">
-            방 입장 코드: {{ enterCode }}
-        </h1>
+        <div style="display: flex; align-items: center">
+            <img src="../assets/image/exit_Icon.svg" alt="" style="width: 40px; height: 40px; padding-right: 20px; cursor: pointer;" @click="backHome">
+            <h1 id="enterCode" style="color: white">
+                방 입장 코드: {{ enterCode }}
+            </h1>
+        </div>
         <div style="display: flex; align-items: center">
             <div style="width: 80px; height: 80px; overflow: hidden">
                 <img
@@ -1015,6 +1018,9 @@ export default {
         closeHowTo() {
             this.showHowTo = 0;
         },
+        backHome() {
+            this.$router.push("/");
+        },
     },
 };
 </script>
@@ -1331,6 +1337,8 @@ button {
     border: 2px solid #000000;
     text-align: center;
     box-shadow: 4px 4px 4px 2px #121212;
+    left: 50px;
+    top: 50%;
 }
 
 #playerHeader {
