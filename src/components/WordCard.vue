@@ -128,21 +128,21 @@ export default {
 
 .wordList {
     display: flex;
-    width: fit-content;
+    width: 80%;
     flex-direction: column-reverse;
     align-items: center;
     align-content: center;
 }
 
 .wordElem {
-    width: 100%;
+    width: 90%;
     height: 100%;
     min-width: 55px;
     min-height: 57px;
     margin-right: 1px;
     margin-bottom: 0.2vw;
     border-radius: 5px;
-
+    box-shadow: 0 0 5px 5px yellow;
     display: flex;
     justify-content: center;
     align-items: center;
