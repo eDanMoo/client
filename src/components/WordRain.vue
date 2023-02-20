@@ -1,20 +1,47 @@
 <template>
-    <div id="contents">
-        <!-- // 밑에 있는 tajaContents Div 안에 글자를 넣어주게 됩니다. -->
-        <div id="tajaContents"></div>
-        <div id="inputContents">
-            <div id="inputText">
-                <input type="text" id="tajaText" />
+
+    
+    <div id="hancom" v-show = "show">
+            <div id="hancom-title">
+                <p>정글타자연습</p>
+                <img
+                v-on:click = "show = !show"
+                src="../assets/gamecomp/Xbutton.png"
+                style="
+                    width: 30px;
+                    height: 30px;
+                    margin-right: 10px;
+                    cursor: pointer;
+                "
+                alt=""
+            />
             </div>
+            <div id="hancom-menu">
+                <p>게임 소개 | 놀이 | 산성비</p>
+            </div>
+            <div id="contents">
+                <!-- // 밑에 있는 tajaContents Div 안에 글자를 넣어주게 됩니다. -->
+                <div id="tajaContents"></div>
+                <div id="inputContents">
+                    <div id="inputText">
+                        <input type="text" id="tajaText" />
+                    </div>
+                </div>
+            </div>
+            <div id="wordExplain">단어설명</div>
         </div>
-    </div>
-    <div id="wordExplain">단어설명</div>
+
+
+
 </template>
 
 <script>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 export default {
     setup() {
+
+        const show = ref(true)
+
         onMounted(() => {
             // 내려오게 할 단어의 목록을 배열로 선언하였습니다.
             var taja = [
@@ -149,19 +176,6 @@ export default {
                         // 타자 친 단어와 화면의 단어가 일치했을 때
                         if (tajaText.value === newObj[i].innerHTML) {
                             tajaContents.removeChild(newObj[i]);
-                            // score += 100;
-                            // scoreDiv.innerHTML = "SCORE : " + score;
-
-                            // // 더이상 화면에 뿌려질 단어가 없고
-                            // // life를 다 소진하지않고 clear 했을 경우
-                            // if (newObj.length === taja.length) {
-                            //     if (!tajaContents.hasChildNodes()) {
-                            //         alert('다음 단계로 이동합니다.(준비중)');
-                            //         alert('총 ' + score + '점을 획득하였습니다.');
-                            //         location.reload();
-                            //     }
-
-                            // }
                         }
                     }
                     // enter 눌렀을 때 input 창 초기화
@@ -171,25 +185,17 @@ export default {
 
             // 클릭 횟수에 대한 변수
             var count = 0;
-            // 시작하기
-            // var tajaBtn = document.getElementById("tajaBtn");
-            // tajaBtn.addEventListener("click", function () {
-            //     // 버튼을 눌렀을 때마다 메서드가 실행되므로 최초 1회만 실행되도록 count변수로 막아주었습니다.
-            //     if (count === 0) {
-            //         drawTaja();
-            //         downTaja();
-            //     }
-            //     count++;
-            //     });
+
             drawTaja();
             downTaja();
+            document.getElementById("tajaText").focus();
 
             setInterval(function () {
-                console.log("안녕하세요");
+
                 if (newObj.length === taja.length) {
-                    console.log("newObj 꽉 찼습니다");
+
                     if (!tajaContents.hasChildNodes()) {
-                        console.log("childNodes 없습니다");
+
                         idx = 0;
                         newObj = [];
                         plusTop = new Array(taja.length);
@@ -203,19 +209,65 @@ export default {
             }, 5000);
         });
 
-        return { setInterval };
+        return { setInterval, show };
     },
 };
 </script>
 
 <style scoped>
+#hancom {
+    background-color: rgb(172, 172, 172);
+    /* padding: 2vh; */
+    height: 100vh;
+    box-shadow: 1px 1px black, inset 2px 2px white;
+    border: solid black;
+    font-family: "DungGeunMo";
+    font-size: x-large;
+    color: black;
+    overflow: auto;
+}
+
+#hancom-title {
+    background-image: linear-gradient(270deg, #1085d2 0%, #00007b 100%);
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
+    color: white;
+    width: 62vw;
+    height: 50px;
+    padding-left: 20px;
+    padding-top: 4px;
+    margin-right: 5px;
+    margin-left: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#hancom-menu {
+    /* background-color: rgb(138, 137, 137); */
+    background-color: rgb(172, 172, 172);
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
+    width: 62vw;
+    height: 50px;
+    padding-left: 20px;
+    padding-top: 4px;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+}
+
 #contents {
     background-color: rgba(228, 226, 226, 0.507);
     width: 62vw;
     height: 75%;
     margin-right: 5px;
     margin-left: 5px;
-}
+} 
 #tajaContents {
     width: 100%;
     height: 90%;
