@@ -2,10 +2,7 @@
     <div id="login-wrapper">
         <div id="loginbox">
             <div id="logo">
-                <!-- <div id="title"> -->
                 <h1>로고</h1>
-                <!-- <img alt="로고" src="../assets/image/logo.png"> -->
-                <!-- </div> -->
             </div>
             <div id="entrance">
                 <input
@@ -45,7 +42,6 @@
                 <button @click="createPage" id="create-button">만들기</button>
                 <button @click="joinPage" id="join-buttom">입장</button>
             </div>
-            <!-- <button id="open-modal">Open Modal</button>                       -->
         </div>
     </div>
     <div class="modal-wrapper">
@@ -69,7 +65,6 @@ export default {
     setup() {
         onMounted(() => {
             //모달창
-            // const openModal = document.getElementById("open-modal");
             const closeModal = document.getElementById("close-modal");
 
             const modal = document.querySelector(".modal-wrapper");
@@ -77,6 +72,14 @@ export default {
             closeModal.onclick = () => {
                 modal.style.display = "none";
             };
+
+            closeModal.addEventListener("keydown", function (e) {
+                if (e.keyCode === 13) {
+                    if (modal.style.display === "flex") {
+                        modal.style.display = "none";
+                    }
+                }
+            })
         });
 
         const router = useRouter();
@@ -85,15 +88,6 @@ export default {
         const user_id = ref("");
 
         const joinPage = () => {
-            //     let check = (/[^A-Za-z]$/ig).test(room_code.value)
-            // if (check == false) {
-            //     console.log('범위 내 입니다')
-            //     room_code.value = "";
-            // }
-            // const name = document.getElementById('input-room-id').value;
-            // console.log(name);
-
-
             router.push({
                 name: "inGame",
                 params: {
@@ -134,14 +128,15 @@ export default {
 <style scoped>
 #login-wrapper {
     height: 100vh;
+    max-width: 400px;
     background-color: rgb(172, 172, 172);
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 #loginbox {
-    width: 400px;
-    height: 800px;
+    width: fit-content;
+    height: fit-content;
 }
 
 #logo {
@@ -152,7 +147,6 @@ export default {
 #entrance {
     text-align: center;
     background-color: rgb(172, 172, 172);
-    /* border: 1px solid black; */
     height: 50%;
     padding-top: 20%;
 }
@@ -217,9 +211,7 @@ export default {
     left: 0;
     width: 100vw;
     height: 100vh;
-    /* background: rgba(0, 0, 0, 0.5); */
     display: none;
-    /* display: flex; */
     justify-content: center;
     align-items: center;
     font-family: "DungGeunMo";

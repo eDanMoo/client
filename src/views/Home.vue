@@ -8,17 +8,6 @@
                 <Login />
             </div>
         </div>
-        <!-- <div class="modal-wrapper">
-            <div class="modal">
-              <h1>경고</h1>
-              <p>
-                    영문과 숫자만 입력 가능합니다!
-              </p>
-              <div class="close-modal">
-                <button id="close-modal">close</button>
-              </div>
-            </div>
-        </div> -->
     </main>
 </template>
 
@@ -47,6 +36,7 @@ export default {
     background-color: rgba(213, 218, 218, 0.658);
 }
 .introduction {
+    background-color: rgb(32, 119, 93);
     display: inline-block;
     opacity: 0.8;
     width: 65vw;
@@ -62,25 +52,4 @@ export default {
     background-color: rgb(102, 98, 105);
 }
 
-/* .modal-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal {
-  background: #fff;
-  padding: 20px;
-
-}
-
-.close-modal {
-  text-align: right;
-} */
 </style>
