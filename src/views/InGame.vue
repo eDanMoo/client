@@ -98,7 +98,17 @@
     </div>
     <nav style="display: flex; justify-content: space-between">
         <div style="display: flex; align-items: center">
-            <img src="../assets/image/exit_Icon.svg" alt="" style="width: 40px; height: 40px; padding-right: 20px; cursor: pointer;" @click="backHome">
+            <img
+                src="../assets/image/exit_Icon.svg"
+                alt=""
+                style="
+                    width: 40px;
+                    height: 40px;
+                    padding-right: 20px;
+                    cursor: pointer;
+                "
+                @click="backHome"
+            />
             <h1 id="enterCode" style="color: white">
                 방 입장 코드: {{ enterCode }}
             </h1>
@@ -145,12 +155,12 @@
                 />
             </div>
             <div class="popupContent">
-                <p style="margin: 10px 10px 0 10px;">
-                    본 게임은 놀이판 내에 존재하는 <br>
-                    단어를 없애는 게임입니다. <br>
-                    그러나, 놀이판 내에 있는 단어를 <br>
-                    직접 입력하면 1점만 얻을 수 있습니다. <br>
-                    가능한 많은 단어를 없애려면 <br>
+                <p style="margin: 10px 10px 0 10px">
+                    본 게임은 놀이판 내에 존재하는 <br />
+                    단어를 없애는 게임입니다. <br />
+                    그러나, 놀이판 내에 있는 단어를 <br />
+                    직접 입력하면 1점만 얻을 수 있습니다. <br />
+                    가능한 많은 단어를 없애려면 <br />
                     많은 단어와 연관있는 단어를 입력해보세요!
                 </p>
             </div>
@@ -202,8 +212,16 @@
                 <div class="gameWindow" id="gameWindow">
                     <div id="gameBox">
                         <WordCard :msg="wordUpdate" />
-                        <img id="initImage" src="../assets/image/kingSejong.png" alt="" v-show="!isGameStarted">
-                        <button id="game_start" @click="boardInit()" v-show="!isGameStarted"
+                        <img
+                            id="initImage"
+                            src="../assets/image/kingSejong.png"
+                            alt=""
+                            v-show="!isGameStarted"
+                        />
+                        <button
+                            id="game_start"
+                            @click="boardInit()"
+                            v-show="!isGameStarted"
                         >
                             게임 시작
                         </button>
@@ -1027,12 +1045,12 @@ export default {
 
 <style scoped>
 @font-face {
-    font-family: 'Dunggeunmo';
+    font-family: "Dunggeunmo";
     src: url("../assets/font/DungGeunMo.ttf");
 }
 
 button {
-    font-family: 'Dunggeunmo';
+    font-family: "Dunggeunmo";
 }
 .containerBody {
     min-width: fit-content;
