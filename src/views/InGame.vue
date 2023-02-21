@@ -235,7 +235,7 @@
                         <input
                             type="text"
                             id="input_answer"
-                            @keyup.enter="answerCheck()"
+                            @keypress.enter="answerCheck()"
                             style="width: 250px; height: 38px; font-size: 2rem"
                         />
                     </div>
@@ -570,7 +570,7 @@ export default {
 
             const socket = new WebSocket(
                 // ws_scheme + "webdev-test.site/ws/" + room_name
-                "ws://127.0.0.1:8000/ws/" + room_name
+                "ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
@@ -578,10 +578,14 @@ export default {
             });
             socket.addEventListener("error", (error) => {
                 console.log("Websocket connect error");
+                alert("게임서버와의 연결이 종료되었습니다.");
+                location.href = "/";
                 reject(error);
             });
             socket.addEventListener("close", (event) => {
                 console.log("WebSocket connection closed:", event);
+                alert("게임서버와의 연결이 종료되었습니다.");
+                location.href = "/";
             });
         });
 
@@ -726,7 +730,9 @@ export default {
                         // videoFrame.appendChild(newFrame);
                         const leftBox = document.getElementById("leftBox");
                         const newFrame =
-                            '<div style="width: 320px; display: flex; align-items: center; justify-items: center; flex-direction: column; margin: 0px 5% 10px 5%; background: #d9d9d9;border: 1px solid #000000; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,inset 3px 3px 0px #ffffff;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid #000000; background: linear-gradient( 351.27deg, #ffffff -854.98%, #eeeeee -854.98%, #cacaca -91.55% ); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000, inset 3px 3px 0px #ffffff; border: 1px solid #000000;"><div style="    width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span>' +
+                            '<div id="' +
+                            userid_str +
+                            '_frame" style="width: 320px; display: flex; align-items: center; justify-items: center; flex-direction: column; margin: 0px 5% 10px 5%; background: #d9d9d9;border: 1px solid #000000; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,inset 3px 3px 0px #ffffff;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid #000000; background: linear-gradient( 351.27deg, #ffffff -854.98%, #eeeeee -854.98%, #cacaca -91.55% ); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000, inset 3px 3px 0px #ffffff; border: 1px solid #000000;"><div style="    width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span>' +
                             userid_str +
                             '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin-bottom: 10px" src="' +
                             event_data.video +
@@ -740,21 +746,27 @@ export default {
                 }
             } else if (event_data.type == "send_user_turn") {
                 console.log("now turn " + userid_str);
-                const input = document.getElementById("submit_answer");
                 const btn = document.getElementById("input_answer");
                 if (userid_str != current_user) {
-                    input.disabled = true;
                     btn.disabled = true;
                     this.time = 100;
                 } else {
-                    input.disabled = false;
+                    this.time = 100;
                     btn.disabled = false;
                     this.timer(userid_str);
                 }
             } else if (event_data.type == "delete_frame") {
-                const delete_frame = document.getElementById(userid_str);
+                const delete_frame = document.getElementById(userid_str + "_frame");
+                const delete_score_user = document.getElementById(
+                    userid_str + "_score_user"
+                );
+                const delete_score_val = document.getElementById(
+                    userid_str + "_score_val"
+                );
                 if (delete_frame) {
                     delete_frame.parentNode.removeChild(delete_frame);
+                    delete_score_user.parentNode.removeChild(delete_score_user);
+                    delete_score_val.parentNode.removeChild(delete_score_val);
                 }
             } else if (event_data.type == "init") {
                 // console.log(typeof event_data);
@@ -772,14 +784,19 @@ export default {
                 const my_score = document.getElementById(
                     event_data.user + "_score_val"
                 );
-                my_score.value =
-                    parseInt(my_score.value) + parseInt(event_data.increment);
+                my_score.innerText =
+                    parseInt(my_score.innerText) + parseInt(event_data.increment);
             } else if (event_data.type == "game_start") {
                 const game_start = document.getElementById("game_start");
                 const game_box = document.getElementById("game_box");
+                const sejong_img = document.getElementById("initImage");
                 console.log(game_box);
                 game_start.style.display = "none";
+                sejong_img.style.display = "none";
                 game_box.style.position = "position";
+            } else if (event_data.type == "game_ing") {
+                alert("이미 진행중인 게임입니다.");
+                connection.close();
             }
         };
         this.processImage();
@@ -862,6 +879,7 @@ export default {
             clearTimeout(cur_timer);
         },
         timer(check_user) {
+            console.log("타이머 왔나?");
             if (this.time <= 0) {
                 this.time = 100;
                 if (this.current_user == check_user) {
