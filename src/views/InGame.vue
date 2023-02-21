@@ -756,7 +756,9 @@ export default {
                     this.timer(userid_str);
                 }
             } else if (event_data.type == "delete_frame") {
-                const delete_frame = document.getElementById(userid_str + "_frame");
+                const delete_frame = document.getElementById(
+                    userid_str + "_frame"
+                );
                 const delete_score_user = document.getElementById(
                     userid_str + "_score_user"
                 );
@@ -785,7 +787,8 @@ export default {
                     event_data.user + "_score_val"
                 );
                 my_score.innerText =
-                    parseInt(my_score.innerText) + parseInt(event_data.increment);
+                    parseInt(my_score.innerText) +
+                    parseInt(event_data.increment);
             } else if (event_data.type == "game_start") {
                 const game_start = document.getElementById("game_start");
                 const game_box = document.getElementById("game_box");

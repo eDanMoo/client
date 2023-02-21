@@ -142,10 +142,20 @@ export default {
             tajaText.addEventListener("keydown", function (e) {
                 // enter 눌렀을 때
                 if (e.keyCode === 13) {
-                    for (let i = 0; i < document.getElementsByClassName("tajaWord").length; i++) {
+                    for (
+                        let i = 0;
+                        i < document.getElementsByClassName("tajaWord").length;
+                        i++
+                    ) {
                         // 타자 친 단어와 화면의 단어가 일치했을 때
-                        if (tajaText.value === document.getElementsByClassName("tajaWord")[i].innerHTML) {
-                            tajaContents.removeChild(document.getElementsByClassName("tajaWord")[i]);
+                        if (
+                            tajaText.value ===
+                            document.getElementsByClassName("tajaWord")[i]
+                                .innerHTML
+                        ) {
+                            tajaContents.removeChild(
+                                document.getElementsByClassName("tajaWord")[i]
+                            );
                         }
                     }
                     // enter 눌렀을 때 input 창 초기화

@@ -1,6 +1,7 @@
 <template>
     <div class="gameBackgroud">
-        <transition-group name="wordBlock"
+        <transition-group
+            name="wordBlock"
             tag="div"
             class="wordList"
             v-for="n in this.tableColumns"
@@ -88,7 +89,8 @@ export default {
             //Delete
             words.forEach((word) => {
                 if (word[1] > length ** 2 - 1) {
-                    indexOf = this.tableColumns - 1 - parseInt(word[0] / length);
+                    indexOf =
+                        this.tableColumns - 1 - parseInt(word[0] / length);
                     Dbuffer.push([word[0] % length, indexOf]);
                 }
             });
@@ -197,17 +199,17 @@ export default {
         height: 70px;
         background-color: greenyellow;
     }
-    70%{
+    70% {
         width: 100px;
         height: 80px;
         background-color: red;
-        position:static;
+        position: static;
         font-size: 2.2rem;
     }
-    95%{
+    95% {
         opacity: 1;
     }
-    100%{
+    100% {
         height: 0px;
         opacity: 0;
         font-size: 0.1rem;
@@ -219,7 +221,6 @@ export default {
     z-index: 3;
     top: 1000px;
 }
-
 
 /* 자작 애니메이션 */
 @keyframes bounce-in {

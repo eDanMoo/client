@@ -79,7 +79,7 @@ export default {
                         modal.style.display = "none";
                     }
                 }
-            })
+            });
         });
 
         const router = useRouter();
