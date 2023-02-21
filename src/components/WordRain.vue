@@ -1,28 +1,30 @@
 <template>
-    <div id="hancom" v-show="show">
-        <div id="hancom-title">
-            <span style="margin-left: 10px">정글타자연습</span>
-            <img
-                v-on:click="show = !show"
-                src="../assets/gamecomp/Xbutton.png"
-                style="
-                    width: 30px;
-                    height: 30px;
-                    cursor: pointer;
-                    margin-right: 5px;
-                "
-                alt=""
-            />
-        </div>
-        <div id="hancom-menu">
-            <p>게임 소개 | 놀이 | 산성비</p>
-        </div>
-        <div id="contents">
-            <!-- // 밑에 있는 tajaContents Div 안에 글자를 넣어주게 됩니다. -->
-            <div id="tajaContents"></div>
-            <div id="inputContents">
-                <div id="inputText">
-                    <input type="text" id="tajaText" />
+    <div class="hancomWindow" v-show="showHancom" ref="floatHancom">
+        <div id="hancom" v-show="showHancom">
+            <div id="hancom-title" @mousedown="dragMouseDown">
+                <span style="margin-left: 10px">정글타자연습</span>
+                <img
+                    src="../assets/gamecomp/Xbutton.png"
+                    style="
+                        width: 30px;
+                        height: 30px;
+                        cursor: pointer;
+                        margin-right: 10px;
+                    "
+                    alt=""
+                    @click="closeHancom()"
+                />
+            </div>
+            <div id="hancom-menu">
+                <p>게임 소개 | 놀이 | 산성비</p>
+            </div>
+            <div id="contents">
+                <!-- // 밑에 있는 tajaContents Div 안에 글자를 넣어주게 됩니다. -->
+                <div id="tajaContents"></div>
+                <div id="inputContents">
+                    <div id="inputText">
+                        <input type="text" id="tajaText" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -32,9 +34,67 @@
 <script>
 import { onMounted, ref } from "vue";
 export default {
+    data() {
+        return {
+            pos1: 0,
+            pos2: 0,
+            pos3: 0,
+            pos4: 0,
+        };
+    },
+    methods: {
+        closeHancom() {
+            this.showHancom = false;
+        },
+        openHancom() {
+            this.$refs.floatHancom.style.top = "5%";
+            this.$refs.floatHancom.style.left = "5%";
+            this.showHancom = true;
+        },
+        dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // get the mouse cursor position at startup:
+            this.pos3 = e.clientX;
+            this.pos4 = e.clientY;
+            document.onmouseup = this.closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = this.elementDrag;
+        },
+        elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            this.pos1 = this.pos3 - e.clientX;
+            this.pos2 = this.pos4 - e.clientY;
+            this.pos3 = e.clientX;
+            this.pos4 = e.clientY;
+            // set the element's new position:
+            this.$refs.floatHancom.style.top =
+                Math.max(
+                    Math.min(
+                        this.$refs.floatHancom.offsetTop - this.pos2,
+                        window.innerHeight - 150
+                    ),
+                    -150
+                ) + "px";
+            this.$refs.floatHancom.style.left =
+                Math.max(
+                    Math.min(
+                        this.$refs.floatHancom.offsetLeft - this.pos1,
+                        window.innerWidth - 150
+                    ),
+                    -500
+                ) + "px";
+        },
+        closeDragElement() {
+            // stop moving when mouse button is released:
+            document.onmouseup = null;
+            document.onmousemove = null;
+        },
+    },
     setup() {
-        const show = ref(true);
-
+        let showHancom = ref(true);
         onMounted(() => {
             // 내려오게 할 단어의 목록을 배열로 선언하였습니다.
             var taja = [
@@ -165,12 +225,25 @@ export default {
             drawTaja();
             downTaja();
         });
-        return { setInterval, show };
+        return { setInterval, showHancom };
     },
 };
 </script>
 
 <style scoped>
+.hancomWindow {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    bottom: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    height: 800px;
+    vertical-align: top;
+}
+
 #hancom {
     background: linear-gradient(
         351.27deg,
@@ -180,7 +253,6 @@ export default {
     );
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
         inset 3px 3px 0px #ffffff;
-    /* padding: 2vh; */
     width: 800px;
     height: 800px;
     box-shadow: 1px 1px black, inset 2px 2px white;
@@ -188,7 +260,7 @@ export default {
     font-family: "DungGeunMo";
     font-size: x-large;
     color: black;
-    overflow: auto;
+    overflow: hidden;
 }
 
 #hancom-title {
@@ -201,6 +273,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: grab;
 }
 
 #hancom-menu {
@@ -208,7 +281,7 @@ export default {
     background-color: rgb(172, 172, 172);
     border: 2px solid rgb(0, 0, 0);
     box-shadow: 1px 1px black, inset 2px 2px white;
-    width: 100%;
+    width: 800px;
     height: 35px;
     display: flex;
     /* justify-content: center; */
