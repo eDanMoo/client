@@ -128,6 +128,7 @@ export default {
 <style scoped>
 #login-wrapper {
     height: 100vh;
+    min-height: 800px;
     max-width: 100%;
     background: linear-gradient(
         351.27deg,

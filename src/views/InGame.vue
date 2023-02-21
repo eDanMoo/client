@@ -289,7 +289,7 @@
                     </div>
                     <div v-show="ChatVisible" class="chatBoxOuter">
                         <div class="chatBox">
-                            <div style="width: 100%">
+                            <div class="chatBoxChat" id="chatBoxChat">
                                 <ul id="messages"></ul>
                                 <div class="chatRow" id="footer">
                                     <form
@@ -301,7 +301,9 @@
                                             <div
                                                 style="
                                                     display: inline-flex;
-                                                    width: 100%;
+                                                    width: 95%;
+                                                    position: absolute;
+                                                    bottom: 4px;
                                                 "
                                             >
                                                 <input
@@ -318,7 +320,7 @@
                                                     name="action"
                                                     id="send_message"
                                                     style="
-                                                        background-color: #4a85d9;
+                                                        background-color: #aaffff;
                                                     "
                                                 >
                                                     보내기
@@ -663,7 +665,7 @@ export default {
                 message.appendChild(content_tag);
                 message.appendChild(userid_tag);
                 messages.appendChild(message);
-                messages.scrollTop = 999999999;
+                document.getElementById("chatBoxChat").scrollTop = 999999999;
             } else if (event_data.type == "video") {
                 if (userid_str == current_user) {
                     0;
@@ -1190,21 +1192,24 @@ button {
     overflow-y: auto;
     background-color: #000000;
     width: 95%;
-    height: 99%;
+    height: 95%;
     min-height: 290px;
+    margin-bottom: 15px;
 }
 
 .chatBoxOuter {
     display: flex;
     justify-content: center;
     width: 100%;
-    height: fit-content;
+    height: 38vh;
+    overflow-y: hidden;
     min-height: 300px;
     max-height: 40vh;
     background: #d9d9d9;
     border: 1px solid #000000;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
         inset 3px 3px 0px #ffffff;
+    position:relative;
 }
 .windowBar {
     width: 100%;
@@ -1552,4 +1557,14 @@ button {
     top: 120px;
     position: absolute;
 }
+.chatBoxChat {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+}
+.chatBoxChat::-webkit-scrollbar {
+    display: none;
+}
+
 </style>
