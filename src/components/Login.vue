@@ -2,7 +2,7 @@
     <div id="login-wrapper">
         <div id="loginbox">
             <div id="logo">
-                <h1>로고</h1>
+                <img src="../assets/image/logo.png" alt="" style="width: 50%; margin-bottom: 5vh">
             </div>
             <div id="entrance">
                 <input
@@ -127,8 +127,8 @@ export default {
 
 <style scoped>
 #login-wrapper {
-    height: 100vh;
-    min-height: 800px;
+    height: 100%;
+    min-height: 100vh;
     max-width: 100%;
     background: linear-gradient(
         351.27deg,
@@ -141,6 +141,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 #loginbox {
     width: fit-content;
@@ -148,13 +149,12 @@ export default {
 }
 
 #logo {
-    height: 40%;
+    /* height: 40%; */
     text-align: center;
 }
 #entrance {
     text-align: center;
-    height: 50%;
-    padding-top: 20%;
+    /* height: 50%; */
 }
 #input-room-id {
     margin: 5px;

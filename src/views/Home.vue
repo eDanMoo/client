@@ -32,10 +32,10 @@
             </div>
             <div style="width: 85%; height: 100%; position:relative;">
                 <div class="menuItems" style="bottom: 410px;" @click="openAlert()">
-                    <img style="height: 45px; margin-left: 7px; margin-right: 4px"  src="../assets/icon/icon_help.png" alt="">
-                    <span style="margin-right: 10px;">Windows Update</span>
+                    <img style="height: 45px; margin-left: 7px; margin-right: 4px"  src="../assets/icon/icon_updates.png" alt="">
+                    <span style="margin-right: 10px">Mindows Update</span>
                 </div>
-                <hr style="position:absolute; bottom:400px; width:100%"/>
+                <hr style="position:absolute; bottom:400px; width:99%"/>
                 <div class="menuItems" style="bottom: 360px;" @click="openAlert()">
                     <img style="height: 45px; margin-left: 7px; margin-right: 4px"  src="../assets/icon/icon_programs.png" alt="">
                     <span style="margin-right: 10px;">프로그램(P)</span>
@@ -64,7 +64,7 @@
                     <img style="height: 45px; margin-left: 7px; margin-right: 4px"  src="../assets/icon/icon_run.png" alt="">
                     <span style="margin-right: 10px;">실행(R)</span>
                 </div>
-                <hr style="position:absolute; bottom:85px; width:100%"/>
+                <hr style="position:absolute; bottom:85px; width:99%"/>
                 <div class="menuItems" style="bottom: 45px;" @click="openAlert()">
                     <img style="height: 45px; margin-left: 7px; margin-right: 4px"  src="../assets/icon/icon_logOff.png" alt="">
                     <span style="margin-right: 10px;">나만무 로그오프(L)...</span>

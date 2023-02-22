@@ -16,7 +16,7 @@
                 />
             </div>
             <div id="hancom-menu">
-                <p>게임 소개 | 놀이 | 산성비</p>
+                <p style="margin-left: 10px">놀이 | 산성비</p>
             </div>
             <div id="contents">
                 <!-- // 밑에 있는 tajaContents Div 안에 글자를 넣어주게 됩니다. -->
@@ -193,6 +193,7 @@ export default {
                             tajaContents.removeChild(
                                 document.getElementsByClassName("tajaWord")[i]
                             );
+                            i--;
                         }
                     }
                 }, DOWNTIME);
