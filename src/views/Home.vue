@@ -294,6 +294,7 @@ export default {
             audio.play();
             this.isShutdown = 1;
         },
+
         openNaver() {
             window.location.href = "https://www.naver.com";
         },
@@ -302,6 +303,10 @@ export default {
         let showHancom = ref(true);
         return { showHancom };
     },
+    unmounted() {
+        clearInterval();
+    },
+
 };
 </script>
 

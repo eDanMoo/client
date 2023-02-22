@@ -1,4 +1,9 @@
 <template>
+    <!-- Game End Pop -->
+    <div>
+        <modal v-if="this.openModal == true" @sendClose="closeModalView" />
+    </div>
+    <button @click="modalOpen">여기를 눌러라</button>
     <!-- Music Player -->
     <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
         <div id="playerHeader" @mousedown="dragMouseDown">
@@ -346,6 +351,7 @@
 // import { onMounted, ref } from "vue";
 // import VueSocketIO from "vue-socket.io";
 import WordCard from "../components/WordCard.vue";
+import modal from "../components/ResultPop.vue";
 // let url_segs = window.location.pathname.split("/");
 let url_segs = "";
 // var room_name = url_segs[1];
@@ -393,7 +399,7 @@ let first_turn = "";
 
 export default {
     name: "cam_comp",
-    components: { WordCard },
+    components: { WordCard, modal },
     data() {
         return {
             data: null,
@@ -406,6 +412,8 @@ export default {
             ChatVisible: true,
             wordUpdate: null,
             isStreaming: 1,
+            // Game End Pop
+            openModal: false,
             // musicPlayer
             openMusicPlayer: 1,
             musicSources: [
@@ -1097,6 +1105,13 @@ export default {
         },
         backHome() {
             this.$router.push("/");
+        },
+        // Game End Pop
+        closeModalView(data) {
+            this.openModal = data;
+        },
+        modalOpen() {
+            this.openModal = true;
         },
     },
 };

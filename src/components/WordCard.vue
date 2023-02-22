@@ -12,6 +12,7 @@
                 :data-index="index"
                 :key="item.id"
                 class="wordElem"
+                :class="{ highlight_Active: item.highlight }"
             >
                 {{ item.value }}
             </div>
@@ -58,6 +59,10 @@ export default {
     methods: {
         createTable() {
             let words = this.words.wordTable;
+            let highlight = this.words.possLocs;
+
+            const length = this.tableColumns;
+            let indexOf = null;
             // console.log(words)
             this.globalId = 0;
 
@@ -76,24 +81,38 @@ export default {
                 this.col[colsOrder].push({
                     id: this.globalId,
                     value: values[i],
+                    highlight: false,
                 });
                 this.globalId++;
             }
+
+            highlight.forEach((pos) => {
+                indexOf = length - 1 - parseInt(pos / length);
+                this.col[pos % length][indexOf].highlight = true;
+            });
         },
         /** 정답확인 */
         answerCheck() {
             let words = this.words.moveInfo;
+            let highlight = this.words.possLocs;
+
             console.log(words);
             let Dbuffer = [];
             let Abuffer = [];
             let indexOf = null;
             const length = this.tableColumns;
 
+            //highlight off
+            for (let i = 0; i < length; i++) {
+                this.col[i].forEach((column) => {
+                    column.highlight = false;
+                });
+            }
+
             //Delete
             words.forEach((word) => {
                 if (word[1] > length ** 2 - 1) {
-                    indexOf =
-                        this.tableColumns - 1 - parseInt(word[0] / length);
+                    indexOf = length - 1 - parseInt(word[0] / length);
                     Dbuffer.push([word[0] % length, indexOf]);
                 }
             });
@@ -111,11 +130,18 @@ export default {
                     this.col[word[1] % length].push({
                         id: this.globalId,
                         value: word[2],
+                        highlight: false,
                     });
                     this.globalId++;
                 }
             });
 
+            //highlight
+
+            highlight.forEach((pos) => {
+                indexOf = length - 1 - parseInt(pos / length);
+                this.col[pos % length][indexOf].highlight = true;
+            });
             // console.log(this.col);
         },
     },
@@ -177,19 +203,20 @@ export default {
 }
 
 .wordBlock-move {
-    transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+    transition: all 0.7s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
 /* 진입 애니메이션 */
 .wordBlock-enter-from {
     transition-delay: 0.4s;
-    transform: translateY(-700px);
+    transform: translateY(-900px);
 }
 
 .wordBlock-enter-active {
     transition: 1s cubic-bezier(0.5, 0.84, 0.36, 1);
     transition-delay: 1.5s;
 }
+
 /* 제거 애니메이션 */
 
 .wordBlock-leave-from {
@@ -198,24 +225,29 @@ export default {
 
 @keyframes test {
     0% {
-        width: 70px;
-        height: 70px;
         background-color: greenyellow;
     }
+
     70% {
-        width: 100px;
-        height: 80px;
+        height: 70px;
         background-color: red;
         position: static;
         font-size: 2.2rem;
     }
+
     95% {
         opacity: 1;
+        font-size: 0.1rem;
+        height: 1px;
     }
+    97% {
+        opacity: 0;
+        height: 0px;
+    }
+
     100% {
         height: 0px;
         opacity: 0;
-        font-size: 0.1rem;
     }
 }
 
@@ -225,18 +257,22 @@ export default {
     top: 1000px;
 }
 
+.highlight_Active {
+    background: #a5bd3c;
+}
+
 /* 자작 애니메이션 */
 @keyframes bounce-in {
     0% {
-        transform: scale(0);
+        transform: scale(0.2);
     }
 
     50% {
-        transform: scale(12);
+        transform: scale(1);
     }
 
     100% {
-        transform: scale(1);
+        transform: scale(0.2);
     }
 }
 </style>
