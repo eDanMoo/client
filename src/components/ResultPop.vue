@@ -1,24 +1,24 @@
 <template>
     <section class="modal align_center">
-        <transition name="modal" appear>
-            <div class="align_center whiteBox" id="bon">
+        <transition duration="4000" name="modal" appear>
+            <div class="align_center whiteBox" id="resultPop">
                 <div class="whiteBox_header padding">
                     <b>게임결과</b>
                 </div>
 
-                <div class="modal__window align_center">
+                <div class="modal__window align_center" id="scorePop">
                     <div class="modal_cover">
                         <div class="ranking padding">
                             <span><b>순위</b></span
                             ><br /><br />
-                            |★★
+                            
                             <div
                                 v-for="(user, index) in users"
                                 :data-index="index"
                                 :key="user.id"
-                                style="display: inline"
+                                style="font-size: 1.3rem;"
                             >
-                                {{ index + 1 }}등: {{ user.id }} |
+                            |점수: {{user[2]}}, ID:{{ user[0] }}, 등: {{ user[1] }} |
                             </div>
                         </div>
 
@@ -29,10 +29,7 @@
                                     v-for="(words, index) in answerLog"
                                     :data-index="index"
                                     :key="answerLog[0]"
-                                    style="
-                                        border: 2px solid;
-                                        margin-bottom: 1rem;
-                                    "
+                                    style="border: 2px solid; margin-bottom: 1rem;"
                                 >
                                     <div>
                                         <span>{{ words[0] }}번 제출: </span
@@ -58,7 +55,7 @@
                 </div>
                 <div class="whiteBox_footer padding">
                     <div>
-                        <b>버전 Beta</b>
+                        <b>버전</b>
                     </div>
                     <div><b>정글</b> 2022-2023</div>
                 </div>
@@ -76,132 +73,14 @@ export default {
     },
     data() {
         return {
-            roomId: "30ch",
-            users: [
-                { id: "웅진", score: 800 },
-                { id: "진우", score: 900 },
-                { id: "우성", score: 300 },
-                { id: "성진", score: 100 },
-            ],
-            answerLog: [
-                [
-                    1,
-                    "딸기",
-                    [
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사슴벌레과",
-                        "과ㄴㄴ일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사ㄴㄴ과",
-                    ],
-                ],
-                [2, "딸기", ["과일", "사과"]],
-                [3, "딸기", ["과일", "사과"]],
-                [
-                    1,
-                    "딸기",
-                    [
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사슴벌레과",
-                        "과ㄴㄴ일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사ㄴㄴ과",
-                    ],
-                ],
-                [
-                    1,
-                    "딸기",
-                    [
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사슴벌레과",
-                        "과ㄴㄴ일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사ㄴㄴ과",
-                    ],
-                ],
-                [
-                    1,
-                    "딸기",
-                    [
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사슴벌레과",
-                        "과ㄴㄴ일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사과",
-                        "과일",
-                        "사ㄴㄴ과",
-                    ],
-                ],
-            ],
+            roomId: this.msg.roomId,
+            users: this.msg.scores,
+            answerLog: this.msg.answerLog,
         };
     },
-    watch: {},
+    watch: {
+
+    },
     mounted() {},
     unmounted() {},
     created() {},
@@ -327,14 +206,31 @@ export default {
     box-shadow: inset 0px 0px 5px white;
 }
 
-.modal-enter-active,
-.modal-leave-active {
-    transition-delay: 0.5s;
-    /* transition: all 0.3s ease-in-out; */
-    z-index: 100;
+.modal-enter-active{
+	transition-delay: 1s;
 }
+
 .modal-enter-from,
 .modal-leave-to {
     opacity: 0;
+}
+
+.modal-enter-active #resultPop {
+	transition-delay: 1s;
+}
+
+.modal-enter-from #resultPop,
+.modal-leave-to #resultPop {
+  opacity: 0.001;
+}
+
+.modal-enter-active #scorePop {
+	transition-delay: 2s;
+}
+
+.modal-enter-from #scorePop,
+.modal-leave-to #scorePop {
+
+  opacity: 0.001;
 }
 </style>

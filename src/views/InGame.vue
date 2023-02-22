@@ -3,7 +3,7 @@
     <div>
         <modal v-if="this.openModal == true" @sendClose="closeModalView" :msg="game_over"/>
     </div>
-    <button @click="modalOpen">여기를 눌러라</button>
+    <!-- <button @click="modalOpen">여기를 눌러라</button> -->
     <!-- Music Player -->
     <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
         <div id="playerHeader" @mousedown="dragMouseDown">
@@ -115,7 +115,7 @@
                 @click="backHome"
             />
             <h1 id="enterCode" style="color: white">
-                {{ time }}방 입장 코드: {{ enterCode }}
+                입장 코드: {{ enterCode }}
             </h1>
         </div>
         <div style="display: flex; align-items: center">
@@ -586,8 +586,8 @@ export default {
             //console.log(send_url);
 
             const socket = new WebSocket(
-                ws_scheme + "webdev-test.site/ws/" + room_name
-                //"ws://127.0.0.1:8888/ws/" + room_name
+                // ws_scheme + "webdev-test.site/ws/" + room_name
+                "ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
@@ -943,7 +943,7 @@ export default {
         // progressbar
         updateProgressbar() {
             let el = document.getElementById("timerbar");
-            let width = (this.time / 100) * 100 + "%";
+            let width = (this.time / 7) * 100 + "%";
             width = parseFloat(width).toFixed(2);
 
             let widthStr = width + "%";
