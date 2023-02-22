@@ -110,7 +110,7 @@
                 @click="backHome"
             />
             <h1 id="enterCode" style="color: white">
-                방 입장 코드: {{ enterCode }}
+                {{ time }}방 입장 코드: {{ enterCode }}
             </h1>
         </div>
         <div style="display: flex; align-items: center">
@@ -211,7 +211,10 @@
                 </div>
                 <div class="gameWindow" id="gameWindow">
                     <div id="gameBox">
-                        <WordCard :msg="wordUpdate" />
+                        <WordCard
+                            :msg="wordUpdate"
+                            @scriptCheck="scriptCheck"
+                        />
                         <img
                             id="initImage"
                             src="../assets/image/kingSejong.png"
@@ -384,6 +387,8 @@ let canvas = "";
 let ctx = "";
 
 let cur_timer = 0;
+
+let first_turn = "";
 
 export default {
     name: "cam_comp",
@@ -755,7 +760,6 @@ export default {
                 } else {
                     this.time = 100;
                     btn.disabled = false;
-                    this.timer(userid_str);
                 }
             } else if (event_data.type == "delete_frame") {
                 const delete_frame = document.getElementById(
@@ -776,6 +780,7 @@ export default {
                 // console.log(typeof event_data);
                 // console.log(event_data);
                 this.wordUpdate = event_data;
+                first_turn = event_data.users[0];
             } else if (event_data.type == "check") {
                 console.log(event_data.increment);
                 this.wordUpdate = event_data;
@@ -802,6 +807,34 @@ export default {
             } else if (event_data.type == "game_ing") {
                 alert("이미 진행중인 게임입니다.");
                 connection.close();
+            } else if (event_data.type == "limit_time_start") {
+                //console.log(event_data.remain_time);
+                if (
+                    first_turn == current_user &&
+                    event_data.remain_time == "5"
+                ) {
+                    console.log("전체타이머 받았으니 턴 요청");
+                    this.send_user_turn();
+                }
+                if (event_data.remain_time == "0") {
+                    console.log("죽여?");
+                    clearTimeout(cur_timer);
+                }
+            } else if (event_data.type == "turn_timer") {
+                //턴이 누군지랑 몇초 인지 전달받음 userid_str
+                const answer_text_box = document.getElementById("input_answer");
+                if (userid_str == current_user) {
+                    // 해당 턴이 내 턴이면 타이머 반영
+                    answer_text_box.disabled = false;
+                    this.time = event_data.remain_time;
+                    if (this.time == 0) {
+                        this.send_user_turn();
+                        this.time = 100;
+                        answer_text_box.disabled = true;
+                    }
+                } else {
+                    answer_text_box.disabled = true;
+                }
             }
         };
         this.processImage();
@@ -838,7 +871,6 @@ export default {
                 connection.send(JSON.stringify(message_obj));
                 input.value = "";
             }
-            this.send_user_turn();
             event.preventDefault();
         },
         processImage() {
@@ -871,29 +903,33 @@ export default {
                 clearInterval(intervalVid);
             }
         },
-        send_user_turn() {
-            // console.log(user_tunrs);
-            // console.log(user_tunrs[user_turn_count]);
-            // console.log("여긴오니?");
-            console.log("서버에 턴 요청합니다.");
+        send_user_turn(user = "") {
             const jsonData = JSON.stringify({
-                type: "send_user_turn",
+                type: "get_timer",
+                next_user: user,
                 userid: current_user,
             });
+
             connection.send(jsonData);
-            clearTimeout(cur_timer);
         },
-        timer(check_user) {
-            console.log("타이머 왔나?");
-            if (this.time <= 0) {
-                this.time = 100;
-                if (this.current_user == check_user) {
-                    this.send_user_turn();
+        scriptCheck(msg, answer_user = "") {
+            if (msg == "init") {
+                //보드 다 만들었으면 전체 타이머 시작
+                if (first_turn == current_user) {
+                    this.getLimitTimer();
                 }
-            } else {
-                this.time--;
-                cur_timer = setTimeout(this.timer, 50);
+            } else if (msg == "check" && answer_user == current_user) {
+                // 단어 체크 해서 끝났으면 타이머
+                this.send_user_turn("true");
+                this.time = 100;
             }
+        },
+        getLimitTimer() {
+            const jsonData = JSON.stringify({
+                type: "limit_time_start",
+            });
+
+            connection.send(jsonData);
         },
         // progressbar
         updateProgressbar() {
@@ -920,7 +956,6 @@ export default {
             });
 
             connection.send(jsonData);
-            this.send_user_turn();
         },
         answerCheck() {
             const answer_text_box = document.getElementById("input_answer");
@@ -936,7 +971,6 @@ export default {
                 },
             });
             connection.send(jsonData);
-            this.send_user_turn();
             answer_text_box.value = "";
         },
         GameStart() {
