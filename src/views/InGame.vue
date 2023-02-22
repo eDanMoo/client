@@ -238,6 +238,7 @@
                         <input
                             type="text"
                             id="input_answer"
+                            disabled
                             @keypress.enter="answerCheck()"
                             style="width: 250px; height: 38px; font-size: 2rem"
                         />
@@ -805,13 +806,13 @@ export default {
                 sejong_img.style.display = "none";
                 game_box.style.position = "position";
             } else if (event_data.type == "game_ing") {
-                alert("이미 진행중인 게임입니다.");
                 connection.close();
+                alert("이미 진행중인 게임입니다.");
             } else if (event_data.type == "limit_time_start") {
                 //console.log(event_data.remain_time);
                 if (
                     first_turn == current_user &&
-                    event_data.remain_time == "5"
+                    event_data.remain_time == "60"
                 ) {
                     console.log("전체타이머 받았으니 턴 요청");
                     this.send_user_turn();
