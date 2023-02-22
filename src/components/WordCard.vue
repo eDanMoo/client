@@ -22,6 +22,7 @@
 <script>
 export default {
     name: "wordGame",
+    emits: ["scriptCheck"],
     props: {
         msg: {},
     },
@@ -39,8 +40,10 @@ export default {
             if (this.words != null) {
                 if (message.type == "init") {
                     this.createTable();
+                    this.$emit("scriptCheck", "init"); // table 생성 완료 시 서버에 턴 요청
                 } else if (message.type == "check") {
                     this.answerCheck();
+                    this.$emit("scriptCheck", "check", this.words.user); // 정답 체크 완료 시 서버에 턴 요청
                 }
             }
         },
