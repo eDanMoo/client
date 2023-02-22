@@ -2,7 +2,11 @@
     <div id="login-wrapper">
         <div id="loginbox">
             <div id="logo">
-                <img src="../assets/image/logo.png" alt="" style="width: 50%; margin-bottom: 5vh">
+                <img
+                    src="../assets/image/logo.png"
+                    alt=""
+                    style="width: 50%; margin-bottom: 5vh"
+                />
             </div>
             <div id="entrance">
                 <input
@@ -88,6 +92,9 @@ export default {
         const user_id = ref("");
 
         const joinPage = () => {
+            const audio = new Audio("../src/assets/soundEffect/enterRoom.wav");
+            audio.volume = 0.6;
+            audio.play();
             router.push({
                 name: "inGame",
                 params: {
@@ -99,6 +106,9 @@ export default {
 
         const createPage = () => {
             const new_room_code = generateRandomCode(6);
+            const audio = new Audio("../src/assets/soundEffect/enterRoom.wav");
+            audio.volume = 0.6;
+            audio.play();
             router.push({
                 name: "inGame",
                 params: {

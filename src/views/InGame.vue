@@ -571,8 +571,8 @@ export default {
             //console.log(send_url);
 
             const socket = new WebSocket(
-                ws_scheme + "webdev-test.site/ws/" + room_name
-                //"ws://127.0.0.1:8888/ws/" + room_name
+                // ws_scheme + "webdev-test.site/ws/" + room_name
+                "ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
@@ -907,6 +907,7 @@ export default {
         boardInit() {
             this.GameStart();
             const audio = new Audio("../src/assets/soundEffect/gameStart.mp3");
+            audio.volume = 0.6;
             audio.play();
             this.isGameStarted = 1;
 
@@ -1230,7 +1231,7 @@ button {
     border: 1px solid #000000;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
         inset 3px 3px 0px #ffffff;
-    position:relative;
+    position: relative;
 }
 .windowBar {
     width: 100%;
@@ -1587,5 +1588,4 @@ button {
 .chatBoxChat::-webkit-scrollbar {
     display: none;
 }
-
 </style>
