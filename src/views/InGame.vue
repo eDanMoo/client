@@ -1,7 +1,7 @@
 <template>
     <!-- Game End Pop -->
     <div>
-        <modal v-if="this.openModal == true" @sendClose="closeModalView" />
+        <modal v-if="this.openModal == true" @sendClose="closeModalView" :msg="game_over"/>
     </div>
     <button @click="modalOpen">여기를 눌러라</button>
     <!-- Music Player -->
@@ -411,6 +411,7 @@ export default {
             LogVisible: true,
             ChatVisible: true,
             wordUpdate: null,
+            game_over: null,
             isStreaming: 1,
             // Game End Pop
             openModal: false,
@@ -585,8 +586,8 @@ export default {
             //console.log(send_url);
 
             const socket = new WebSocket(
-                // ws_scheme + "webdev-test.site/ws/" + room_name
-                "ws://127.0.0.1:8888/ws/" + room_name
+                ws_scheme + "webdev-test.site/ws/" + room_name
+                //"ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
@@ -820,14 +821,10 @@ export default {
                 //console.log(event_data.remain_time);
                 if (
                     first_turn == current_user &&
-                    event_data.remain_time == "60"
+                    event_data.remain_time == "3"
                 ) {
                     console.log("전체타이머 받았으니 턴 요청");
                     this.send_user_turn();
-                }
-                if (event_data.remain_time == "0") {
-                    console.log("죽여?");
-                    clearTimeout(cur_timer);
                 }
             } else if (event_data.type == "turn_timer") {
                 //턴이 누군지랑 몇초 인지 전달받음 userid_str
@@ -844,6 +841,9 @@ export default {
                 } else {
                     answer_text_box.disabled = true;
                 }
+            } else if (event_data.type == "finish") {
+                this.game_over = event_data;
+                this.modalOpen();
             }
         };
         this.processImage();
