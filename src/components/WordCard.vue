@@ -26,6 +26,7 @@ export default {
     emits: ["scriptCheck"],
     props: {
         msg: {},
+        delete_board: Number,
     },
     data() {
         return {
@@ -46,6 +47,11 @@ export default {
                     this.answerCheck();
                     this.$emit("scriptCheck", "check", this.words.user); // 정답 체크 완료 시 서버에 턴 요청
                 }
+            }
+        },
+        delete_board(is_finish) {
+            if (is_finish) {
+                this.col = [];
             }
         },
     },

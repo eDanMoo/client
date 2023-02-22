@@ -3,7 +3,6 @@
     <div>
         <modal v-if="this.openModal == true" @sendClose="closeModalView" :msg="game_over"/>
     </div>
-    <!-- <button @click="modalOpen">여기를 눌러라</button> -->
     <!-- Music Player -->
     <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
         <div id="playerHeader" @mousedown="dragMouseDown">
@@ -115,7 +114,7 @@
                 @click="backHome"
             />
             <h1 id="enterCode" style="color: white">
-                입장 코드: {{ enterCode }}
+                방 입장 코드: {{ enterCode }}
             </h1>
         </div>
         <div style="display: flex; align-items: center">
@@ -218,6 +217,7 @@
                     <div id="gameBox">
                         <WordCard
                             :msg="wordUpdate"
+                            :delete_board="delete_board"
                             @scriptCheck="scriptCheck"
                         />
                         <img
@@ -407,11 +407,13 @@ export default {
             toggle_text: "카메라 비활성화",
             enterCode: "",
             time: 100,
+            game_time: null,
             ScoreVisible: true,
             LogVisible: true,
             ChatVisible: true,
             wordUpdate: null,
             game_over: null,
+            delete_board: 0,
             isStreaming: 1,
             // Game End Pop
             openModal: false,
@@ -624,6 +626,7 @@ export default {
                 stream = await navigator.mediaDevices.getUserMedia(constraints);
                 /* 스트림 사용 */
                 video.srcObject = stream;
+                video.volume = 0;
                 video.play();
             } catch (error) {
                 console.log(error);
@@ -791,21 +794,45 @@ export default {
                 // console.log(event_data);
                 this.wordUpdate = event_data;
                 first_turn = event_data.users[0];
+                this.isGameStarted = 1;
+                this.delete_board = 0;
             } else if (event_data.type == "check") {
                 console.log(event_data.increment);
                 this.wordUpdate = event_data;
-                // if (event_data.user == current_user) {
-                //     const my_score = document.getElementById(
-                //         event_data.user + "_score_val"
-                //     );
-                //     my_score.value = parseInt(my_score.value) + parseInt(event_data.increment);
-                // }
+
                 const my_score = document.getElementById(
                     event_data.user + "_score_val"
                 );
                 my_score.innerText =
                     parseInt(my_score.innerText) +
                     parseInt(event_data.increment);
+
+                this.isGameStarted = 1;
+
+                const log_board = document.getElementById("logBoard");
+
+                const log_tab = document.createElement("div");
+                const span_user_id = document.createElement("span");
+                const span_user_input = document.createElement("span");
+                const span_remove_word = document.createElement("span");
+
+                log_tab.style.display = "flex";
+                log_tab.style.justifyContent = "space-between";
+                log_tab.style.margin = "0 2% 0 2%";
+                log_tab.id = "log_tab";
+                span_remove_word.style.textAlign = "right";
+
+                span_user_id.innerText = event_data.user;
+                span_user_input.innerText = event_data.answer;
+
+                event_data.removedWords.forEach((element) => {
+                    span_remove_word.innerHTML += element + "<br/>";
+                });
+
+                //log_tab.appendChild(span_user_id);
+                log_tab.appendChild(span_user_input);
+                log_tab.appendChild(span_remove_word);
+                log_board.appendChild(log_tab);
             } else if (event_data.type == "game_start") {
                 const game_start = document.getElementById("game_start");
                 const game_box = document.getElementById("game_box");
@@ -819,9 +846,10 @@ export default {
                 alert("이미 진행중인 게임입니다.");
             } else if (event_data.type == "limit_time_start") {
                 //console.log(event_data.remain_time);
+                this.game_time = event_data.remain_time;
                 if (
                     first_turn == current_user &&
-                    event_data.remain_time == "3"
+                    event_data.remain_time == "60"
                 ) {
                     console.log("전체타이머 받았으니 턴 요청");
                     this.send_user_turn();
@@ -844,6 +872,12 @@ export default {
             } else if (event_data.type == "finish") {
                 this.game_over = event_data;
                 this.modalOpen();
+                this.delete_board = 1;
+                this.isGameStarted = 0;
+                this.game_time = null;
+                // todo. 여기 아이디가 다 같아서 안지워지는 문제임
+                const log_tab = document.getElementById("log_tab");
+                log_tab.parentNode.removeChild(log_tab);
             }
         };
         this.processImage();
@@ -955,6 +989,7 @@ export default {
             audio.volume = 0.6;
             audio.play();
             this.isGameStarted = 1;
+            this.delete_board = 0;
 
             const jsonData = JSON.stringify({
                 type: "game_server",
