@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onBeforeUnmount } from "vue";
 export default {
     data() {
         return {
@@ -44,6 +44,9 @@ export default {
     },
     methods: {
         closeHancom() {
+            const audio = new Audio("../src/assets/soundEffect/click.mp3");
+            audio.volume = 0.6;
+            audio.play();
             this.showHancom = false;
         },
         openHancom() {
@@ -95,6 +98,8 @@ export default {
     },
     setup() {
         let showHancom = ref(true);
+        let drawInterval = null;
+        let downInterval = null;
         onMounted(() => {
             // 내려오게 할 단어의 목록을 배열로 선언하였습니다.
             var taja = [
@@ -140,7 +145,7 @@ export default {
 
             // taja배열의 index 값에 대한 변수
             function drawTaja() {
-                let drawInterval = setInterval(function () {
+                return setInterval(function () {
                     let randomPick = 0;
                     let drawWord = "";
                     randomPick = Math.round(Math.random() * (taja.length - 1));
@@ -162,11 +167,9 @@ export default {
                         tajaDiv.style.left = leftWidth + "px";
                     }
                 }, DRAWTIME);
-                return drawInterval;
             }
-
             function downTaja() {
-                const downInterval = setInterval(function () {
+                return setInterval(function () {
                     document.getElementsByClassName("tajaWord");
                     let tajaContents = document.getElementById("tajaContents");
                     for (
@@ -197,7 +200,6 @@ export default {
                         }
                     }
                 }, DOWNTIME);
-                return downInterval;
             }
             var tajaText = document.getElementById("tajaText");
             tajaText.addEventListener("keydown", function (e) {
@@ -223,8 +225,12 @@ export default {
                     tajaText.value = "";
                 }
             });
-            drawTaja();
-            downTaja();
+            drawInterval = drawTaja();
+            downInterval = downTaja();
+        });
+        onBeforeUnmount(() => {
+            clearInterval(drawInterval);
+            clearInterval(downInterval);
         });
         return { setInterval, showHancom };
     },
