@@ -20,8 +20,10 @@
                     if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
 
                         this.value = ''; 
-                        const modal = document.querySelector('.modal-wrapper');
+                        const modal = document.getElementById('modal-wrapper');
                         modal.style.display = 'flex'; 
+
+                        document.getElementById('close-modal').focus();
                                                 } "
                     :maxlength="6"
                 />
@@ -36,8 +38,10 @@
                     if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
 
                         this.value = ''; 
-                        const modal = document.querySelector('.modal-wrapper');
+                        const modal = document.getElementById('modal-wrapper');
                         modal.style.display = 'flex'; 
+
+                        document.getElementById('close-modal').focus();
                                                 } "
                     :maxlength="6"
                 />
@@ -48,13 +52,24 @@
             </div>
         </div>
     </div>
-    <div class="modal-wrapper">
-        <div class="modal">
+    <div id="modal-wrapper">
+        <div id="modal">
             <div id="modal-title">경고</div>
             <div id="modal-content">
                 <div>영문과 숫자만 입력 가능합니다!</div>
                 <div class="close-modal">
                     <button id="close-modal">알겠습니다</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modal-wrapper-2">
+        <div id="modal-2">
+            <div id="modal-title-2">경고</div>
+            <div id="modal-content-2">
+                <div>입력값을 적어주세요</div>
+                <div class="close-modal-2">
+                    <button id="close-modal-2">알겠습니다</button>
                 </div>
             </div>
         </div>
@@ -70,8 +85,10 @@ export default {
         onMounted(() => {
             //모달창
             const closeModal = document.getElementById("close-modal");
+            const closeModal2 = document.getElementById("close-modal-2");
 
-            const modal = document.querySelector(".modal-wrapper");
+            const modal = document.getElementById("modal-wrapper");
+            const modal2 = document.getElementById("modal-wrapper-2");
 
             closeModal.onclick = () => {
                 modal.style.display = "none";
@@ -84,6 +101,18 @@ export default {
                     }
                 }
             });
+
+            closeModal2.onclick = () => {
+                modal2.style.display = "none";
+            };
+
+            closeModal2.addEventListener("keydown", function (e) {
+                if (e.keyCode === 13) {
+                    if (modal2.style.display === "flex") {
+                        modal2.style.display = "none";
+                    }
+                }
+            });
         });
 
         const router = useRouter();
@@ -92,6 +121,16 @@ export default {
         const user_id = ref("");
 
         const joinPage = () => {
+
+            const roomID = document.getElementById("input-room-id")
+            const userID = document.getElementById("input-user-id");
+            const modal2 = document.getElementById("modal-wrapper-2");
+
+            if (userID.value == "" || roomID.value == "") {
+                modal2.style.display = 'flex'; 
+                document.getElementById("close-modal-2").focus();
+            }
+
             const audio = new Audio("../src/assets/soundEffect/enterRoom.wav");
             audio.volume = 0.6;
             audio.play();
@@ -105,6 +144,14 @@ export default {
         };
 
         const createPage = () => {
+
+            const userID = document.getElementById("input-user-id");
+            const modal2 = document.getElementById("modal-wrapper-2");
+
+            if (userID.value == "") {
+                modal2.style.display = 'flex'; 
+                document.getElementById("close-modal-2").focus();
+            }
             const new_room_code = generateRandomCode(6);
             const audio = new Audio("../src/assets/soundEffect/enterRoom.wav");
             audio.volume = 0.6;
@@ -221,7 +268,7 @@ export default {
     font-size: x-large;
 }
 
-.modal-wrapper {
+#modal-wrapper {
     position: fixed;
     top: 0;
     left: 0;
@@ -234,7 +281,7 @@ export default {
     font-size: x-large;
 }
 
-.modal {
+#modal {
     background-color: rgb(172, 172, 172);
     padding: 10px;
     width: 25vw;
@@ -264,7 +311,6 @@ export default {
     padding: 10px;
     font-size: large;
 }
-
 .close-modal {
     align-items: center;
     flex-basis: 20%;
@@ -276,4 +322,62 @@ export default {
     border: 2px solid rgb(80, 80, 80);
     box-shadow: 1px 1px black, inset 2px 2px white;
 }
+
+#modal-wrapper-2 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-family: "DungGeunMo";
+    font-size: x-large;
+}
+
+#modal-2 {
+    background-color: rgb(172, 172, 172);
+    padding: 10px;
+    width: 25vw;
+    height: 30vh;
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#modal-title-2 {
+    background-image: linear-gradient(270deg, #1085d2 0%, #00007b 100%);
+    flex-basis: 10%;
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
+    padding-left: 10px;
+    color: white;
+}
+
+#modal-content-2 {
+    background-color: rgb(172, 172, 172);
+    flex-basis: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    font-size: large;
+}
+
+.close-modal-2 {
+    align-items: center;
+    flex-basis: 20%;
+    display: flex;
+    justify-content: center;
+}
+
+#close-modal-2 {
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
+}
+
+
 </style>
