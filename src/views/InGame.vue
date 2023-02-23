@@ -833,6 +833,7 @@ export default {
                 log_tab.appendChild(span_user_input);
                 log_tab.appendChild(span_remove_word);
                 log_board.appendChild(log_tab);
+                log_board.scrollTop = 9999999;
             } else if (event_data.type == "game_start") {
                 const game_start = document.getElementById("game_start");
                 const game_box = document.getElementById("game_box");
@@ -860,6 +861,7 @@ export default {
                 if (userid_str == current_user) {
                     // 해당 턴이 내 턴이면 타이머 반영
                     answer_text_box.disabled = false;
+                    answer_text_box.focus();
                     this.time = event_data.remain_time;
                     if (this.time == 0) {
                         this.send_user_turn();
@@ -1673,4 +1675,13 @@ button {
 .chatBoxChat::-webkit-scrollbar {
     display: none;
 }
+
+#logBoard {
+    height: 300px;
+    overflow-y: scroll;
+}
+#logBoard::-webkit-scrollbar {
+    display: none;
+}
+
 </style>
