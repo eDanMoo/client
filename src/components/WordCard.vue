@@ -209,13 +209,13 @@ export default {
 }
 
 .wordBlock-move {
-    transition: all 0.7s cubic-bezier(0.55, 0, 0.1, 1);
+    transition: all 0.3s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
 /* 진입 애니메이션 */
 .wordBlock-enter-from {
     transition-delay: 0.4s;
-    transform: translateY(-900px);
+    transform: translateY(-860px);
 }
 
 .wordBlock-enter-active {
@@ -264,7 +264,7 @@ export default {
 }
 
 .highlight_Active {
-    background: #a5bd3c;
+    background: #e2f110;
 }
 
 /* 자작 애니메이션 */

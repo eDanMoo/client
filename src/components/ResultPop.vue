@@ -1,6 +1,5 @@
 <template>
     <section class="modal align_center">
-        <transition duration="4000" name="modal" appear>
             <div class="align_center whiteBox" id="resultPop">
                 <div class="whiteBox_header padding">
                     <b>게임결과</b>
@@ -60,7 +59,6 @@
                     <div><b>정글</b> 2022-2023</div>
                 </div>
             </div>
-        </transition>
         <div class="blueScreen"></div>
     </section>
 </template>
@@ -206,31 +204,4 @@ export default {
     box-shadow: inset 0px 0px 5px white;
 }
 
-.modal-enter-active{
-	transition-delay: 1s;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-    opacity: 0;
-}
-
-.modal-enter-active #resultPop {
-	transition-delay: 1s;
-}
-
-.modal-enter-from #resultPop,
-.modal-leave-to #resultPop {
-  opacity: 0.001;
-}
-
-.modal-enter-active #scorePop {
-	transition-delay: 2s;
-}
-
-.modal-enter-from #scorePop,
-.modal-leave-to #scorePop {
-
-  opacity: 0.001;
-}
 </style>
