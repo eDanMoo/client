@@ -162,7 +162,7 @@ export default {
 
 .gameBackgroud {
     min-width: 680px;
-    height: 830px;
+    height: 700px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -175,20 +175,17 @@ export default {
     width: 80%;
     height: 1500px;
     position: relative;
-    bottom: 335px;
+    bottom: 400px;
     overflow-y: hidden;
     flex-direction: column-reverse;
     align-items: center;
     align-content: center;
-    border-color: #5d5838;
-    border-style: dashed;
 }
 
 .wordElem {
     width: 90%;
     min-width: 55px;
-    max-width: 65px;
-    height: 70px;
+    height: 60px;
     margin-right: 1px;
     margin-bottom: 0.2vw;
     border-radius: 5px;

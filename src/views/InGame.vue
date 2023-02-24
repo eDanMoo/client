@@ -1,7 +1,11 @@
 <template>
     <!-- Game End Pop -->
     <div>
-        <modal v-if="this.openModal == true" @sendClose="closeModalView" :msg="game_over"/>
+        <modal
+            v-if="this.openModal == true"
+            @sendClose="closeModalView"
+            :msg="game_over"
+        />
     </div>
     <!-- Music Player -->
     <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
@@ -29,8 +33,8 @@
                 />
             </audio>
             <div id="radioPannel">
-                <div id="flowBoxWrapper">
-                    <div id="flowBox">
+                <div class="flowBoxWrapper">
+                    <div class="flowBox">
                         <span class="musicTitle" id="musicTitle1">{{
                             musicSources[musicIndex].fileName
                         }}</span>
@@ -41,7 +45,7 @@
                 </div>
             </div>
             <div id="radioBtnBox">
-                <div style="position: absolute; display: flex; margin: 6px">
+                <div class="radioBtnWrapper">
                     <button
                         class="radioBtn"
                         @click="playMusic()"
@@ -100,6 +104,7 @@
             </div>
         </div>
     </div>
+    <!-- Nav Bar -->
     <nav style="display: flex; justify-content: space-between">
         <div style="display: flex; align-items: center">
             <img
@@ -118,11 +123,63 @@
             </h1>
         </div>
         <div style="display: flex; align-items: center">
-            <h1 style="color: white; font-size: 3.5rem; margin-bottom: unset; margin-top: unset">
+            <h1
+                style="
+                    color: white;
+                    font-size: 3.5rem;
+                    margin-bottom: unset;
+                    margin-top: unset;
+                "
+            >
                 {{ game_time }}
             </h1>
         </div>
         <div style="display: flex; align-items: center">
+            <div
+                class="flowBoxWrapper"
+                style="width: 15vw"
+                v-show="isPlaying && !openMusicPlayer"
+            >
+                <div class="flowBox">
+                    <span class="musicTitle" id="musicTitle3">{{
+                        musicSources[musicIndex].fileName
+                    }}</span>
+                    <span class="musicTitle" id="musicTitle4">{{
+                        musicSources[musicIndex].fileName
+                    }}</span>
+                </div>
+            </div>
+            <div
+                v-show="!openMusicPlayer"
+                style="
+                    cursor: pointer;
+                    width: 40px;
+                    height: 40px;
+                    background: linear-gradient(
+                        351.27deg,
+                        #ffffff -854.98%,
+                        #eeeeee -854.98%,
+                        #cacaca -91.55%
+                    );
+                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25),
+                        1px 1px 0px #000000, inset 3px 3px 0px #ffffff;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                "
+                @click="toggleMusic()"
+            >
+                <img
+                    class="btnMark"
+                    src="../assets/image/btn_pause.png"
+                    v-show="isPlaying"
+                />
+                <img
+                    class="btnMark"
+                    src="../assets/image/btn_play.png"
+                    v-show="!isPlaying"
+                />
+            </div>
             <div style="width: 80px; height: 80px; overflow: hidden">
                 <img
                     v-show="isPlaying"
@@ -147,6 +204,7 @@
             />
         </div>
     </nav>
+    <!-- How To -->
     <div v-show="showHowTo" class="inGamePopup" id="howToPopup">
         <div class="popupWrapper">
             <div class="popupBar">
@@ -178,38 +236,68 @@
     <div>
         <div class="containerBody">
             <!-- 영상 재생부 -->
-            <div id="leftBox">
-                <div class="videoWindow">
-                    <div class="videoBarCover">
-                        <div class="videoBar">
-                            <span>내 영상</span>
-                            <button class="minBtnDisabled"></button>
-                        </div>
+            <div
+                class="toggleBtn"
+                style="
+                    position: absolute;
+                    left: 0px;
+                    width: 30px;
+                    display: flex;
+                    justify-content: end;
+                "
+                @click="toggleLeft()"
+                v-show="!isOpenLeft"
+            >
+                <span> > </span>
+            </div>
+            <div
+                class="toggleBtn"
+                style="position: absolute; right: 0px; width: 30px"
+                @click="toggleRight()"
+                v-show="!isOpenRight"
+            >
+                <span> &lt; </span>
+            </div>
+            <Transition name="left">
+                <div id="leftBox" v-show="isOpenLeft">
+                    <!-- 닫기 버튼 -->
+                    <div class="toggleBtn" @click="toggleLeft()">
+                        <span>참여자 영상</span>
+                        <span> 접기 &lt; </span>
                     </div>
-                    <div class="videoFrame">
-                        <div style="width: 300px; height: fit-content">
-                            <canvas
-                                v-show="isStreaming"
-                                class="videoOutput"
-                                id="videoOutput"
-                            ></canvas>
-                            <div v-show="!isStreaming">
-                                <img
-                                    src="../assets/gamecomp/userBlank.jpg"
-                                    alt="Camera Off"
-                                />
+                    <div class="videoWindow">
+                        <div class="videoBarCover">
+                            <div class="videoBar">
+                                <span>내 영상</span>
+                                <button class="minBtnDisabled"></button>
+                            </div>
+                        </div>
+                        <div class="videoFrame">
+                            <div class="videoStreaming">
+                                <canvas
+                                    v-show="isStreaming"
+                                    class="videoOutput"
+                                    id="videoOutput"
+                                ></canvas>
+                                <div v-show="!isStreaming">
+                                    <img
+                                        src="../assets/gamecomp/userBlank.jpg"
+                                        alt="Camera Off"
+                                        style="width: 300px; height: 240px"
+                                    />
+                                </div>
                             </div>
                             <button
+                                class="hoverButton"
                                 @click="toggleVideoCamera()"
-                                style="width: 90%; margin: 0 5% 5px 5%"
                             >
                                 {{ toggle_text }}
                             </button>
+                            <div><video id="videoInput"></video></div>
                         </div>
-                        <div><video id="videoInput"></video></div>
                     </div>
                 </div>
-            </div>
+            </Transition>
             <!-- ############게임화면################# -->
             <div class="centerBox" id="centerBox">
                 <div class="barCover">
@@ -225,128 +313,129 @@
                             :delete_board="delete_board"
                             @scriptCheck="scriptCheck"
                         />
-                        <img
-                            id="initImage"
-                            src="../assets/image/kingSejong.png"
-                            alt=""
-                            v-show="!isGameStarted"
-                        />
                         <button
                             id="game_start"
                             @click="boardInit()"
                             v-show="!isGameStarted"
-                        >
-                            게임 시작
-                        </button>
-                    </div>
-                    <div>
-                        <div class="progressBar">
-                            <div id="timerbar" class="innerbar"></div>
-                        </div>
-                    </div>
-                    <div class="answerBox">
-                        <input
-                            type="text"
-                            id="input_answer"
-                            disabled
-                            @keypress.enter="answerCheck()"
-                            style="width: 250px; height: 38px; font-size: 2rem"
-                        />
+                        ></button>
                     </div>
                 </div>
             </div>
-
             <!-- ############오른쪽 화면################# -->
-            <div class="rightBox" id="rightBox">
-                <!---------------------점수화면--------------------->
-                <div class="innerWindow">
-                    <div class="barCover">
-                        <div class="windowBar">
-                            <span>점수</span
-                            ><button
-                                class="minBtn"
-                                @click="ScoreVisible = !ScoreVisible"
-                            ></button>
+            <Transition name="right">
+                <div class="rightBox" id="rightBox" v-show="isOpenRight">
+                    <!--------------------- 닫기 버튼 ------------------>
+                    <div class="toggleBtn" @click="toggleRight()">
+                        <span> > 접기 </span>
+                        <span>정보</span>
+                    </div>
+                    <!---------------------점수화면--------------------->
+                    <div class="innerWindow">
+                        <div class="barCover">
+                            <div class="windowBar">
+                                <span>점수</span
+                                ><button
+                                    class="minBtn"
+                                    @click="ScoreVisible = !ScoreVisible"
+                                ></button>
+                            </div>
+                        </div>
+                        <div v-show="ScoreVisible" class="windowOuter">
+                            <div class="blackBox" id="socreBoard"></div>
                         </div>
                     </div>
-                    <div v-show="ScoreVisible" class="windowOuter">
-                        <div class="blackBox" id="socreBoard"></div>
-                    </div>
-                </div>
 
-                <!---------------------로그화면--------------------->
-                <div class="innerWindow">
-                    <div class="barCover">
-                        <div class="windowBar">
-                            <span>기록</span
-                            ><button
-                                class="minBtn"
-                                @click="LogVisible = !LogVisible"
-                            ></button>
+                    <!---------------------로그화면--------------------->
+                    <div class="innerWindow">
+                        <div class="barCover">
+                            <div class="windowBar">
+                                <span>기록</span
+                                ><button
+                                    class="minBtn"
+                                    @click="LogVisible = !LogVisible"
+                                ></button>
+                            </div>
+                        </div>
+                        <div v-show="LogVisible" class="windowOuter">
+                            <div class="blackBox" id="logBoard"></div>
                         </div>
                     </div>
-                    <div v-show="LogVisible" class="windowOuter">
-                        <div class="blackBox" id="logBoard"></div>
-                    </div>
-                </div>
-                <!---------------------채팅화면--------------------->
+                    <!---------------------채팅화면--------------------->
 
-                <div class="innerWindow">
-                    <div class="barCover">
-                        <div class="windowBar">
-                            <span>대화</span
-                            ><button
-                                class="minBtn"
-                                @click="ChatVisible = !ChatVisible"
-                            ></button>
+                    <div class="innerWindow">
+                        <div class="barCover">
+                            <div class="windowBar">
+                                <span>대화</span
+                                ><button
+                                    class="minBtn"
+                                    @click="ChatVisible = !ChatVisible"
+                                ></button>
+                            </div>
                         </div>
-                    </div>
-                    <div v-show="ChatVisible" class="chatBoxOuter">
-                        <div class="chatBox">
-                            <div class="chatBoxChat" id="chatBoxChat">
-                                <ul id="messages"></ul>
-                                <div class="chatRow" id="footer">
-                                    <form
-                                        name="chat-form"
-                                        action=""
-                                        @submit.prevent="sendMessage"
-                                    >
-                                        <div class="chatRow">
-                                            <div
-                                                style="
-                                                    display: inline-flex;
-                                                    width: 95%;
-                                                    position: absolute;
-                                                    bottom: 4px;
-                                                "
-                                            >
-                                                <input
-                                                    type="text"
-                                                    autocomplete="off"
-                                                    id="messageText"
-                                                    class="materialize-textarea"
-                                                    @click="
-                                                        checkWebSocket(event)
-                                                    "
-                                                />
-                                                <button
-                                                    type="submit"
-                                                    name="action"
-                                                    id="send_message"
+                        <div v-show="ChatVisible" class="chatBoxOuter">
+                            <div class="chatBox">
+                                <div class="chatBoxChat" id="chatBoxChat">
+                                    <ul id="messages"></ul>
+                                    <div class="chatRow" id="footer">
+                                        <form
+                                            name="chat-form"
+                                            action=""
+                                            @submit.prevent="sendMessage"
+                                        >
+                                            <div class="chatRow">
+                                                <div
                                                     style="
-                                                        background-color: #aaffff;
+                                                        display: inline-flex;
+                                                        width: 95%;
+                                                        position: absolute;
+                                                        bottom: 4px;
+                                                        height: 20px;
                                                     "
                                                 >
-                                                    보내기
-                                                </button>
+                                                    <input
+                                                        type="text"
+                                                        autocomplete="off"
+                                                        id="messageText"
+                                                        class="materialize-textarea"
+                                                        @click="
+                                                            checkWebSocket(
+                                                                event
+                                                            )
+                                                        "
+                                                    />
+                                                    <button
+                                                        type="submit"
+                                                        name="action"
+                                                        id="send_message"
+                                                    >
+                                                        보내기
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </form>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </Transition>
+            <!-- 오른쪽 끝 -->
+        </div>
+        <div class="answerArea">
+            <div>
+                <div class="progressBar">
+                    <div id="timerbar" class="innerbar"></div>
+                </div>
+            </div>
+            <div class="answerBox">
+                <input
+                    type="text"
+                    id="input_answer"
+                    disabled
+                    @keypress.enter="answerCheck()"
+                    style="width: 250px; height: 38px; font-size: 2rem"
+                />
             </div>
         </div>
     </div>
@@ -377,13 +466,13 @@ let connection = "";
 let messages = "";
 
 const w = 300,
-    h = 300;
+    h = 240;
 // navigator.mediaDevices.getUserMedia =
 //     navigator.mediaDevices.getUserMedia ||
 //     navigator.mediaDevices.webkitGetUserMedia ||
 //     navigator.mediaDevices.mozGetUserMedia;
 
-const constraints = { audio: true, video: true };
+const constraints = { audio: false, video: true };
 // const video = document.getElementById("videoInput");
 let video = "";
 // video.width = w;
@@ -407,6 +496,8 @@ export default {
     components: { WordCard, modal },
     data() {
         return {
+            isOpenLeft: true,
+            isOpenRight: true,
             data: null,
             my_cam: current_user,
             toggle_text: "카메라 비활성화",
@@ -423,11 +514,16 @@ export default {
             // Game End Pop
             openModal: false,
             // musicPlayer
-            openMusicPlayer: 1,
+            openMusicPlayer: 0,
             musicSources: [
                 {
                     fileName: "Welcome Player! - Visager.ogg",
                     src: "../src/assets/music/Welcome Player! - Visager.ogg",
+                    type: "audio/ogg",
+                },
+                {
+                    fileName: "8 Bit Win! - HeatleyBros.ogg",
+                    src: "../src/assets/music/8 Bit Win! - HeatleyBros.ogg",
                     type: "audio/ogg",
                 },
                 {
@@ -483,11 +579,6 @@ export default {
                 {
                     fileName: "Vibe Mountain - Operatic 3.ogg",
                     src: "../src/assets/music/Vibe Mountain - Operatic 3.ogg",
-                    type: "audio/ogg",
-                },
-                {
-                    fileName: "8 Bit Win! - HeatleyBros.ogg",
-                    src: "../src/assets/music/8 Bit Win! - HeatleyBros.ogg",
                     type: "audio/ogg",
                 },
                 {
@@ -615,7 +706,7 @@ export default {
 
         isStreaming = 1;
 
-        intervalVid = setInterval(this.sendImage, 30);
+        intervalVid = setInterval(this.sendImage, 100);
 
         messages = document.getElementById("messages");
 
@@ -757,7 +848,7 @@ export default {
                         const newFrame =
                             '<div id="' +
                             userid_str +
-                            '_frame" style="width: 320px; display: flex; align-items: center; justify-items: center; flex-direction: column; margin: 0px 5% 10px 5%; background: #d9d9d9;border: 1px solid #000000; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,inset 3px 3px 0px #ffffff;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid #000000; background: linear-gradient( 351.27deg, #ffffff -854.98%, #eeeeee -854.98%, #cacaca -91.55% ); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000, inset 3px 3px 0px #ffffff; border: 1px solid #000000;"><div style="    width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span>' +
+                            '_frame" style="width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; background: #d9d9d9;border: 1px solid #000000; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,inset 3px 3px 0px #ffffff;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid #000000; background: linear-gradient( 351.27deg, #ffffff -854.98%, #eeeeee -854.98%, #cacaca -91.55% ); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000, inset 3px 3px 0px #ffffff; border: 1px solid #000000;"><div style="    width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span>' +
                             userid_str +
                             '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin-bottom: 10px" src="' +
                             event_data.video +
@@ -774,9 +865,9 @@ export default {
                 const btn = document.getElementById("input_answer");
                 if (userid_str != current_user) {
                     btn.disabled = true;
-                    this.time = 100;
+                    this.time = 12;
                 } else {
-                    this.time = 100;
+                    this.time = 12;
                     btn.disabled = false;
                 }
             } else if (event_data.type == "delete_frame") {
@@ -826,12 +917,14 @@ export default {
                 log_tab.style.margin = "0 2% 0 2%";
                 log_tab.id = "log_tab";
                 span_remove_word.style.textAlign = "right";
+                span_remove_word.style.width = "250px";
+                span_remove_word.style.wordBreak = "keep-all";
 
                 span_user_id.innerText = event_data.user;
                 span_user_input.innerText = event_data.answer;
 
                 event_data.removedWords.forEach((element) => {
-                    span_remove_word.innerHTML += element + "<br/>";
+                    span_remove_word.innerHTML += element + " ";
                 });
 
                 //log_tab.appendChild(span_user_id);
@@ -870,7 +963,7 @@ export default {
                     this.time = event_data.remain_time;
                     if (this.time == 0) {
                         this.send_user_turn();
-                        this.time = 100;
+                        this.time = 12;
                         answer_text_box.disabled = true;
                     }
                 } else {
@@ -888,9 +981,14 @@ export default {
             }
         };
         this.processImage();
-        //this.updateProgressbar();
+        // this.updateProgressbar();
+        // this.playMusic();
+        this.colored();
     },
     methods: {
+        colored() {
+            document.body.style.backgroundColor = "rgb(0, 0, 0)";
+        },
         testbutton() {
             this.time--;
         },
@@ -944,7 +1042,7 @@ export default {
                 this.isStreaming = 1;
                 this.toggle_text = "카메라 비활성화";
                 // intervalVid = setInterval(this.sendImage, 15);
-                intervalVid = setInterval(this.sendImage, 30);
+                intervalVid = setInterval(this.sendImage, 100);
             } else {
                 console.log("카메라 비활성화");
                 isStreaming = 0;
@@ -984,11 +1082,48 @@ export default {
         // progressbar
         updateProgressbar() {
             let el = document.getElementById("timerbar");
-            let width = (this.time / 7) * 100 + "%";
+            let width = (this.time / 12) * 100 + "%";
             width = parseFloat(width).toFixed(2);
-
             let widthStr = width + "%";
             el.style.width = widthStr;
+            switch (this.time) {
+                case 12:
+                    el.style.backgroundColor = "#42FF00";
+                    break;
+                case 11:
+                    el.style.backgroundColor = "#80FF00";
+                    break;
+                case 10:
+                    el.style.backgroundColor = "#9EFF00";
+                    break;
+                case 9:
+                    el.style.backgroundColor = "#BDFF00";
+                    break;
+                case 8:
+                    el.style.backgroundColor = "#DBFF00";
+                    break;
+                case 7:
+                    el.style.backgroundColor = "#EBFF00";
+                    break;
+                case 6:
+                    el.style.backgroundColor = "#FAFF00";
+                    break;
+                case 5:
+                    el.style.backgroundColor = "#FFF500";
+                    break;
+                case 4:
+                    el.style.backgroundColor = "#FFE600";
+                    break;
+                case 3:
+                    el.style.backgroundColor = "#FFC700";
+                    break;
+                case 2:
+                    el.style.backgroundColor = "#FF9900";
+                    break;
+                case 1:
+                    el.style.backgroundColor = "#FF1F00";
+                    break;
+            }
         },
         boardInit() {
             this.GameStart();
@@ -1035,12 +1170,15 @@ export default {
             connection.send(jsonData);
         },
         // musicPlayer Methods
+        /** Play Music */
         musicPlay() {
             this.$refs.playAudio.play();
         },
+        /** Pause Music */
         musicPause() {
             this.$refs.playAudio.pause();
         },
+        /** Play Music for button */
         playMusic() {
             this.isPlaying = 1;
             document.getElementById("radioPlayBtn").style.backgroundImage =
@@ -1048,6 +1186,14 @@ export default {
             document.getElementById("radioPauseBtn").style.backgroundImage =
                 "url('../src/assets/image/btn_pop.png')";
             this.musicPlay();
+        },
+        /** Play Music for button */
+        toggleMusic() {
+            if (this.isPlaying) {
+                this.pauseMusic();
+            } else {
+                this.playMusic();
+            }
         },
         pauseMusic() {
             this.isPlaying = 0;
@@ -1086,9 +1232,9 @@ export default {
             audio.volume = (gradientValue * event.target.value) / 100;
             event.target.style.background = `linear-gradient(to right, #0054e6 0%, #0054e6 ${
                 gradientValue * event.target.value
-            }%, rgb(62, 62, 62) ${
+            }%, rgb(32, 32, 32) ${
                 gradientValue * event.target.value
-            }%, rgb(62, 62, 62) 100%)`;
+            }%, rgb(32, 32, 32) 100%)`;
         },
         dragMouseDown(e) {
             e = e || window.event;
@@ -1133,8 +1279,8 @@ export default {
         },
         toggleMusicBox() {
             this.openMusicPlayer = (this.openMusicPlayer + 1) % 2;
-            this.$refs.floatWindow.style.top = "50px";
-            this.$refs.floatWindow.style.left = "50px";
+            this.$refs.floatWindow.style.top = "5%";
+            this.$refs.floatWindow.style.right = "150px";
         },
         closePlayer() {
             this.openMusicPlayer = 0;
@@ -1146,6 +1292,9 @@ export default {
             this.showHowTo = 0;
         },
         backHome() {
+            const audio = new Audio("../src/assets/soundEffect/close.wav");
+            audio.volume = 0.6;
+            audio.play();
             this.$router.push("/");
         },
         // Game End Pop
@@ -1154,6 +1303,18 @@ export default {
         },
         modalOpen() {
             this.openModal = true;
+        },
+        toggleRight() {
+            const audio = new Audio("../src/assets/soundEffect/page.wav");
+            audio.volume = 0.6;
+            audio.play();
+            this.isOpenRight = !this.isOpenRight;
+        },
+        toggleLeft() {
+            const audio = new Audio("../src/assets/soundEffect/page.wav");
+            audio.volume = 0.6;
+            audio.play();
+            this.isOpenLeft = !this.isOpenLeft;
         },
     },
 };
@@ -1170,46 +1331,13 @@ button {
 }
 .containerBody {
     min-width: fit-content;
+    width: 100vw;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: center;
+    overflow-x: hidden;
 }
 
-#leftBox,
-#centerBox,
-#rightBox {
-    flex-basis: 100%;
-    margin-bottom: 20px;
-}
-
-@media screen and (min-width: 1560px) {
-    #leftBox {
-        flex-basis: 25%;
-    }
-    #rightBox {
-        flex-basis: 25%;
-    }
-
-    #centerBox {
-        flex-basis: 45%;
-    }
-}
-
-@media screen and (max-width: 1560px) {
-    #rightBox {
-        flex-basis: 45%;
-        width: 300px;
-        order: 2;
-    }
-    #leftBox {
-        flex-basis: 45%;
-        order: 3;
-    }
-    #centerBox {
-        flex-basis: 60%;
-        order: 1;
-    }
-}
 .video-container {
     display: grid;
 }
@@ -1219,20 +1347,16 @@ button {
 }
 
 .innerWindow {
-    width: 90%;
-    margin: 0 0 10px 0;
+    width: 100%;
     float: right;
 }
 
 .videoWindow {
-    width: 320px;
+    width: 337px;
     display: flex;
     align-items: center;
     justify-items: center;
     flex-direction: column;
-
-    margin: 0px 5% 10px 5%;
-
     background: #d9d9d9;
     border: 1px solid #000000;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
@@ -1267,33 +1391,30 @@ button {
     border: 1px solid #000000;
 }
 .progressBar {
-    max-width: 660px;
+    max-width: 700px;
     width: 90%;
     margin: 10px auto;
-    /* margin-top: 100px; */
     height: 20px;
-    border-style: dashed;
+    border-style: solid;
     border-radius: 3px;
     background: linear-gradient(#ffffff, #fffffff9);
 }
 
 .innerbar {
-    max-width: 660px;
     width: 100%;
     height: 100%;
     text-align: right;
     height: 20px;
     /* same as #progressBar height if we want text middle aligned */
     border-radius: 3px;
-    background: linear-gradient(#ffac2e, #ffcf3e, #ffac2e);
+    background-color: #42ff00;
 }
 
 .answerBox {
-    max-width: 100%;
+    width: 100%;
     margin: 10px auto;
     /* margin-top: 100px; */
-    height: 5vh;
-    min-height: 50px;
+    height: 50px;
     display: flex;
     justify-content: center;
     border-radius: 3px;
@@ -1315,10 +1436,10 @@ button {
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 38vh;
+    height: 30%;
     overflow-y: hidden;
     min-height: 300px;
-    max-height: 40vh;
+    max-height: 30vh;
     background: #d9d9d9;
     border: 1px solid #000000;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
@@ -1337,7 +1458,7 @@ button {
 .barCover {
     /* Rectangle 2 */
     width: 100%;
-    height: 30px;
+    height: 50px;
 
     display: flex;
     justify-content: center;
@@ -1346,7 +1467,6 @@ button {
     border-right: 3px;
     border-style: solid;
     border-color: #000000;
-
     background: linear-gradient(
         351.27deg,
         #ffffff -854.98%,
@@ -1380,10 +1500,19 @@ button {
     background-size: cover;
 }
 #game_start {
+    box-sizing: border-box;
+    /* height: 15%;
+    width: 40%; */
     font-size: 2rem;
     position: absolute;
-    left: 40%;
-    top: 40%;
+    left: 30%;
+    top: 30%;
+    z-index: 98;
+    cursor: pointer;
+    background-color: transparent;
+    border-top: 155px solid rgba(22, 255, 96, 0);
+    border-left: 250px solid rgba(22, 255, 96, 1);
+    border-bottom: 155px solid rgba(22, 255, 96, 0);
 }
 
 .blackBox {
@@ -1398,20 +1527,27 @@ button {
 }
 
 #rightBox {
+    position: fixed;
     justify-content: end;
-    min-width: 300px;
-    max-height: 80vh;
+    width: 400px;
+    height: 80vh;
+    right: 0px;
 }
 
 #leftBox {
-    width: 370px;
-    min-width: 370px;
+    position: fixed;
+    left: 0px;
+    width: 340px;
     max-height: 80vh;
     overflow-y: scroll;
     overflow-x: hidden;
 }
+#leftBox::-webkit-scrollbar {
+    display: none;
+}
+
 #centerBox {
-    width: fit-content;
+    width: 100%;
     max-width: 800px;
     max-height: 80vh;
     flex-direction: column;
@@ -1423,9 +1559,20 @@ button {
 }
 .videoFrame {
     width: 300px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+}
+.hoverButton {
+    z-index: -1;
+    position: absolute;
+    color: #ffffff;
+}
+.videoFrame:hover .hoverButton {
+    z-index: 2;
+    top: 78px;
+    left: 20px;
+    width: 300px;
+    height: 240px;
+    border: none;
+    background-color: rgba(32, 32, 32, 0.7);
 }
 #gameWindow {
     width: 100%;
@@ -1444,6 +1591,7 @@ button {
 }
 #send_message {
     width: 20%;
+    background-color: rgb(22, 255, 94);
 }
 /*############################### Music Player */
 @font-face {
@@ -1469,23 +1617,37 @@ button {
 
 #floatWindow {
     position: absolute;
-    z-index: 9;
-    background-color: #f1f1f1;
-    border: 2px solid #000000;
+    z-index: 10;
     text-align: center;
-    box-shadow: 4px 4px 4px 2px #121212;
-    left: 50px;
-    top: 50%;
+    background: linear-gradient(
+        351.27deg,
+        #ffffff -854.98%,
+        #eeeeee -854.98%,
+        #cacaca -91.55%
+    );
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
+    right: 150px;
+    top: 5%;
+    width: 20vw;
+    min-width: 300px;
+    z-index: 30;
 }
 
 #playerHeader {
-    width: 755px;
+    width: 100%;
     height: 30px;
     cursor: move;
     z-index: 10;
-    background-color: #003a9f;
-    color: #fff;
-    border-width: 3px 5px 0px 3px;
+    background: linear-gradient(
+        351.27deg,
+        #ffffff -854.98%,
+        #eeeeee -854.98%,
+        #cacaca -91.55%
+    );
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
+    border-width: 3px 3px 0px 3px;
     border-style: solid;
     border-color: #000000;
     display: flex;
@@ -1493,13 +1655,13 @@ button {
     align-items: center;
 }
 
-#flowBoxWrapper {
-    width: 697px;
+.flowBoxWrapper {
+    width: 95%;
     overflow: hidden;
     word-break: nowrap;
 }
 
-#flowBox {
+.flowBox {
     width: 1394px;
     display: flex;
     justify-content: space-between;
@@ -1508,10 +1670,10 @@ button {
 }
 
 .musicTitle {
-    width: 697px;
+    width: 100%;
     color: #afffb3;
     font-family: "retroFont";
-    font-size: 1.2rem;
+    font-size: 100%;
     word-break: nowrap;
     text-shadow: -1px 0 #d0ffd2, 0 1px #d0ffd2, 1px 0 #d0ffd2, 0 -1px #d0ffd2;
 }
@@ -1521,10 +1683,10 @@ button {
 }
 
 #audioPlayer {
-    width: 755px;
-    height: 307.3px;
+    width: 100%;
+    height: 210px;
     background: linear-gradient(180deg, #c6c6c6 -15.29%, #ffffff 116.66%);
-    border-width: 3px 5px 7px 3px;
+    border-width: 3px;
     border-style: solid;
     border-color: #000000;
 }
@@ -1532,45 +1694,57 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 709px;
-    height: 102px;
+    width: 94%;
+    height: 30%;
     margin: 0 auto;
     margin-top: 20px;
     background-image: url("../assets/image/radio_pannel.png");
     background-size: cover;
 }
 #radioBtnBox {
-    width: 709px;
-    height: 87px;
+    width: 94%;
+    height: 25%;
     margin: 0 auto;
     margin-top: 15px;
     background-image: url("../assets/image/radio_btnBox.png");
     background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #radioVolume {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 709px;
-    height: 42px;
+    width: 94%;
+    height: 14%;
+    min-height: 15px;
     margin: 0 auto;
     margin-top: 15px;
     background-image: url("../assets/image/radio_volume.png");
     background-size: cover;
 }
 .radioBtn {
-    width: 174px;
-    height: 74px;
+    width: 24%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     background-image: url("../assets/image/btn_pop.png");
     background-size: cover;
 }
+.radioBtnWrapper {
+    width: 99%;
+    height: 85%;
+    margin-bottom: 1%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
 
 #volume-slider {
     -webkit-appearance: none; /* 기본 적용 CSS 방지 */
-    width: 98%;
+    width: 100%;
     border-radius: 1px; /* 슬라이더 모서리 */
     float: left;
     outline: none;
@@ -1580,8 +1754,8 @@ button {
         to right,
         #0054e6 0%,
         #0054e6 60%,
-        #3e3e3e 60%,
-        #3e3e3e 100%
+        RGB(32, 32, 32) 60%,
+        RGB(32, 32, 32) 100%
     );
     outline: none; /* 슬라이더 테두리 없이 */
 }
@@ -1673,20 +1847,102 @@ button {
 }
 .chatBoxChat {
     width: 100%;
-    height: 100%;
+    height: 280px;
     overflow-y: scroll;
     -ms-overflow-style: none;
+    margin-bottom: 10px;
 }
 .chatBoxChat::-webkit-scrollbar {
     display: none;
 }
 
 #logBoard {
-    height: 300px;
+    min-height: 200px;
+    height: 30%;
+    max-height: 300px;
     overflow-y: scroll;
 }
 #logBoard::-webkit-scrollbar {
     display: none;
 }
+.btnMark {
+    height: 30%;
+}
+span {
+    font-size: 1.5rem;
+    margin: 2px;
+}
 
+.toggleBtn {
+    background-color: #cacaca;
+    border: 1px solid #000000;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+}
+.toggleBtn > span {
+    color: RGB(32, 32, 32);
+}
+#toggleBtnLeft {
+    float: left;
+}
+.answerArea {
+    position: fixed;
+    bottom: 0%;
+    width: 100%;
+    height: 100px;
+    z-index: 100;
+    background: linear-gradient(
+        351.27deg,
+        #ffffff -854.98%,
+        #eeeeee -854.98%,
+        #cacaca -91.55%
+    );
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
+        inset 3px 3px 0px #ffffff;
+}
+.left-enter-from {
+    transform: translateX(-360px);
+}
+.left-enter-to {
+    transform: translateX(-0px);
+}
+
+.left-leave-from {
+    transform: translateX(-0px);
+}
+.left-leave-to {
+    transform: translateX(-360px);
+}
+
+.left-leave-active {
+    transition: all 0.4s;
+}
+.left-enter-active {
+    transition: all 0.4s;
+}
+
+.right-enter-from {
+    transform: translateX(360px);
+}
+.right-enter-to {
+    transform: translateX(0px);
+}
+
+.right-leave-from {
+    transform: translateX(0px);
+}
+.right-leave-to {
+    transform: translateX(360px);
+}
+
+.right-leave-active {
+    transition: all 0.4s;
+}
+.right-enter-active {
+    transition: all 0.4s;
+}
 </style>
