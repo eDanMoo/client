@@ -1,214 +1,20 @@
 <template>
-    <!-- Game End Pop -->
-    <div>
-        <modal
-            v-if="this.openModal == true"
-            @sendClose="closeModalView"
-            :msg="game_over"
-        />
-    </div>
-    <!-- Music Player -->
-    <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
-        <div id="playerHeader" @mousedown="dragMouseDown">
-            <span style="margin-left: 10px">음악 재생기</span>
-            <img
-                src="../assets/gamecomp/Xbutton.png"
-                style="
-                    width: 22px;
-                    height: 22px;
-                    margin-right: 10px;
-                    cursor: pointer;
-                "
-                alt=""
-                @click="closePlayer()"
+    <div id="inGameContainer space stars1">
+        <div class="main"></div>
+        <div class="chuvaMeteoro"></div>
+        <!-- Game End Pop -->
+        <div>
+            <modal
+                v-if="this.openModal == true"
+                @sendClose="closeModalView"
+                :msg="game_over"
+                style="z-index: 1000"
             />
         </div>
-        <div id="audioPlayer">
-            <audio ref="playAudio" loop volume="0.6">
-                <source
-                    v-for="(source, index) in musicSources"
-                    :key="index"
-                    :src="source.src"
-                    :type="source.type"
-                />
-            </audio>
-            <div id="radioPannel">
-                <div class="flowBoxWrapper">
-                    <div class="flowBox">
-                        <span class="musicTitle" id="musicTitle1">{{
-                            musicSources[musicIndex].fileName
-                        }}</span>
-                        <span class="musicTitle" id="musicTitle2">{{
-                            musicSources[musicIndex].fileName
-                        }}</span>
-                    </div>
-                </div>
-            </div>
-            <div id="radioBtnBox">
-                <div class="radioBtnWrapper">
-                    <button
-                        class="radioBtn"
-                        @click="playMusic()"
-                        id="radioPlayBtn"
-                    >
-                        <img
-                            class="btnMark"
-                            src="../assets/image/btn_play.png"
-                            alt=""
-                        />
-                    </button>
-                    <button
-                        class="radioBtn"
-                        @click="pauseMusic()"
-                        id="radioPauseBtn"
-                    >
-                        <img
-                            class="btnMark"
-                            src="../assets/image/btn_pause.png"
-                            alt=""
-                        />
-                    </button>
-                    <button
-                        class="radioBtn"
-                        @click="prevMusic()"
-                        id="radioPrevBtn"
-                    >
-                        <img
-                            class="btnMark"
-                            src="../assets/image/btn_prev.png"
-                            alt=""
-                        />
-                    </button>
-                    <button
-                        class="radioBtn"
-                        @click="nextMusic()"
-                        id="radioNextBtn"
-                    >
-                        <img
-                            class="btnMark"
-                            src="../assets/image/btn_next.png"
-                            alt=""
-                        />
-                    </button>
-                </div>
-            </div>
-            <div id="radioVolume">
-                <input
-                    type="range"
-                    ref="volumeSlider"
-                    id="volume-slider"
-                    max="100"
-                    value="60"
-                    @input="onVolumeChange"
-                />
-            </div>
-        </div>
-    </div>
-    <!-- Nav Bar -->
-    <nav style="display: flex; justify-content: space-between">
-        <div style="display: flex; align-items: center">
-            <img
-                src="../assets/image/exit_Icon.svg"
-                alt=""
-                style="
-                    width: 40px;
-                    height: 40px;
-                    padding-right: 20px;
-                    cursor: pointer;
-                "
-                @click="backHome"
-            />
-            <h1 id="enterCode" style="color: white">
-                방 입장 코드: {{ enterCode }}
-            </h1>
-        </div>
-        <div style="display: flex; align-items: center">
-            <h1
-                style="
-                    color: white;
-                    font-size: 3.5rem;
-                    margin-bottom: unset;
-                    margin-top: unset;
-                "
-            >
-                {{ game_time }}
-            </h1>
-        </div>
-        <div style="display: flex; align-items: center">
-            <div
-                class="flowBoxWrapper"
-                style="width: 15vw"
-                v-show="isPlaying && !openMusicPlayer"
-            >
-                <div class="flowBox">
-                    <span class="musicTitle" id="musicTitle3">{{
-                        musicSources[musicIndex].fileName
-                    }}</span>
-                    <span class="musicTitle" id="musicTitle4">{{
-                        musicSources[musicIndex].fileName
-                    }}</span>
-                </div>
-            </div>
-            <div
-                v-show="!openMusicPlayer"
-                style="
-                    cursor: pointer;
-                    width: 40px;
-                    height: 40px;
-                    background: linear-gradient(
-                        351.27deg,
-                        #ffffff -854.98%,
-                        #eeeeee -854.98%,
-                        #cacaca -91.55%
-                    );
-                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25),
-                        1px 1px 0px #000000, inset 3px 3px 0px #ffffff;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                "
-                @click="toggleMusic()"
-            >
-                <img
-                    class="btnMark"
-                    src="../assets/image/btn_pause.png"
-                    v-show="isPlaying"
-                />
-                <img
-                    class="btnMark"
-                    src="../assets/image/btn_play.png"
-                    v-show="!isPlaying"
-                />
-            </div>
-            <div style="width: 80px; height: 80px; overflow: hidden">
-                <img
-                    v-show="isPlaying"
-                    src="../assets/image/playerIcon.png"
-                    alt="cdP"
-                    id="playerIcon"
-                    @click="toggleMusicBox()"
-                />
-                <img
-                    v-show="!isPlaying"
-                    src="../assets/image/playerIcon.png"
-                    alt="cdP"
-                    id="playerIconStop"
-                    @click="toggleMusicBox()"
-                />
-            </div>
-            <img
-                src="../assets/image/questionIcon.png"
-                alt=""
-                style="width: 100px; height: 100px; cursor: pointer"
-                @click="toggleHowTo()"
-            />
-        </div>
-    </nav>
-    <!-- How To -->
-    <div v-show="showHowTo" class="inGamePopup" id="howToPopup">
-        <div class="popupWrapper">
-            <div class="popupBar">
-                <p style="margin-left: 10px">설명</p>
+        <!-- Music Player -->
+        <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
+            <div id="playerHeader" @mousedown="dragMouseDown">
+                <span style="margin-left: 10px">음악 재생기</span>
                 <img
                     src="../assets/gamecomp/Xbutton.png"
                     style="
@@ -218,58 +24,285 @@
                         cursor: pointer;
                     "
                     alt=""
-                    @click="closeHowTo()"
+                    @click="closePlayer()"
                 />
             </div>
-            <div class="popupContent">
-                <p style="margin: 10px 10px 0 10px">
-                    본 게임은 놀이판 내에 존재하는 <br />
-                    단어를 없애는 게임입니다. <br />
-                    그러나, 놀이판 내에 있는 단어를 <br />
-                    직접 입력하면 1점만 얻을 수 있습니다. <br />
-                    가능한 많은 단어를 없애려면 <br />
-                    많은 단어와 연관있는 단어를 입력해보세요!
-                </p>
+            <div id="audioPlayer">
+                <audio ref="playAudio" loop volume="0.6">
+                    <source
+                        v-for="(source, index) in musicSources"
+                        :key="index"
+                        :src="source.src"
+                        :type="source.type"
+                    />
+                </audio>
+                <div id="radioPannel">
+                    <div class="flowBoxWrapper">
+                        <div class="flowBox">
+                            <span class="musicTitle" id="musicTitle1">{{
+                                musicSources[musicIndex].fileName
+                            }}</span>
+                            <span class="musicTitle" id="musicTitle2">{{
+                                musicSources[musicIndex].fileName
+                            }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="radioBtnBox">
+                    <div class="radioBtnWrapper">
+                        <button
+                            class="radioBtn"
+                            @click="playMusic()"
+                            id="radioPlayBtn"
+                        >
+                            <img
+                                class="btnMark"
+                                src="../assets/image/btn_play.png"
+                                alt=""
+                            />
+                        </button>
+                        <button
+                            class="radioBtn"
+                            @click="pauseMusic()"
+                            id="radioPauseBtn"
+                        >
+                            <img
+                                class="btnMark"
+                                src="../assets/image/btn_pause.png"
+                                alt=""
+                            />
+                        </button>
+                        <button
+                            class="radioBtn"
+                            @click="prevMusic()"
+                            id="radioPrevBtn"
+                        >
+                            <img
+                                class="btnMark"
+                                src="../assets/image/btn_prev.png"
+                                alt=""
+                            />
+                        </button>
+                        <button
+                            class="radioBtn"
+                            @click="nextMusic()"
+                            id="radioNextBtn"
+                        >
+                            <img
+                                class="btnMark"
+                                src="../assets/image/btn_next.png"
+                                alt=""
+                            />
+                        </button>
+                    </div>
+                </div>
+                <div id="radioVolume">
+                    <input
+                        type="range"
+                        ref="volumeSlider"
+                        id="volume-slider"
+                        max="100"
+                        value="60"
+                        @input="onVolumeChange"
+                    />
+                </div>
             </div>
         </div>
-    </div>
-    <div>
+        <!-- Nav Bar -->
+        <nav style="display: flex; justify-content: space-between;">
+            <div style="display: flex; align-items: center">
+                <img
+                    src="../assets/image/exit_Icon.svg"
+                    alt=""
+                    style="
+                        width: 40px;
+                        height: 40px;
+                        padding-right: 20px;
+                        cursor: pointer;
+                    "
+                    @click="backHome"
+                />
+                <h1 id="enterCode" style="color: white">
+                    방 입장 코드: {{ enterCode }}
+                </h1>
+            </div>
+            <div style="display: flex; align-items: center">
+                <h1
+                    style="
+                        color: white;
+                        font-size: 3.5rem;
+                        margin-bottom: unset;
+                        margin-top: unset;
+                    "
+                >
+                    {{ game_time }}
+                </h1>
+            </div>
+            <div style="display: flex; align-items: center">
+                <div
+                    class="flowBoxWrapper"
+                    style="width: 15vw"
+                    v-show="isPlaying && !openMusicPlayer"
+                >
+                    <div class="flowBox">
+                        <span class="musicTitle" id="musicTitle3">{{
+                            musicSources[musicIndex].fileName
+                        }}</span>
+                        <span class="musicTitle" id="musicTitle4">{{
+                            musicSources[musicIndex].fileName
+                        }}</span>
+                    </div>
+                </div>
+                <div
+                    v-show="!openMusicPlayer"
+                    style="
+                        cursor: pointer;
+                        width: 40px;
+                        height: 40px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border: 2px solid rgb(22, 255, 255);
+                        border-radius: 5px;
+                        margin: 10px;
+                    "
+                    @click="toggleMusic()"
+                >
+                    <button
+                        v-show="!isPlaying"
+                        style="
+                            cursor: pointer;
+                            box-sizing: border-box;
+                            background-color: transparent;
+                            border-top: 12.5px transparent;
+                            border-bottom: 12.5px transparent;
+                            border-left: 25px rgb(22, 255, 255);
+                            border-right: 0px transparent;
+                            border-style: solid;
+                            margin-left: 10px;
+                        "
+                    ></button>
+                    <button
+                        v-show="isPlaying"
+                        style="
+                            cursor: pointer;
+                            height: 30px;
+                            background-color: transparent;
+                            border-top: 0 transparent;
+                            border-bottom: 0 transparent;
+                            border-left: 7px rgb(22, 255, 255);
+                            border-right: 7px rgb(22, 255, 255);
+                            border-style: solid;
+                        "
+                    ></button>
+                </div>
+                <div
+                    style="
+                        width: 80px;
+                        height: 80px;
+                        overflow: hidden;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    "
+                >
+                    <img
+                        v-show="isPlaying"
+                        src="../assets/image/playerIcon.png"
+                        alt="cdP"
+                        id="playerIcon"
+                        @click="toggleMusicBox()"
+                    />
+                    <img
+                        v-show="!isPlaying"
+                        src="../assets/image/playerIcon.png"
+                        alt="cdP"
+                        id="playerIconStop"
+                        @click="toggleMusicBox()"
+                    />
+                </div>
+                <img
+                    src="../assets/image/questionIcon.png"
+                    alt=""
+                    style="
+                        width: 30px;
+                        height: 45px;
+                        cursor: pointer;
+                        margin: 10px;
+                        margin-right: 40px;
+                    "
+                    @click="toggleHowTo()"
+                />
+            </div>
+        </nav>
+        <!-- How To -->
+        <div v-show="showHowTo" class="inGamePopup" id="howToPopup">
+            <div class="popupWrapper">
+                <div class="popupBar">
+                    <p style="margin-left: 10px">설명</p>
+                    <img
+                        src="../assets/gamecomp/Xbutton.png"
+                        style="
+                            width: 22px;
+                            height: 22px;
+                            margin-right: 10px;
+                            cursor: pointer;
+                        "
+                        alt=""
+                        @click="closeHowTo()"
+                    />
+                </div>
+                <div class="popupContent">
+                    <p style="margin: 10px 10px 0 10px">
+                        본 게임은 놀이판 내에 존재하는 <br />
+                        단어를 없애는 게임입니다. <br />
+                        그러나, 놀이판 내에 있는 단어를 <br />
+                        직접 입력하면 1점만 얻을 수 있습니다. <br />
+                        가능한 많은 단어를 없애려면 <br />
+                        많은 단어와 연관있는 단어를 입력해보세요!
+                    </p>
+                </div>
+            </div>
+        </div>
         <div class="containerBody">
             <!-- 영상 재생부 -->
-            <div
-                class="toggleBtn"
-                style="
-                    position: absolute;
-                    left: 0px;
-                    width: 30px;
-                    display: flex;
-                    justify-content: end;
-                "
-                @click="toggleLeft()"
-                v-show="!isOpenLeft"
-            >
-                <span> > </span>
-            </div>
-            <div
-                class="toggleBtn"
-                style="position: absolute; right: 0px; width: 30px"
-                @click="toggleRight()"
-                v-show="!isOpenRight"
-            >
-                <span> &lt; </span>
-            </div>
+            <Transition name="left">
+                <div
+                    class="toggleBtn"
+                    style="
+                        position: absolute;
+                        left: 0px;
+                        width: 30px;
+                        display: flex;
+                        justify-content: end;
+                    "
+                    @click="toggleLeft()"
+                    v-show="!isOpenLeft"
+                >
+                    <span> > </span>
+                </div>
+            </Transition>
+            <Transition name="right">
+                <div
+                    class="toggleBtn"
+                    style="position: absolute; right: 0px; width: 30px"
+                    @click="toggleRight()"
+                    v-show="!isOpenRight"
+                >
+                    <span> &lt; </span>
+                </div>
+            </Transition>
             <Transition name="left">
                 <div id="leftBox" v-show="isOpenLeft">
                     <!-- 닫기 버튼 -->
                     <div class="toggleBtn" @click="toggleLeft()">
                         <span>참여자 영상</span>
-                        <span> 접기 &lt; </span>
+                        <span> &lt; </span>
                     </div>
                     <div class="videoWindow">
                         <div class="videoBarCover">
                             <div class="videoBar">
-                                <span>내 영상</span>
-                                <button class="minBtnDisabled"></button>
+                                <span style="color: rgb(22, 255, 94);">내 영상</span>
                             </div>
                         </div>
                         <div class="videoFrame">
@@ -300,12 +333,6 @@
             </Transition>
             <!-- ############게임화면################# -->
             <div class="centerBox" id="centerBox">
-                <div class="barCover">
-                    <div class="windowBar">
-                        <span>놀이판</span>
-                        <button class="minBtnDisabled"></button>
-                    </div>
-                </div>
                 <div class="gameWindow" id="gameWindow">
                     <div id="gameBox">
                         <WordCard
@@ -326,7 +353,7 @@
                 <div class="rightBox" id="rightBox" v-show="isOpenRight">
                     <!--------------------- 닫기 버튼 ------------------>
                     <div class="toggleBtn" @click="toggleRight()">
-                        <span> > 접기 </span>
+                        <span> > </span>
                         <span>정보</span>
                     </div>
                     <!---------------------점수화면--------------------->
@@ -337,11 +364,21 @@
                                 ><button
                                     class="minBtn"
                                     @click="ScoreVisible = !ScoreVisible"
-                                ></button>
+                                    v-show="ScoreVisible"
+                                >
+                                    -
+                                </button>
+                                <button
+                                    class="minBtn"
+                                    @click="ScoreVisible = !ScoreVisible"
+                                    v-show="!ScoreVisible"
+                                >
+                                    +
+                                </button>
                             </div>
                         </div>
                         <div v-show="ScoreVisible" class="windowOuter">
-                            <div class="blackBox" id="socreBoard"></div>
+                            <div class="blackBox" id="scoreBoard"></div>
                         </div>
                     </div>
 
@@ -353,7 +390,17 @@
                                 ><button
                                     class="minBtn"
                                     @click="LogVisible = !LogVisible"
-                                ></button>
+                                    v-show="LogVisible"
+                                >
+                                    -
+                                </button>
+                                <button
+                                    class="minBtn"
+                                    @click="LogVisible = !LogVisible"
+                                    v-show="!LogVisible"
+                                >
+                                    +
+                                </button>
                             </div>
                         </div>
                         <div v-show="LogVisible" class="windowOuter">
@@ -369,7 +416,17 @@
                                 ><button
                                     class="minBtn"
                                     @click="ChatVisible = !ChatVisible"
-                                ></button>
+                                    v-show="ChatVisible"
+                                >
+                                    -
+                                </button>
+                                <button
+                                    class="minBtn"
+                                    @click="ChatVisible = !ChatVisible"
+                                    v-show="!ChatVisible"
+                                >
+                                    +
+                                </button>
                             </div>
                         </div>
                         <div v-show="ChatVisible" class="chatBoxOuter">
@@ -423,25 +480,30 @@
             <!-- 오른쪽 끝 -->
         </div>
         <div class="answerArea">
-            <div>
-                <div class="progressBar">
-                    <div id="timerbar" class="innerbar"></div>
+            <div class="answerLine"></div>
+            <div class="innerAnswer">
+                <div>
+                    <div class="progressBar">
+                        <div id="timerbar" class="innerbar"></div>
+                    </div>
+                </div>
+                <div class="answerBox">
+                    <input
+                        type="text"
+                        id="input_answer"
+                        disabled
+                        @keypress.enter="answerCheck()"
+                        style="width: 250px; height: 38px; font-size: 2rem"
+                    />
                 </div>
             </div>
-            <div class="answerBox">
-                <input
-                    type="text"
-                    id="input_answer"
-                    disabled
-                    @keypress.enter="answerCheck()"
-                    style="width: 250px; height: 38px; font-size: 2rem"
-                />
-            </div>
+            <div class="answerLine"></div>
         </div>
     </div>
 </template>
 
 <script>
+
 // import { onMounted, ref } from "vue";
 // import VueSocketIO from "vue-socket.io";
 import WordCard from "../components/WordCard.vue";
@@ -684,24 +746,24 @@ export default {
             //console.log(send_url);
 
             const socket = new WebSocket(
-                ws_scheme + "webdev-test.site/ws/" + room_name
-                //"ws://127.0.0.1:8888/ws/" + room_name
+                // ws_scheme + "webdev-test.site/ws/" + room_name
+                "ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
                 resolve(socket);
             });
-            socket.addEventListener("error", (error) => {
-                console.log("Websocket connect error");
-                alert("게임서버와의 연결이 종료되었습니다.");
-                location.href = "/";
-                reject(error);
-            });
-            socket.addEventListener("close", (event) => {
-                console.log("WebSocket connection closed:", event);
-                alert("게임서버와의 연결이 종료되었습니다.");
-                location.href = "/";
-            });
+            // socket.addEventListener("error", (error) => {
+            //     console.log("Websocket connect error");
+            //     alert("게임서버와의 연결이 종료되었습니다.");
+            //     location.href = "/";
+            //     reject(error);
+            // });
+            // socket.addEventListener("close", (event) => {
+            //     console.log("WebSocket connection closed:", event);
+            //     alert("게임서버와의 연결이 종료되었습니다.");
+            //     location.href = "/";
+            // });
         });
 
         isStreaming = 1;
@@ -768,14 +830,14 @@ export default {
 
                 if (userid_str == current_user) {
                     userid_tag.setAttribute("class", "userid_tag_right");
-                    content_tag.style.color = "#ff0000";
+                    content_tag.style.color = "rgb(255, 152, 78)";
                     message.style.float = "right";
                     content_tag.style.float = "right";
                     userid_tag.style.color = "#9d44f0";
                     userid_tag.style.backgroundColor = "userid_tag";
                 } else {
                     userid_tag.setAttribute("class", "userid_tag_left");
-                    content_tag.style.color = "#fef769";
+                    content_tag.style.color = "rgb(255, 152, 78)";
                     userid_tag.style.color = "#9d44f0";
                     message.style.float = "left";
                     content_tag.style.float = "left";
@@ -810,7 +872,7 @@ export default {
                     userid_str + "_score"
                 );
                 if (!check_score_input) {
-                    const socreBoard = document.getElementById("socreBoard");
+                    const scoreBoard = document.getElementById("scoreBoard");
                     const scoreTab = document.createElement("div");
                     const spanUserId = document.createElement("span");
                     const spanScore = document.createElement("span");
@@ -825,7 +887,7 @@ export default {
                     spanScore.innerText = 0;
                     scoreTab.appendChild(spanUserId);
                     scoreTab.appendChild(spanScore);
-                    socreBoard.appendChild(scoreTab);
+                    scoreBoard.appendChild(scoreTab);
                 }
                 if (userid_str == current_user) {
                     0;
@@ -848,9 +910,9 @@ export default {
                         const newFrame =
                             '<div id="' +
                             userid_str +
-                            '_frame" style="width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; background: #d9d9d9;border: 1px solid #000000; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,inset 3px 3px 0px #ffffff;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid #000000; background: linear-gradient( 351.27deg, #ffffff -854.98%, #eeeeee -854.98%, #cacaca -91.55% ); box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000, inset 3px 3px 0px #ffffff; border: 1px solid #000000;"><div style="    width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span>' +
+                            '_frame" style="width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 1.5rem">' +
                             userid_str +
-                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin-bottom: 10px" src="' +
+                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="' +
                             event_data.video +
                             '" id="' +
                             userid_str +
@@ -982,12 +1044,42 @@ export default {
         };
         this.processImage();
         // this.updateProgressbar();
-        // this.playMusic();
+        this.playMusic();
         this.colored();
+        this.init();
+        document.body.style.background =
+            "radial-gradient(circle at bottom, rgb(10, 10, 60) 0, black 100%)";
     },
     methods: {
+        init() {
+            var style = ["style1", "style2", "style3", "style4"];
+
+            function getRandomArbitrary(min, max) {
+                return Math.floor(Math.random() * (max - min)) + min;
+            }
+            //meteoros
+
+            var numeroAleatorio = 5000;
+
+            setTimeout(function () {
+                carregarMeteoro();
+            }, numeroAleatorio);
+
+            function carregarMeteoro() {
+                setTimeout(carregarMeteoro, numeroAleatorio);
+                numeroAleatorio = getRandomArbitrary(5000, 10000);
+                var meteoro =
+                "<div class='meteoro " + style[getRandomArbitrary(0, 4)] + "'></div>";
+                document.getElementsByClassName("chuvaMeteoro")[0].innerHTML = meteoro;
+                setTimeout(function () {
+                document.getElementsByClassName("chuvaMeteoro")[0].innerHTML = "";
+                }, 1000);
+            }
+        },
         colored() {
             document.body.style.backgroundColor = "rgb(0, 0, 0)";
+            document.body.style.background =
+                "radial-gradient(circle at bottom, rgb(10, 10, 60) 0, black 100%)";
         },
         testbutton() {
             this.time--;
@@ -1330,7 +1422,6 @@ button {
     font-family: "Dunggeunmo";
 }
 .containerBody {
-    min-width: fit-content;
     width: 100vw;
     display: flex;
     flex-wrap: wrap;
@@ -1347,24 +1438,23 @@ button {
 }
 
 .innerWindow {
+    box-sizing: border-box;
     width: 100%;
-    float: right;
+    border: 1px solid rgb(22, 255, 94);
 }
 
 .videoWindow {
-    width: 337px;
+    box-sizing: border-box;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-items: center;
     flex-direction: column;
-    background: #d9d9d9;
-    border: 1px solid #000000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
+    border: 1px solid rgb(22, 255, 94);
 }
 
 .videoBar {
-    width: 90%;
+    width: 100%;
     height: 30px;
     display: flex;
     justify-content: space-between;
@@ -1372,23 +1462,14 @@ button {
 }
 
 .videoBarCover {
+    box-sizing: border-box;
     width: 100%;
     height: 30px;
 
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #000000;
-
-    background: linear-gradient(
-        351.27deg,
-        #ffffff -854.98%,
-        #eeeeee -854.98%,
-        #cacaca -91.55%
-    );
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
-    border: 1px solid #000000;
+    border-bottom: 1px solid rgb(22, 255, 94);
 }
 .progressBar {
     max-width: 700px;
@@ -1401,9 +1482,11 @@ button {
 }
 
 .innerbar {
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     text-align: right;
+    margin: 0;
     height: 20px;
     /* same as #progressBar height if we want text middle aligned */
     border-radius: 3px;
@@ -1428,22 +1511,14 @@ button {
     background-color: #000000;
     width: 95%;
     height: 95%;
-    min-height: 290px;
-    margin-bottom: 15px;
 }
 
 .chatBoxOuter {
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 30%;
+    height: 200px;
     overflow-y: hidden;
-    min-height: 300px;
-    max-height: 30vh;
-    background: #d9d9d9;
-    border: 1px solid #000000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
     position: relative;
 }
 .windowBar {
@@ -1457,85 +1532,94 @@ button {
 
 .barCover {
     /* Rectangle 2 */
+    box-sizing: border-box;
     width: 100%;
     height: 50px;
-
+    color: rgb(22, 255, 94);
     display: flex;
     justify-content: center;
     align-items: center;
-    border-left: 3px;
-    border-right: 3px;
-    border-style: solid;
-    border-color: #000000;
-    background: linear-gradient(
-        351.27deg,
-        #ffffff -854.98%,
-        #eeeeee -854.98%,
-        #cacaca -91.55%
-    );
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
-    border: 1px solid #000000;
+    border-bottom: 1px solid rgb(22, 255, 94);
 }
 
 .windowOuter {
     width: 100%;
     height: 30%;
-    background: #d9d9d9;
-    border: 1px solid #000000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
 }
 
 .minBtn {
     width: 22px;
     height: 20px;
-    background-image: url("../assets/gamecomp/minBtn.png");
-    background-size: cover;
+    background-color: transparent;
+    border: 2px solid rgb(22, 255, 94);
+    border-radius: 3px;
+    color: rgb(22, 255, 94);
+    font-weight: bold;
+    cursor: pointer;
 }
-.minBtnDisabled {
-    width: 22px;
-    height: 20px;
-    background-image: url("../assets/gamecomp/minBtnDisabled.png");
-    background-size: cover;
+@keyframes startPulse {
+    0% {
+        border-left: 100px solid rgb(22, 255, 94);
+    }
+    50% {
+        border-left: 100px solid rgb(255, 82, 43);
+    }
+    100% {
+        border-left: 100px solid rgb(22, 255, 94);
+    }
 }
+
 #game_start {
     box-sizing: border-box;
-    /* height: 15%;
-    width: 40%; */
     font-size: 2rem;
     position: absolute;
-    left: 30%;
-    top: 30%;
+    left: 50%;
+    top: 50%;
     z-index: 98;
     cursor: pointer;
     background-color: transparent;
-    border-top: 155px solid rgba(22, 255, 96, 0);
-    border-left: 250px solid rgba(22, 255, 96, 1);
-    border-bottom: 155px solid rgba(22, 255, 96, 0);
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-right: 0px;
+    margin: -50px 0 0 -45px;
+    animation: startPulse 5s linear infinite;
 }
-
+#game_start:hover {
+    animation: startPulse 0.5s infinite;
+}
 .blackBox {
     background-color: #000000;
-    border: 0px;
-    border-left: 2px;
-    border-right: 2px;
-    border-bottom: 3px;
-    border-style: solid;
-    border-color: #cacaca;
-    color: rgb(255, 139, 68);
+    color: rgb(255, 152, 78);
+    font-size: 1.2rem;
+}
+#scoreBoard {
+    max-height: 240px;
+    overflow-y: scroll;
+}
+#scoreBoard::-webkit-scrollbar {
+    display: none;
+}
+
+@media (min-width: 1420px) {
+    #rightBox {
+        right: 0;
+    }
 }
 
 #rightBox {
-    position: fixed;
-    justify-content: end;
-    width: 400px;
-    height: 80vh;
-    right: 0px;
+    position: absolute;
+    width: 340px;
+    margin-left: 1070px;
+    margin-right: 0;
+    max-height: 80vh;
+    overflow-y: scoll;
+    overflow-x: hidden;
 }
-
+#rightBox::-webkit-scrollbar {
+    display: none;
+}
 #leftBox {
-    position: fixed;
+    position: absolute;
     left: 0px;
     width: 340px;
     max-height: 80vh;
@@ -1548,14 +1632,16 @@ button {
 
 #centerBox {
     width: 100%;
-    max-width: 800px;
-    max-height: 80vh;
+    max-width: fit-content;
+    max-height: fit-content;
     flex-direction: column;
     position: relative;
 }
 #gameBox {
-    width: 100%;
-    height: 100%;
+    width: 700px;
+    height: 700px;
+    border: 3px solid rgb(22, 255, 94);
+    border-radius: 10px;
 }
 .videoFrame {
     width: 300px;
@@ -1564,24 +1650,33 @@ button {
     z-index: -1;
     position: absolute;
     color: #ffffff;
+    display: none;
 }
 .videoFrame:hover .hoverButton {
     z-index: 2;
+    margin-top: 6px;
     top: 78px;
     left: 20px;
     width: 300px;
-    height: 240px;
+    height: 245px;
     border: none;
+    display:block;
     background-color: rgba(32, 32, 32, 0.7);
 }
 #gameWindow {
-    width: 100%;
-    height: fit-content;
-    background-color: #cacaca;
-    border: 1px solid #000000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
-    margin-bottom: 15px;
+    box-sizing: border-box;
+    width: 720px;
+    height: 720px;
+    border-width: 3px;
+    border-style: solid;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    animation: borderPulse 7s infinite;
+    margin: 50px;
+    box-shadow: 0 0 50px 10px rgb(22, 255, 94);
 }
 .chatRow {
     width: 100%;
@@ -1783,30 +1878,29 @@ button {
         transform: rotate(0deg);
     }
     to {
-        transform: rotate(359deg);
+        transform: rotate(360deg);
     }
 }
 #playerIcon {
-    width: 80px;
-    height: 80px;
-    animation: rotation 2s infinite linear;
+    width: 50px;
+    height: 50px;
+    animation: rotation 1s infinite linear;
     cursor: pointer;
 }
 #playerIconStop {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     cursor: pointer;
 }
 .inGamePopup {
     position: absolute;
     float: inline-start;
-    top: 80px;
-    right: 5vw;
-    width: 400px;
+    width: fit-content;
     min-height: 200px;
     height: fit-content;
     max-height: 50vh;
     overflow-y: scroll;
+    overflow-x: hidden;
     background-color: #cacaca;
     border: 1px solid #000000;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
@@ -1815,6 +1909,13 @@ button {
     display: flex;
     justify-self: center;
     align-items: center;
+}
+#howToPopup {
+    top: 60px;
+    right: 50px;
+}
+.inGamePopup::-webkit-scrollbar {
+    display: none;
 }
 .popupBar {
     display: flex;
@@ -1847,19 +1948,16 @@ button {
 }
 .chatBoxChat {
     width: 100%;
-    height: 280px;
+    height: 100%;
     overflow-y: scroll;
     -ms-overflow-style: none;
-    margin-bottom: 10px;
 }
 .chatBoxChat::-webkit-scrollbar {
     display: none;
 }
 
 #logBoard {
-    min-height: 200px;
-    height: 30%;
-    max-height: 300px;
+    height: 150px;
     overflow-y: scroll;
 }
 #logBoard::-webkit-scrollbar {
@@ -1874,17 +1972,14 @@ span {
 }
 
 .toggleBtn {
-    background-color: #cacaca;
-    border: 1px solid #000000;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
+    border: 1px solid rgb(22, 255, 94);
     height: fit-content;
     display: flex;
     justify-content: space-between;
     cursor: pointer;
 }
 .toggleBtn > span {
-    color: RGB(32, 32, 32);
+    color: rgb(22, 255, 94);
 }
 #toggleBtnLeft {
     float: left;
@@ -1895,14 +1990,49 @@ span {
     width: 100%;
     height: 100px;
     z-index: 100;
-    background: linear-gradient(
-        351.27deg,
-        #ffffff -854.98%,
-        #eeeeee -854.98%,
-        #cacaca -91.55%
-    );
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
+    display: flex;
+    justify-content: center;
+    background: transparent;
+}
+
+@keyframes bgPulse {
+    0% {
+        background-color: rgb(22, 255, 94);
+    }
+    50% {
+        background-color: rgb(52, 255, 134);
+    }
+    100% {
+        background-color: rgb(22, 255, 94);
+    }
+}
+.answerLine {
+    width: 25%;
+    height: 5%;
+    margin-top: 40px;
+    background-size: 400% 400%;
+    animation: bgPulse 7s ease infinite;
+}
+@keyframes borderPulse {
+    0% {
+        border-color: rgb(22, 255, 94);
+    }
+    50% {
+        border-color: rgb(52, 255, 134);
+    }
+    100% {
+        border-color: rgb(22, 255, 94);
+    }
+}
+.innerAnswer {
+    box-sizing: border-box;
+    width: 50%;
+    min-width: 600px;
+    border: 3px;
+    border-style: solid;
+    border-radius: 5px;
+    border-bottom: 0px;
+    animation: borderPulse 7s infinite;
 }
 .left-enter-from {
     transform: translateX(-360px);
@@ -1944,5 +2074,249 @@ span {
 }
 .right-enter-active {
     transition: all 0.4s;
+}
+#inGameContainer {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.space {
+    background: rgba(128, 0, 128, 0.1) center / 200px 200px round;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.stars1 {
+    background-image: radial-gradient(
+            1px 1px at 25px 5px,
+            white,
+            rgba(255, 255, 255, 0)
+        ),
+        radial-gradient(1px 1px at 50px 25px, white, rgba(255, 255, 255, 0)),
+        radial-gradient(1px 1px at 125px 20px, white, rgba(255, 255, 255, 0)),
+        radial-gradient(1.5px 1.5px at 50px 75px, white, rgba(255, 255, 255, 0)),
+        radial-gradient(2px 2px at 15px 125px, white, rgba(255, 255, 255, 0)),
+        radial-gradient(
+            2.5px 2.5px at 110px 80px,
+            white,
+            rgba(255, 255, 255, 0)
+        );
+}
+.main {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 1px;
+    width: 1px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: -42vw -4vh 0px 0px #fff, 25vw -41vh 0px 0px #fff,
+        -20vw 49vh 0px 1px #fff, 5vw 40vh 1px 1px #fff, 29vw 19vh 1px 0px #fff,
+        -44vw -13vh 0px 0px #fff, 46vw 41vh 0px 1px #fff,
+        -3vw -45vh 0px 1px #fff, 47vw 35vh 1px 0px #fff, 12vw -8vh 1px 0px #fff,
+        -34vw 48vh 1px 1px #fff, 32vw 26vh 1px 1px #fff, 32vw -41vh 1px 1px #fff,
+        0vw 37vh 1px 1px #fff, 34vw -26vh 1px 0px #fff, -14vw -49vh 1px 0px #fff,
+        -12vw 45vh 0px 1px #fff, -44vw -33vh 0px 1px #fff,
+        -13vw 41vh 0px 0px #fff, -36vw -11vh 0px 1px #fff,
+        -23vw -24vh 1px 0px #fff, -38vw -27vh 0px 1px #fff,
+        16vw -19vh 0px 0px #fff, 28vw 33vh 1px 0px #fff, -49vw -4vh 0px 0px #fff,
+        16vw 32vh 0px 1px #fff, 36vw -18vh 1px 0px #fff,
+        -25vw -30vh 1px 0px #fff, -23vw 24vh 0px 1px #fff,
+        -2vw -35vh 1px 1px #fff, -25vw 9vh 0px 0px #fff,
+        -15vw -34vh 0px 0px #fff, -8vw -19vh 1px 0px #fff,
+        -20vw -20vh 1px 1px #fff, 42vw 50vh 0px 1px #fff,
+        -32vw 10vh 1px 0px #fff, -23vw -17vh 0px 0px #fff,
+        44vw 15vh 1px 0px #fff, -40vw 33vh 1px 1px #fff, -43vw 8vh 0px 0px #fff,
+        -48vw -15vh 1px 1px #fff, -24vw 17vh 0px 0px #fff,
+        -31vw 50vh 1px 0px #fff, 36vw -38vh 0px 1px #fff, -7vw 48vh 0px 0px #fff,
+        15vw -32vh 0px 0px #fff, 29vw -41vh 0px 0px #fff, 2vw 37vh 1px 0px #fff,
+        7vw -40vh 1px 1px #fff, 15vw 18vh 0px 0px #fff, 25vw -13vh 1px 1px #fff,
+        -46vw -12vh 1px 1px #fff, -18vw 22vh 0px 0px #fff,
+        23vw -9vh 1px 0px #fff, 50vw 12vh 0px 1px #fff, 45vw 2vh 0px 0px #fff,
+        14vw -48vh 1px 0px #fff, 23vw 43vh 0px 1px #fff, -40vw 16vh 1px 1px #fff,
+        20vw -31vh 0px 1px #fff, -17vw 44vh 1px 1px #fff,
+        18vw -45vh 0px 0px #fff, 33vw -6vh 0px 0px #fff, 0vw 7vh 0px 1px #fff,
+        -10vw -18vh 0px 1px #fff, -19vw 5vh 1px 0px #fff, 1vw 42vh 0px 0px #fff,
+        22vw 48vh 0px 1px #fff, 39vw -8vh 1px 1px #fff, -6vw -42vh 1px 0px #fff,
+        -47vw 34vh 0px 0px #fff, -46vw 19vh 0px 1px #fff,
+        -12vw -32vh 0px 0px #fff, -45vw -38vh 0px 1px #fff,
+        -28vw 18vh 1px 0px #fff, -38vw -46vh 1px 1px #fff,
+        49vw -6vh 1px 1px #fff, -28vw 18vh 1px 1px #fff, 10vw -24vh 0px 1px #fff,
+        -5vw -11vh 1px 1px #fff, 33vw -8vh 1px 0px #fff, -16vw 17vh 0px 0px #fff,
+        18vw 27vh 0px 1px #fff, -8vw -10vh 1px 1px #fff;
+
+    /* stars were too big with the layers above but left the code in case no one cares  -- as in, if noone's just that  one other loner who actually cares    */
+
+    box-shadow: 24vw 9vh 1px 0px #fff, 12vw -24vh 0px 1px #fff,
+        -45vw -22vh 0px 0px #fff, -37vw -40vh 0px 1px #fff,
+        29vw 19vh 0px 1px #fff, 4vw -8vh 0px 1px #fff, -5vw 21vh 1px 1px #fff,
+        -27vw 26vh 1px 1px #fff, -47vw -3vh 1px 1px #fff,
+        -28vw -30vh 0px 1px #fff, -43vw -27vh 0px 1px #fff,
+        4vw 22vh 1px 1px #fff, 36vw 23vh 0px 0px #fff, -21vw 24vh 1px 1px #fff,
+        -16vw 2vh 1px 0px #fff, -16vw -6vh 0px 0px #fff, 5vw 26vh 0px 0px #fff,
+        -34vw 41vh 0px 0px #fff, 1vw 42vh 1px 1px #fff, 11vw -13vh 1px 1px #fff,
+        48vw -8vh 1px 0px #fff, 22vw -15vh 0px 0px #fff, 45vw 49vh 0px 0px #fff,
+        43vw -27vh 1px 1px #fff, 20vw -2vh 0px 0px #fff, 8vw 22vh 0px 1px #fff,
+        39vw 48vh 1px 1px #fff, -21vw -11vh 0px 1px #fff,
+        -40vw 45vh 0px 1px #fff, 11vw -30vh 1px 0px #fff, 26vw 30vh 1px 0px #fff,
+        45vw -29vh 0px 1px #fff, -2vw 18vh 0px 0px #fff,
+        -29vw -45vh 1px 0px #fff, -7vw -27vh 1px 1px #fff,
+        42vw 24vh 0px 0px #fff, 45vw -48vh 1px 0px #fff,
+        -36vw -18vh 0px 0px #fff, -44vw 13vh 0px 1px #fff,
+        36vw 16vh 0px 1px #fff, 40vw 24vh 0px 0px #fff, 18vw 11vh 0px 0px #fff,
+        -15vw -23vh 1px 0px #fff, -24vw 48vh 0px 1px #fff,
+        27vw -45vh 1px 0px #fff, -2vw -24vh 0px 1px #fff,
+        -15vw -28vh 0px 0px #fff, -43vw 13vh 1px 0px #fff, 7vw 27vh 1px 0px #fff,
+        47vw 5vh 0px 0px #fff, -45vw 15vh 1px 1px #fff, -5vw -28vh 0px 1px #fff,
+        38vw 25vh 1px 1px #fff, -39vw -1vh 1px 0px #fff, 5vw 0vh 1px 0px #fff,
+        49vw 13vh 0px 0px #fff, 48vw 10vh 0px 1px #fff, 19vw -28vh 0px 0px #fff,
+        4vw 7vh 0px 0px #fff, 21vw 21vh 1px 1px #fff, -15vw -15vh 0px 1px #fff,
+        -6vw -42vh 1px 0px #fff, -15vw 48vh 1px 1px #fff,
+        -23vw 25vh 1px 1px #fff, -48vw 25vh 0px 1px #fff,
+        -31vw -19vh 0px 1px #fff, 4vw 37vh 1px 1px #fff, -43vw 28vh 0px 0px #fff,
+        3vw -25vh 0px 1px #fff, -39vw 14vh 0px 1px #fff, -40vw 31vh 0px 1px #fff,
+        35vw -36vh 1px 1px #fff, 16vw 49vh 0px 0px #fff, 6vw 39vh 0px 0px #fff,
+        3vw -35vh 0px 1px #fff, -44vw -2vh 1px 0px #fff, -6vw 21vh 1px 0px #fff,
+        48vw 9vh 1px 1px #fff, -43vw 30vh 1px 1px #fff, 29vw -12vh 1px 1px #fff,
+        -48vw 13vh 1px 0px #fff, -42vw 32vh 1px 1px #fff, 34vw 15vh 1px 1px #fff,
+        29vw -37vh 1px 1px #fff, 28vw 2vh 0px 0px #fff;
+    animation: zoom 10s alternate infinite, rotation 100s linear infinite;
+}
+
+.meteoro {
+    position: absolute;
+    background-color: #fff;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    transform: rotate(-35deg);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+}
+
+.meteoro:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    width: 0;
+    height: 0;
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+    border-left: 85px solid white;
+    position: absolute;
+    left: 2px;
+    top: 0;
+}
+.meteoro.style1 {
+    animation-name: meteoroStyle1;
+}
+.meteoro.style2 {
+    animation-name: meteoroStyle2;
+}
+.meteoro.style3 {
+    animation-name: meteoroStyle3;
+}
+.meteoro.style4 {
+    animation-name: meteoroStyle4;
+}
+
+@keyframes meteoroStyle1 {
+    0% {
+        opacity: 0;
+        right: 300px;
+        top: 100px;
+    }
+    30% {
+        opacity: 0.3;
+    }
+    60% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0;
+        right: 1000px;
+        top: 600px;
+    }
+}
+
+@keyframes meteoroStyle2 {
+    0% {
+        opacity: 0;
+        right: 700px;
+        top: 100px;
+    }
+    30% {
+        opacity: 1;
+    }
+    60% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        right: 1400px;
+        top: 600px;
+    }
+}
+
+@keyframes meteoroStyle3 {
+    0% {
+        opacity: 0;
+        right: 300px;
+        top: 300px;
+    }
+    30% {
+        opacity: 1;
+    }
+    60% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        right: 1000px;
+        top: 800px;
+    }
+}
+
+@keyframes meteoroStyle4 {
+    0% {
+        opacity: 0;
+        right: 700px;
+        top: 300px;
+    }
+    30% {
+        opacity: 1;
+    }
+    60% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        right: 1400px;
+        top: 800px;
+    }
+}
+
+@keyframes zoom {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.5);
+    }
+}
+
+.videoStreaming {
+    height: fit-content;
+    margin: 10px auto;
 }
 </style>

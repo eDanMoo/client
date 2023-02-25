@@ -161,13 +161,12 @@ export default {
 }
 
 .gameBackgroud {
-    min-width: 680px;
+    min-width: 700px;
     height: 700px;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
     overflow: hidden;
-    background: rgb(32, 32, 32);
 }
 
 .wordList {
@@ -183,11 +182,9 @@ export default {
 }
 
 .wordElem {
+    box-sizing: border-box;
     width: 90%;
-    min-width: 55px;
-    height: 60px;
-    margin-right: 1px;
-    margin-bottom: 0.2vw;
+    height: 63px;
     border-radius: 5px;
     box-shadow: 0 0 5px 5px yellow;
     display: flex;

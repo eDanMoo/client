@@ -1,8 +1,7 @@
 /* color palette from <https://github.com/vuejs/theme> */
 body {
-  min-height: 100vh;
-  /* color: var(--color-text); */
-  /* background: var(--color-background); */
+  height: 100vh;
+  width: 100vw;
   background-color: rgb(32, 119, 93);
   transition: color 0.5s, background-color 0.5s;
   line-height: 1.6;
@@ -12,4 +11,5 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
+  overflow: hidden;
 }
