@@ -740,6 +740,7 @@ export default {
 
         const info_obj = {
             type: "info",
+            video_status: 1,
             userid: current_user,
         };
         connection.send(JSON.stringify(info_obj));
@@ -978,6 +979,20 @@ export default {
                 // todo. 여기 아이디가 다 같아서 안지워지는 문제임
                 const log_tab = document.getElementById("log_tab");
                 log_tab.parentNode.removeChild(log_tab);
+            } else if (event_data.type == "video_off") {
+                if (current_user != userid_str) {
+                    const subFrame = document.getElementById(userid_str);
+                    if (subFrame) {
+                        subFrame.style.display = "none";
+                    }
+                }
+            } else if (event_data.type == "video_on") {
+                if (current_user != userid_str) {
+                    const subFrame = document.getElementById(userid_str);
+                    if (subFrame) {
+                        subFrame.style.removeProperty("display");
+                    }
+                }
             }
         };
         this.processImage();
@@ -1043,12 +1058,24 @@ export default {
                 this.toggle_text = "카메라 비활성화";
                 // intervalVid = setInterval(this.sendImage, 15);
                 intervalVid = setInterval(this.sendImage, 100);
+
+                const jsonData = JSON.stringify({
+                    type: "video_on",
+                    userid: current_user,
+                });
+                connection.send(jsonData);
             } else {
                 console.log("카메라 비활성화");
                 isStreaming = 0;
                 this.isStreaming = 0;
                 this.toggle_text = "카메라 활성화";
                 clearInterval(intervalVid);
+
+                const jsonData = JSON.stringify({
+                    type: "video_off",
+                    userid: current_user,
+                });
+                connection.send(jsonData);
             }
         },
         send_user_turn(user = "") {
