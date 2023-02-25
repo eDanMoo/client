@@ -1078,16 +1078,17 @@ export default {
                 connection.send(jsonData);
             }
         },
-        send_user_turn(user = "") {
+        send_user_turn(user = "", remove_count = 0) {
             const jsonData = JSON.stringify({
                 type: "get_timer",
                 next_user: user,
+                remove_count: remove_count,
                 userid: current_user,
             });
 
             connection.send(jsonData);
         },
-        scriptCheck(msg, answer_user = "") {
+        scriptCheck(msg, answer_user = "", remove_count) {
             if (msg == "init") {
                 //보드 다 만들었으면 전체 타이머 시작
                 if (first_turn == current_user) {
@@ -1095,7 +1096,9 @@ export default {
                 }
             } else if (msg == "check" && answer_user == current_user) {
                 // 단어 체크 해서 끝났으면 타이머
-                this.send_user_turn("true");
+                this.send_user_turn("true", remove_count);
+                const answer_text_box = document.getElementById("input_answer");
+                answer_text_box.disabled = true;
                 this.time = 100;
             }
         },
