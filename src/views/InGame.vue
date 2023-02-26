@@ -109,7 +109,7 @@
             </div>
         </div>
         <!-- Nav Bar -->
-        <nav style="display: flex; justify-content: space-between;">
+        <nav style="display: flex; justify-content: space-between">
             <div style="display: flex; align-items: center">
                 <img
                     src="../assets/image/exit_Icon.svg"
@@ -302,7 +302,9 @@
                     <div class="videoWindow">
                         <div class="videoBarCover">
                             <div class="videoBar">
-                                <span style="color: rgb(22, 255, 94);">내 영상</span>
+                                <span style="color: rgb(22, 255, 94)"
+                                    >내 영상</span
+                                >
                             </div>
                         </div>
                         <div class="videoFrame">
@@ -503,7 +505,6 @@
 </template>
 
 <script>
-
 // import { onMounted, ref } from "vue";
 // import VueSocketIO from "vue-socket.io";
 import WordCard from "../components/WordCard.vue";
@@ -553,6 +554,8 @@ let cur_timer = 0;
 
 let first_turn = "";
 
+let process_image = "";
+
 export default {
     name: "cam_comp",
     components: { WordCard, modal },
@@ -580,128 +583,128 @@ export default {
             musicSources: [
                 {
                     fileName: "Welcome Player! - Visager.ogg",
-                    src: "../src/assets/music/Welcome Player! - Visager.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Welcome+Player!+-+Visager.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "8 Bit Win! - HeatleyBros.ogg",
-                    src: "../src/assets/music/8 Bit Win! - HeatleyBros.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/8+Bit+Win!+-+HeatleyBros.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Kevin MacLeod - Pixelland.ogg",
-                    src: "../src/assets/music/Kevin MacLeod - Pixelland.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Kevin+MacLeod+-+Pixelland.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "The Whole Other - 8-Bit Dreamscape.ogg",
-                    src: "../src/assets/music/The Whole Other - 8-Bit Dreamscape.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/The+Whole+Other+-+8-Bit+Dreamscape.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Kubbi - Up In My Jam.ogg",
-                    src: "../src/assets/music/Kubbi - Up In My Jam.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Kubbi+-+Up+In+My+Jam.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Kevin MacLeod - 8bit Dungeon Boss.ogg",
-                    src: "../src/assets/music/Kevin MacLeod - 8bit Dungeon Boss.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Kevin+MacLeod+-+8bit+Dungeon+Boss.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Move Along - SpaceRazzer.ogg",
-                    src: "../src/assets/music/Move Along - SpaceRazzer.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Move+Along+-+SpaceRazzer.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "SPring - RoccoW.ogg",
-                    src: "../src/assets/music/SPring - RoccoW.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/SPring+-+RoccoW.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "17092017 - RoccoW.ogg",
-                    src: "../src/assets/music/17092017 - RoccoW.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/17092017+-+RoccoW.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Kevin MacLeod - Itty Bitty 8 Bit.ogg",
-                    src: "../src/assets/music/Kevin MacLeod - Itty Bitty 8 Bit.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Kevin+MacLeod+-+Itty+Bitty+8+Bit.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Splash - Spiff Tune.ogg",
-                    src: "../src/assets/music/Splash - Spiff Tune.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Splash+-+Spiff+Tune.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Monplaisir - Soundtrack.ogg",
-                    src: "../src/assets/music/Monplaisir - Soundtrack.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Monplaisir+-+Soundtrack.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Vibe Mountain - Operatic 3.ogg",
-                    src: "../src/assets/music/Vibe Mountain - Operatic 3.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Vibe+Mountain+-+Operatic+3.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "PhilosophicalSongTitle - RoccoW.ogg",
-                    src: "../src/assets/music/PhilosophicalSongTitle - RoccoW.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/PhilosophicalSongTitle+-+RoccoW.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "F cking Moths - RoccoW.ogg",
-                    src: "../src/assets/music/F cking Moths - RoccoW.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/F+cking+Moths+-+RoccoW.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Jeremy Blake - Powerup!.ogg",
-                    src: "../src/assets/music/Jeremy Blake - Powerup!.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Jeremy+Blake+-+Powerup!.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName:
                         "Jam Jam Jam Said The Owner Of The Shop - RoccoW.ogg",
-                    src: "../src/assets/music/Jam Jam Jam Said The Owner Of The Shop - RoccoW.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Jam+Jam+Jam+Said+The+Owner+Of+The+Shop+-+RoccoW.ogg.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Quincas Moreira - Robot City.ogg",
-                    src: "../src/assets/music/Quincas Moreira - Robot City.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Quincas+Moreira+-+Robot+City.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Green Greens' Starry Skies - RoccoW.ogg",
-                    src: "../src/assets/music/Green Greens' Starry Skies - RoccoW.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Green+Greens'+Starry+Skies+-+RoccoW.ogg.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Messeah - RoccoW.ogg",
-                    src: "../src/assets/music/Messeah - RoccoW.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Messeah+-+RoccoW.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Chiptune Dream - Tim Beek.ogg",
-                    src: "../src/assets/music/Chiptune Dream - Tim Beek.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Chiptune+Dream+-+Tim+Beek.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Krayzius & Brainstorm - Virtual Boy.ogg",
-                    src: "../src/assets/music/Krayzius & Brainstorm - Virtual Boy.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Krayzius+%26+Brainstorm+-+Virtual+Boy.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "Wasted Panther - HolFix.ogg",
-                    src: "../src/assets/music/Wasted Panther - HolFix.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/Wasted+Panther+-+HolFix.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "RGB - Stevia Sphere.ogg",
-                    src: "../src/assets/music/RGB - Stevia Sphere.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/RGB+-+Stevia+Sphere.ogg",
                     type: "audio/ogg",
                 },
                 {
                     fileName: "William Rosati - Floating Also.ogg",
-                    src: "../src/assets/music/William Rosati - Floating Also.ogg",
+                    src: "https://koword-file-server.s3.ap-northeast-2.amazonaws.com/music/William+Rosati+-+Floating+Also.ogg",
                     type: "audio/ogg",
                 },
             ],
@@ -738,14 +741,11 @@ export default {
             }
 
             url_segs = window.location.pathname.split("/");
-            console.log(url_segs);
 
             room_name = url_segs[1];
             this.enterCode = room_name;
             uniqCode = this.getRandomInt(10000, 100000);
             current_user = url_segs[2] + "#" + uniqCode;
-            //let send_url = room_name + "/" + current_user;
-            //console.log(send_url);
 
             const socket = new WebSocket(
                 // ws_scheme + "webdev-test.site/ws/" + room_name
@@ -755,22 +755,18 @@ export default {
                 console.log("socket connect");
                 resolve(socket);
             });
-            // socket.addEventListener("error", (error) => {
-            //     console.log("Websocket connect error");
-            //     alert("게임서버와의 연결이 종료되었습니다.");
-            //     location.href = "/";
-            //     reject(error);
-            // });
-            // socket.addEventListener("close", (event) => {
-            //     console.log("WebSocket connection closed:", event);
-            //     alert("게임서버와의 연결이 종료되었습니다.");
-            //     location.href = "/";
-            // });
+            socket.addEventListener("error", (error) => {
+                console.log("Websocket connect error");
+                alert("게임서버와의 연결이 종료되었습니다.");
+                location.href = "/";
+                reject(error);
+            });
+            socket.addEventListener("close", (event) => {
+                console.log("WebSocket connection closed:", event);
+                alert("게임서버와의 연결이 종료되었습니다.");
+                location.href = "/";
+            });
         });
-
-        isStreaming = 1;
-
-        intervalVid = setInterval(this.sendImage, 100);
 
         messages = document.getElementById("messages");
 
@@ -779,21 +775,6 @@ export default {
         video.width = w;
         video.height = h;
 
-        /** 내 카메라 켜기 */
-        const myCam = async (constraints) => {
-            let stream = null;
-            try {
-                stream = await navigator.mediaDevices.getUserMedia(constraints);
-                /* 스트림 사용 */
-                video.srcObject = stream;
-                video.volume = 0;
-                video.play();
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        myCam(constraints);
 
         canvas = document.getElementById("videoOutput");
 
@@ -804,6 +785,7 @@ export default {
 
         const info_obj = {
             type: "info",
+            video_status: true,
             userid: current_user,
         };
         connection.send(JSON.stringify(info_obj));
@@ -820,8 +802,6 @@ export default {
             const text = document.createTextNode(text_str);
             const userid = document.createTextNode(userid_str);
             if (event_data.type == "message") {
-                console.log("Text Recieved: " + text_str);
-
                 const content_tag = document.createElement("div");
                 content_tag.appendChild(text);
                 content_tag.setAttribute("class", "content_tag");
@@ -852,7 +832,6 @@ export default {
                 if (userid_str == current_user) {
                     0;
                 } else {
-                    //console.log(current_user);
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
                         subFrame.setAttribute("src", event_data.video);
@@ -869,7 +848,6 @@ export default {
                     }
                 }
             } else if (event_data.type == "info") {
-                //console.log(userid_str + "  -- " + current_user);
                 const check_score_input = document.getElementById(
                     userid_str + "_score"
                 );
@@ -1042,13 +1020,30 @@ export default {
                 // todo. 여기 아이디가 다 같아서 안지워지는 문제임
                 const log_tab = document.getElementById("log_tab");
                 log_tab.parentNode.removeChild(log_tab);
+            } else if (event_data.type == "video_off") {
+                if (current_user != userid_str) {
+                    const subFrame = document.getElementById(userid_str);
+                    if (subFrame) {
+                        subFrame.style.display = "none";
+                    }
+                }
+            } else if (event_data.type == "video_on") {
+                if (current_user != userid_str) {
+                    const subFrame = document.getElementById(userid_str);
+                    if (subFrame) {
+                        subFrame.style.removeProperty("display");
+                    }
+                }
             }
         };
-        this.processImage();
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            this.checkWebcam();
+        } else {
+            console.log("getUserMedia not supported on this browser");
+        }
         // this.updateProgressbar();
         this.playMusic();
         this.colored();
-        
     },
     methods: {
         colored() {
@@ -1058,6 +1053,37 @@ export default {
         },
         testbutton() {
             this.time--;
+        },
+        /** 유저가 웹캡이 있는지 체크 */
+        async checkWebcam() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === "videoinput");
+                if (videoDevices.length > 0) {
+                    // User has a webcam, call the myCam function
+                    this.myCam(constraints);
+                    this.processImage();
+                    isStreaming = 1;
+                    intervalVid = setInterval(this.sendImage, 100);
+                } else {
+                    console.log("User does not have a webcam");
+                }
+            } catch (error) {
+                console.log("Error while checking for video devices: ", error);
+            }
+        },
+        /** 내 카메라 켜기 */
+        async myCam(constraints) {
+            let stream = null;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                /* 스트림 사용 */
+                video.srcObject = stream;
+                video.volume = 0;
+                video.play();
+            } catch (error) {
+                console.log(error);
+            }
         },
         /** 클라이언트 구분을 위해 아이디에 부여할 난수 생성 */
         getRandomInt(min, max) {
@@ -1090,7 +1116,7 @@ export default {
         },
         processImage() {
             ctx.drawImage(video, 0, 0, w, h);
-            setTimeout(this.processImage, 1);
+            process_image = setTimeout(this.processImage, 1);
         },
         sendImage() {
             const rawData = canvas.toDataURL("image/jpeg", 0.5);
@@ -1108,26 +1134,30 @@ export default {
                 isStreaming = 1;
                 this.isStreaming = 1;
                 this.toggle_text = "카메라 비활성화";
-                // intervalVid = setInterval(this.sendImage, 15);
                 intervalVid = setInterval(this.sendImage, 100);
+                this.processImage();
+                this.videoOn();
             } else {
                 console.log("카메라 비활성화");
                 isStreaming = 0;
                 this.isStreaming = 0;
                 this.toggle_text = "카메라 활성화";
                 clearInterval(intervalVid);
+                clearTimeout(process_image);
+                this.videoOff();
             }
         },
-        send_user_turn(user = "") {
+        send_user_turn(user = "", remove_count = 0) {
             const jsonData = JSON.stringify({
                 type: "get_timer",
                 next_user: user,
+                remove_count: remove_count,
                 userid: current_user,
             });
 
             connection.send(jsonData);
         },
-        scriptCheck(msg, answer_user = "") {
+        scriptCheck(msg, answer_user = "", remove_count) {
             if (msg == "init") {
                 //보드 다 만들었으면 전체 타이머 시작
                 if (first_turn == current_user) {
@@ -1135,7 +1165,9 @@ export default {
                 }
             } else if (msg == "check" && answer_user == current_user) {
                 // 단어 체크 해서 끝났으면 타이머
-                this.send_user_turn("true");
+                this.send_user_turn("true", remove_count);
+                const answer_text_box = document.getElementById("input_answer");
+                answer_text_box.disabled = true;
                 this.time = 100;
             }
         },
@@ -1382,6 +1414,39 @@ export default {
             audio.volume = 0.6;
             audio.play();
             this.isOpenLeft = !this.isOpenLeft;
+            this.blockVideo(this.isOpenLeft);
+        },
+        /** 비디오 창 접었을 시 서버에 내 비디오 상대에게서 지우라고 보내고 나는 상대들의 비디오 받지 않겠다 보내기 */
+        blockVideo(status) {
+            if (!status) {
+                this.videoOff();
+                isStreaming = 0;
+                this.isStreaming = 0;
+                this.toggle_text = "카메라 활성화";
+                clearInterval(intervalVid);
+                clearTimeout(process_image);
+            }
+            const jsonData = JSON.stringify({
+                type: "video_status",
+                video_status: status,
+            });
+            connection.send(jsonData);
+        },
+        /** 서버에 내 비디오 상대에게서 보여주라고 보내기 */
+        videoOn() {
+            const jsonData = JSON.stringify({
+                type: "video_on",
+                userid: current_user,
+            });
+            connection.send(jsonData);
+        },
+        /** 서버에 내 비디오 상대에게서 지우라고 보내기 */
+        videoOff() {
+            const jsonData = JSON.stringify({
+                type: "video_off",
+                userid: current_user,
+            });
+            connection.send(jsonData);
         },
     },
 };
@@ -1637,7 +1702,7 @@ button {
     width: 300px;
     height: 245px;
     border: none;
-    display:block;
+    display: block;
     background-color: rgba(32, 32, 32, 0.7);
 }
 #gameWindow {

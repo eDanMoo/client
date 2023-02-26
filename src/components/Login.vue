@@ -121,13 +121,12 @@ export default {
         const user_id = ref("");
 
         const joinPage = () => {
-
-            const roomID = document.getElementById("input-room-id")
+            const roomID = document.getElementById("input-room-id");
             const userID = document.getElementById("input-user-id");
             const modal2 = document.getElementById("modal-wrapper-2");
 
             if (userID.value == "" || roomID.value == "") {
-                modal2.style.display = 'flex'; 
+                modal2.style.display = "flex";
                 document.getElementById("close-modal-2").focus();
             }
 
@@ -144,12 +143,11 @@ export default {
         };
 
         const createPage = () => {
-
             const userID = document.getElementById("input-user-id");
             const modal2 = document.getElementById("modal-wrapper-2");
 
             if (userID.value == "") {
-                modal2.style.display = 'flex'; 
+                modal2.style.display = "flex";
                 document.getElementById("close-modal-2").focus();
             }
             const new_room_code = generateRandomCode(6);
@@ -378,6 +376,4 @@ export default {
     border: 2px solid rgb(80, 80, 80);
     box-shadow: 1px 1px black, inset 2px 2px white;
 }
-
-
 </style>
