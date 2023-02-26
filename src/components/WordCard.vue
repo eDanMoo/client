@@ -45,7 +45,12 @@ export default {
                     this.$emit("scriptCheck", "init"); // table 생성 완료 시 서버에 턴 요청
                 } else if (message.type == "check") {
                     this.answerCheck();
-                    this.$emit("scriptCheck", "check", this.words.user, this.words.increment); // 정답 체크 완료 시 서버에 턴 요청
+                    this.$emit(
+                        "scriptCheck",
+                        "check",
+                        this.words.user,
+                        this.words.increment
+                    ); // 정답 체크 완료 시 서버에 턴 요청
                 }
             }
         },

@@ -1,64 +1,65 @@
 <template>
     <section class="modal align_center">
-            <div class="align_center whiteBox" id="resultPop">
-                <div class="whiteBox_header padding">
-                    <b>게임결과</b>
-                </div>
+        <div class="align_center whiteBox" id="resultPop">
+            <div class="whiteBox_header padding">
+                <b>게임결과</b>
+            </div>
 
-                <div class="modal__window align_center" id="scorePop">
-                    <div class="modal_cover">
-                        <div class="ranking padding">
-                            <span><b>순위</b></span
-                            ><br /><br />
-                            
-                            <div
-                                v-for="(user, index) in users"
-                                :data-index="index"
-                                :key="user.id"
-                                style="font-size: 1.3rem;"
-                            >
-                            |점수: {{user[2]}}, ID:{{ user[0] }}, 등: {{ user[1] }} |
-                            </div>
+            <div class="modal__window align_center" id="scorePop">
+                <div class="modal_cover">
+                    <div class="ranking padding">
+                        <span><b>순위</b></span
+                        ><br /><br />
+
+                        <div
+                            v-for="(user, index) in users"
+                            :data-index="index"
+                            :key="user.id"
+                            style="font-size: 1.3rem"
+                        >
+                            |점수: {{ user[2] }}, ID:{{ user[0] }}, 등:
+                            {{ user[1] }} |
                         </div>
+                    </div>
 
-                        <div class="answerLog padding">
-                            <span><b>연관단어</b></span>
-                            <div class="wordList scrollbar">
+                    <div class="answerLog padding">
+                        <span><b>연관단어</b></span>
+                        <div class="wordList scrollbar">
+                            <div
+                                v-for="(words, index) in answerLog"
+                                :data-index="index"
+                                :key="answerLog[0]"
+                                style="border: 2px solid; margin-bottom: 1rem"
+                            >
+                                <div>
+                                    <span>{{ words[0] }}번 제출: </span
+                                    ><span>{{ words[1] }}</span>
+                                </div>
                                 <div
-                                    v-for="(words, index) in answerLog"
+                                    v-for="(word, index) in words[2]"
                                     :data-index="index"
-                                    :key="answerLog[0]"
-                                    style="border: 2px solid; margin-bottom: 1rem;"
+                                    :key="word"
+                                    style="display: inline"
                                 >
-                                    <div>
-                                        <span>{{ words[0] }}번 제출: </span
-                                        ><span>{{ words[1] }}</span>
-                                    </div>
-                                    <div
-                                        v-for="(word, index) in words[2]"
-                                        :data-index="index"
-                                        :key="word"
-                                        style="display: inline"
-                                    >
-                                        {{ word }}&nbsp,
-                                    </div>
+                                    {{ word }}&nbsp,
                                 </div>
                             </div>
                         </div>
-                        <div class="closeButton padding">
-                            <div @click="closeModal">
-                                <span><b>닫기</b></span>
-                            </div>
+                    </div>
+                    <div class="closeButton padding">
+                        <div @click="closeModal">
+                            <span><b>닫기</b></span>
                         </div>
                     </div>
                 </div>
-                <div class="whiteBox_footer padding">
-                    <div>
-                        <b>버전</b>
-                    </div>
-                    <div><b>정글</b> 2022-2023</div>
-                </div>
             </div>
+            <div class="whiteBox_footer padding">
+                <div>
+                    <b>버전</b>
+                </div>
+                <div><b>정글</b> 2022-2023</div>
+            </div>
+        </div>
         <div class="blueScreen"></div>
     </section>
 </template>
@@ -76,9 +77,7 @@ export default {
             answerLog: this.msg.answerLog,
         };
     },
-    watch: {
-
-    },
+    watch: {},
     mounted() {},
     unmounted() {},
     created() {},
@@ -203,5 +202,4 @@ export default {
     background-color: rgb(170, 170, 170);
     box-shadow: inset 0px 0px 5px white;
 }
-
 </style>

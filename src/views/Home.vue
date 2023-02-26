@@ -306,7 +306,6 @@ export default {
     unmounted() {
         clearInterval();
     },
-
 };
 </script>
 

@@ -109,7 +109,7 @@
             </div>
         </div>
         <!-- Nav Bar -->
-        <nav style="display: flex; justify-content: space-between;">
+        <nav style="display: flex; justify-content: space-between">
             <div style="display: flex; align-items: center">
                 <img
                     src="../assets/image/exit_Icon.svg"
@@ -302,7 +302,9 @@
                     <div class="videoWindow">
                         <div class="videoBarCover">
                             <div class="videoBar">
-                                <span style="color: rgb(22, 255, 94);">내 영상</span>
+                                <span style="color: rgb(22, 255, 94)"
+                                    >내 영상</span
+                                >
                             </div>
                         </div>
                         <div class="videoFrame">
@@ -503,7 +505,6 @@
 </template>
 
 <script>
-
 // import { onMounted, ref } from "vue";
 // import VueSocketIO from "vue-socket.io";
 import WordCard from "../components/WordCard.vue";
@@ -1084,10 +1085,15 @@ export default {
                 setTimeout(carregarMeteoro, numeroAleatorio);
                 numeroAleatorio = getRandomArbitrary(5000, 10000);
                 var meteoro =
-                "<div class='meteoro " + style[getRandomArbitrary(0, 4)] + "'></div>";
-                document.getElementsByClassName("chuvaMeteoro")[0].innerHTML = meteoro;
+                    "<div class='meteoro " +
+                    style[getRandomArbitrary(0, 4)] +
+                    "'></div>";
+                document.getElementsByClassName("chuvaMeteoro")[0].innerHTML =
+                    meteoro;
                 setTimeout(function () {
-                document.getElementsByClassName("chuvaMeteoro")[0].innerHTML = "";
+                    document.getElementsByClassName(
+                        "chuvaMeteoro"
+                    )[0].innerHTML = "";
                 }, 1000);
             }
         },
@@ -1690,7 +1696,7 @@ button {
     width: 300px;
     height: 245px;
     border: none;
-    display:block;
+    display: block;
     background-color: rgba(32, 32, 32, 0.7);
 }
 #gameWindow {
