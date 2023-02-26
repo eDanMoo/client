@@ -1421,6 +1421,7 @@ button {
 .videoWindow {
     box-sizing: border-box;
     width: 100%;
+    min-height: 300px;
     display: flex;
     align-items: center;
     justify-items: center;
@@ -1459,6 +1460,7 @@ button {
 .innerbar {
     box-sizing: border-box;
     width: 100%;
+    max-width: 700px;
     height: 100%;
     text-align: right;
     margin: 0;
@@ -1651,7 +1653,7 @@ button {
     border-radius: 10px;
     animation: borderPulse 7s infinite;
     margin: 50px;
-    box-shadow: 0 0 50px 10px rgb(22, 255, 94);
+    box-shadow: 0 0 30px 5px rgb(22, 255, 94);
 }
 .chatRow {
     width: 100%;
@@ -1987,6 +1989,7 @@ span {
     margin-top: 40px;
     background-size: 400% 400%;
     animation: bgPulse 7s ease infinite;
+    box-shadow: 0 0 10px 0 rgb(22, 255, 94);
 }
 @keyframes borderPulse {
     0% {
@@ -2008,6 +2011,7 @@ span {
     border-radius: 5px;
     border-bottom: 0px;
     animation: borderPulse 7s infinite;
+    box-shadow: 0 0 30px 5px rgb(22, 255, 94);
 }
 .left-enter-from {
     transform: translateX(-360px);
