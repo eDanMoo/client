@@ -802,6 +802,7 @@ export default {
 
         const info_obj = {
             type: "info",
+            video_status: 1,
             userid: current_user,
         };
         connection.send(JSON.stringify(info_obj));
@@ -1040,6 +1041,20 @@ export default {
                 // todo. 여기 아이디가 다 같아서 안지워지는 문제임
                 const log_tab = document.getElementById("log_tab");
                 log_tab.parentNode.removeChild(log_tab);
+            } else if (event_data.type == "video_off") {
+                if (current_user != userid_str) {
+                    const subFrame = document.getElementById(userid_str);
+                    if (subFrame) {
+                        subFrame.style.display = "none";
+                    }
+                }
+            } else if (event_data.type == "video_on") {
+                if (current_user != userid_str) {
+                    const subFrame = document.getElementById(userid_str);
+                    if (subFrame) {
+                        subFrame.style.removeProperty("display");
+                    }
+                }
             }
         };
         this.processImage();
@@ -1135,24 +1150,37 @@ export default {
                 this.toggle_text = "카메라 비활성화";
                 // intervalVid = setInterval(this.sendImage, 15);
                 intervalVid = setInterval(this.sendImage, 100);
+
+                const jsonData = JSON.stringify({
+                    type: "video_on",
+                    userid: current_user,
+                });
+                connection.send(jsonData);
             } else {
                 console.log("카메라 비활성화");
                 isStreaming = 0;
                 this.isStreaming = 0;
                 this.toggle_text = "카메라 활성화";
                 clearInterval(intervalVid);
+
+                const jsonData = JSON.stringify({
+                    type: "video_off",
+                    userid: current_user,
+                });
+                connection.send(jsonData);
             }
         },
-        send_user_turn(user = "") {
+        send_user_turn(user = "", remove_count = 0) {
             const jsonData = JSON.stringify({
                 type: "get_timer",
                 next_user: user,
+                remove_count: remove_count,
                 userid: current_user,
             });
 
             connection.send(jsonData);
         },
-        scriptCheck(msg, answer_user = "") {
+        scriptCheck(msg, answer_user = "", remove_count) {
             if (msg == "init") {
                 //보드 다 만들었으면 전체 타이머 시작
                 if (first_turn == current_user) {
@@ -1160,7 +1188,9 @@ export default {
                 }
             } else if (msg == "check" && answer_user == current_user) {
                 // 단어 체크 해서 끝났으면 타이머
-                this.send_user_turn("true");
+                this.send_user_turn("true", remove_count);
+                const answer_text_box = document.getElementById("input_answer");
+                answer_text_box.disabled = true;
                 this.time = 100;
             }
         },
