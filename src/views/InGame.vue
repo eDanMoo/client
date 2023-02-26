@@ -554,6 +554,8 @@ let cur_timer = 0;
 
 let first_turn = "";
 
+let process_image = "";
+
 export default {
     name: "cam_comp",
     components: { WordCard, modal },
@@ -739,14 +741,11 @@ export default {
             }
 
             url_segs = window.location.pathname.split("/");
-            console.log(url_segs);
 
             room_name = url_segs[1];
             this.enterCode = room_name;
             uniqCode = this.getRandomInt(10000, 100000);
             current_user = url_segs[2] + "#" + uniqCode;
-            //let send_url = room_name + "/" + current_user;
-            //console.log(send_url);
 
             const socket = new WebSocket(
                 // ws_scheme + "webdev-test.site/ws/" + room_name
@@ -756,22 +755,18 @@ export default {
                 console.log("socket connect");
                 resolve(socket);
             });
-            // socket.addEventListener("error", (error) => {
-            //     console.log("Websocket connect error");
-            //     alert("게임서버와의 연결이 종료되었습니다.");
-            //     location.href = "/";
-            //     reject(error);
-            // });
-            // socket.addEventListener("close", (event) => {
-            //     console.log("WebSocket connection closed:", event);
-            //     alert("게임서버와의 연결이 종료되었습니다.");
-            //     location.href = "/";
-            // });
+            socket.addEventListener("error", (error) => {
+                console.log("Websocket connect error");
+                alert("게임서버와의 연결이 종료되었습니다.");
+                location.href = "/";
+                reject(error);
+            });
+            socket.addEventListener("close", (event) => {
+                console.log("WebSocket connection closed:", event);
+                alert("게임서버와의 연결이 종료되었습니다.");
+                location.href = "/";
+            });
         });
-
-        isStreaming = 1;
-
-        intervalVid = setInterval(this.sendImage, 100);
 
         messages = document.getElementById("messages");
 
@@ -780,21 +775,6 @@ export default {
         video.width = w;
         video.height = h;
 
-        /** 내 카메라 켜기 */
-        const myCam = async (constraints) => {
-            let stream = null;
-            try {
-                stream = await navigator.mediaDevices.getUserMedia(constraints);
-                /* 스트림 사용 */
-                video.srcObject = stream;
-                video.volume = 0;
-                video.play();
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        myCam(constraints);
 
         canvas = document.getElementById("videoOutput");
 
@@ -805,7 +785,7 @@ export default {
 
         const info_obj = {
             type: "info",
-            video_status: 1,
+            video_status: true,
             userid: current_user,
         };
         connection.send(JSON.stringify(info_obj));
@@ -822,8 +802,6 @@ export default {
             const text = document.createTextNode(text_str);
             const userid = document.createTextNode(userid_str);
             if (event_data.type == "message") {
-                console.log("Text Recieved: " + text_str);
-
                 const content_tag = document.createElement("div");
                 content_tag.appendChild(text);
                 content_tag.setAttribute("class", "content_tag");
@@ -854,7 +832,6 @@ export default {
                 if (userid_str == current_user) {
                     0;
                 } else {
-                    //console.log(current_user);
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
                         subFrame.setAttribute("src", event_data.video);
@@ -871,7 +848,6 @@ export default {
                     }
                 }
             } else if (event_data.type == "info") {
-                //console.log(userid_str + "  -- " + current_user);
                 const check_score_input = document.getElementById(
                     userid_str + "_score"
                 );
@@ -1060,11 +1036,14 @@ export default {
                 }
             }
         };
-        this.processImage();
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            this.checkWebcam();
+        } else {
+            console.log("getUserMedia not supported on this browser");
+        }
         // this.updateProgressbar();
         this.playMusic();
         this.colored();
-        
     },
     methods: {
         colored() {
@@ -1074,6 +1053,37 @@ export default {
         },
         testbutton() {
             this.time--;
+        },
+        /** 유저가 웹캡이 있는지 체크 */
+        async checkWebcam() {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const videoDevices = devices.filter(device => device.kind === "videoinput");
+                if (videoDevices.length > 0) {
+                    // User has a webcam, call the myCam function
+                    this.myCam(constraints);
+                    this.processImage();
+                    isStreaming = 1;
+                    intervalVid = setInterval(this.sendImage, 100);
+                } else {
+                    console.log("User does not have a webcam");
+                }
+            } catch (error) {
+                console.log("Error while checking for video devices: ", error);
+            }
+        },
+        /** 내 카메라 켜기 */
+        async myCam(constraints) {
+            let stream = null;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                /* 스트림 사용 */
+                video.srcObject = stream;
+                video.volume = 0;
+                video.play();
+            } catch (error) {
+                console.log(error);
+            }
         },
         /** 클라이언트 구분을 위해 아이디에 부여할 난수 생성 */
         getRandomInt(min, max) {
@@ -1106,7 +1116,7 @@ export default {
         },
         processImage() {
             ctx.drawImage(video, 0, 0, w, h);
-            setTimeout(this.processImage, 1);
+            process_image = setTimeout(this.processImage, 1);
         },
         sendImage() {
             const rawData = canvas.toDataURL("image/jpeg", 0.5);
@@ -1124,26 +1134,17 @@ export default {
                 isStreaming = 1;
                 this.isStreaming = 1;
                 this.toggle_text = "카메라 비활성화";
-                // intervalVid = setInterval(this.sendImage, 15);
                 intervalVid = setInterval(this.sendImage, 100);
-
-                const jsonData = JSON.stringify({
-                    type: "video_on",
-                    userid: current_user,
-                });
-                connection.send(jsonData);
+                this.processImage();
+                this.videoOn();
             } else {
                 console.log("카메라 비활성화");
                 isStreaming = 0;
                 this.isStreaming = 0;
                 this.toggle_text = "카메라 활성화";
                 clearInterval(intervalVid);
-
-                const jsonData = JSON.stringify({
-                    type: "video_off",
-                    userid: current_user,
-                });
-                connection.send(jsonData);
+                clearTimeout(process_image);
+                this.videoOff();
             }
         },
         send_user_turn(user = "", remove_count = 0) {
@@ -1413,6 +1414,39 @@ export default {
             audio.volume = 0.6;
             audio.play();
             this.isOpenLeft = !this.isOpenLeft;
+            this.blockVideo(this.isOpenLeft);
+        },
+        /** 비디오 창 접었을 시 서버에 내 비디오 상대에게서 지우라고 보내고 나는 상대들의 비디오 받지 않겠다 보내기 */
+        blockVideo(status) {
+            if (!status) {
+                this.videoOff();
+                isStreaming = 0;
+                this.isStreaming = 0;
+                this.toggle_text = "카메라 활성화";
+                clearInterval(intervalVid);
+                clearTimeout(process_image);
+            }
+            const jsonData = JSON.stringify({
+                type: "video_status",
+                video_status: status,
+            });
+            connection.send(jsonData);
+        },
+        /** 서버에 내 비디오 상대에게서 보여주라고 보내기 */
+        videoOn() {
+            const jsonData = JSON.stringify({
+                type: "video_on",
+                userid: current_user,
+            });
+            connection.send(jsonData);
+        },
+        /** 서버에 내 비디오 상대에게서 지우라고 보내기 */
+        videoOff() {
+            const jsonData = JSON.stringify({
+                type: "video_off",
+                userid: current_user,
+            });
+            connection.send(jsonData);
         },
     },
 };
