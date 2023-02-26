@@ -725,6 +725,8 @@ export default {
         connection.close();
     },
     async mounted() {
+        document.body.style.background =
+            "radial-gradient(circle at bottom, rgb(10, 10, 60) 0, black 100%)";
         // test.inintOutputVideo();
         // test.initInputVideo();
         // test.processImage();
@@ -1046,36 +1048,9 @@ export default {
         // this.updateProgressbar();
         this.playMusic();
         this.colored();
-        this.init();
-        document.body.style.background =
-            "radial-gradient(circle at bottom, rgb(10, 10, 60) 0, black 100%)";
+        
     },
     methods: {
-        init() {
-            var style = ["style1", "style2", "style3", "style4"];
-
-            function getRandomArbitrary(min, max) {
-                return Math.floor(Math.random() * (max - min)) + min;
-            }
-            //meteoros
-
-            var numeroAleatorio = 5000;
-
-            setTimeout(function () {
-                carregarMeteoro();
-            }, numeroAleatorio);
-
-            function carregarMeteoro() {
-                setTimeout(carregarMeteoro, numeroAleatorio);
-                numeroAleatorio = getRandomArbitrary(5000, 10000);
-                var meteoro =
-                "<div class='meteoro " + style[getRandomArbitrary(0, 4)] + "'></div>";
-                document.getElementsByClassName("chuvaMeteoro")[0].innerHTML = meteoro;
-                setTimeout(function () {
-                document.getElementsByClassName("chuvaMeteoro")[0].innerHTML = "";
-                }, 1000);
-            }
-        },
         colored() {
             document.body.style.backgroundColor = "rgb(0, 0, 0)";
             document.body.style.background =
@@ -2081,11 +2056,6 @@ span {
     overflow: hidden;
 }
 
-canvas {
-    width: 100%;
-    height: 100%;
-}
-
 .space {
     background: rgba(128, 0, 128, 0.1) center / 200px 200px round;
     bottom: 0;
@@ -2188,130 +2158,18 @@ canvas {
         48vw 9vh 1px 1px #fff, -43vw 30vh 1px 1px #fff, 29vw -12vh 1px 1px #fff,
         -48vw 13vh 1px 0px #fff, -42vw 32vh 1px 1px #fff, 34vw 15vh 1px 1px #fff,
         29vw -37vh 1px 1px #fff, 28vw 2vh 0px 0px #fff;
-    animation: zoom 10s alternate infinite, rotation 100s linear infinite;
-}
-
-.meteoro {
-    position: absolute;
-    background-color: #fff;
-    width: 2px;
-    height: 2px;
-    border-radius: 50%;
-    transform: rotate(-35deg);
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-duration: 1s;
-}
-
-.meteoro:before {
-    content: "";
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 10px;
-    width: 0;
-    height: 0;
-    border-top: 1px solid transparent;
-    border-bottom: 1px solid transparent;
-    border-left: 85px solid white;
-    position: absolute;
-    left: 2px;
-    top: 0;
-}
-.meteoro.style1 {
-    animation-name: meteoroStyle1;
-}
-.meteoro.style2 {
-    animation-name: meteoroStyle2;
-}
-.meteoro.style3 {
-    animation-name: meteoroStyle3;
-}
-.meteoro.style4 {
-    animation-name: meteoroStyle4;
-}
-
-@keyframes meteoroStyle1 {
-    0% {
-        opacity: 0;
-        right: 300px;
-        top: 100px;
-    }
-    30% {
-        opacity: 0.3;
-    }
-    60% {
-        opacity: 0.3;
-    }
-    100% {
-        opacity: 0;
-        right: 1000px;
-        top: 600px;
-    }
-}
-
-@keyframes meteoroStyle2 {
-    0% {
-        opacity: 0;
-        right: 700px;
-        top: 100px;
-    }
-    30% {
-        opacity: 1;
-    }
-    60% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-        right: 1400px;
-        top: 600px;
-    }
-}
-
-@keyframes meteoroStyle3 {
-    0% {
-        opacity: 0;
-        right: 300px;
-        top: 300px;
-    }
-    30% {
-        opacity: 1;
-    }
-    60% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-        right: 1000px;
-        top: 800px;
-    }
-}
-
-@keyframes meteoroStyle4 {
-    0% {
-        opacity: 0;
-        right: 700px;
-        top: 300px;
-    }
-    30% {
-        opacity: 1;
-    }
-    60% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-        right: 1400px;
-        top: 800px;
-    }
+    animation: zoom 100s alternate infinite;
 }
 
 @keyframes zoom {
     0% {
-        transform: scale(1);
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        transform: scale(2) rotate(360deg);
     }
     100% {
-        transform: scale(1.5);
+        transform: scale(1) rotate(720deg);
     }
 }
 
