@@ -337,9 +337,29 @@
             <div class="centerBox" id="centerBox">
                 <div class="gameWindow" id="gameWindow">
                     <div id="gameBox">
-                        <component :is="game_mode" :msg="wordUpdate" :delete_board="delete_board" @scriptCheck="scriptCheck"></component>
-                        <button @click="loadComponent('WordCard')" v-show="!isGameStarted">경쟁</button>
-                        <button @click="loadComponent('Login')" v-show="!isGameStarted">협동</button>
+                        <!-- <component
+                            :is="game_mode"
+                            :msg="wordUpdate"
+                            :delete_board="delete_board"
+                            @scriptCheck="scriptCheck"
+                        ></component> -->
+                        <component :is="game_mode" :msg="wordUpdate">
+                            <template v-if="game_mode === 'WordCard'">
+                                <component :is="game_mode" :delete_board="delete_board" @scriptCheck="scriptCheck" />
+                            </template>
+                        </component>
+                        <button
+                            @click="loadComponent('WordCard')"
+                            v-show="!isGameStarted"
+                        >
+                            경쟁
+                        </button>
+                        <button
+                            @click="loadComponent('CoOpGame')"
+                            v-show="!isGameStarted"
+                        >
+                            협동
+                        </button>
                         <!-- <WordCard
                             :msg="wordUpdate"
                             :delete_board="delete_board"
@@ -1046,8 +1066,12 @@ export default {
                         subFrame.style.removeProperty("display");
                     }
                 }
+            } else if (event_data.type == "next") {
+                // console.log(typeof event_data);
+                this.wordUpdate = event_data;
             }
         };
+
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             this.checkWebcam();
         } else {
