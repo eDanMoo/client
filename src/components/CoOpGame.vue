@@ -58,45 +58,66 @@ import { onMounted, watch } from "vue";
 
 
 // watch 함수 예시
-        watch(props.msg, () => {
-        console.log('watch는 실행됨')
-        if (props.msg['word2'].status == 1) {
-          console.log('변경완료 표시도 됨')
-          storeInWordSet(props.msg['word'].word, props.msg['word'].left, props.msg['word'].length, -1)
-          dropWord(props.msg['word'].word, props.msg['word'].fall)
-        } 
-      } )
+      //   watch(props.msg, () => {
+      //   console.log('watch는 실행됨')
+      //   if (props.msg['word2'].status == 1) {
+      //     console.log('변경완료 표시도 됨')
+      //     storeInWordSet(props.msg['word'].word, props.msg['word'].left, props.msg['word'].length, -1)
+      //     dropWord(props.msg['word'].word, props.msg['word'].fall)
+      //   } 
+      // } )
 
 
 
       // 나중에 연결하면 살리기
-      //   watch(props.msg, ()=> {
-      //     if (props.msg.type == next) {  
-      //       let status = props.msg.status
-      //       if (status == "continue") {
-      //         let word = props.msg.word;
-      //         let left = props.msg.left;
-      //         let length = props.msg.length;
-      //         let fall = props.msg.fall
+        watch(props.msg, ()=> {
+          if (props.msg.type == next) {  
+            let status = props.msg.status
+            if (status == "continue") {
+              let word = props.msg.word;
+              let left = props.msg.left;
+              let length = props.msg.length;
+              let fall = props.msg.fall
 
-      //       storeInWordSet(word, left, length, -1)
-      //       dropWord(word, fall)
-      //     } else {
-      //       gameover()
-      //     } 
-      //   } else if (props.msg.type == check) {
+            storeInWordSet(word, left, length, -1)
+            dropWord(word, fall)
+          } 
+        } else if (props.msg.type == check) {
           
-      //     answerRemove()
-      //     let moveInfo = words.moveInfo;
-      //     for (i=0; i < moveInfo.length; i++){
-      //       let newword = moveInfo[i][0];
-      //       let fall = moveInfo[i][1]
-      //       dropWord(newword, fall)
-      //     }
-      //   }
-      // })
+          let removeWords = props.msg.removeWords
+          for (i=0; i<removeWords.length; i++) {
+            removeWord(removeWords[i])
+          }
+          let moveInfo = props.msg.moveInfo
+          for (i=0; i < moveInfo.length; i++){
+            let newword = moveInfo[i][0];
+            let fall = moveInfo[i][1]
+            dropWord(newword, fall)
+
+          // 떨어지는 글자 사라지게 구현하기 
+          }
+        }
+      })
         
+                  //단어 입력하면 삭제시키기
+            // var inputAnswer = -1
+
+            // button.addEventListener('click', function(event) {
+            //   console.log("단어 입력 함수 동작함")
+            //   let a = input.value;
+            //   console.log("입력값 :", a)
+            //   let b = Object.keys(wordSet)
+            //   for (i=0; i < b.length; i++) {
+                
+            //     if (b[i] == a && wordSet[b[i]].height != -1) {
+            //       removeWord(a);
+            //     } 
+            //     inputAnswer = a
+            //   }
+            // }
+            // )
         
+        //점수채우기
         
 
 
