@@ -4,7 +4,7 @@
   </div>
 
   <!-- 일단 복붙해옴 -->
-  <div class="answerBox">
+  <!-- <div class="answerBox">
                         <input
                             type="text"
                             id="input_answer"
@@ -28,7 +28,7 @@
                         >
                             게임 시작
                         </button>
-  </div>
+  </div> -->
 </template>
 
 
@@ -45,33 +45,12 @@ import { onMounted, watch } from "vue";
 
     setup (props) {
 
-      // console.log(props.msg)
-      // console.log(props.msg['word2'].status)
-
-
-      function init() {
-        console.log('init');
-      }
-
       onMounted(() => {  
 
-
-
-// watch 함수 예시
-      //   watch(props.msg, () => {
-      //   console.log('watch는 실행됨')
-      //   if (props.msg['word2'].status == 1) {
-      //     console.log('변경완료 표시도 됨')
-      //     storeInWordSet(props.msg['word'].word, props.msg['word'].left, props.msg['word'].length, -1)
-      //     dropWord(props.msg['word'].word, props.msg['word'].fall)
-      //   } 
-      // } )
-
-
-
       // 나중에 연결하면 살리기
-        watch(props.msg, ()=> {
-          if (props.msg.type == next) {  
+        watch(() => props.msg, ()=> {
+          console.log(props.msg);
+          if (props.msg.type == 'next') {  
             let status = props.msg.status
             if (status == "continue") {
               let word = props.msg.word;
@@ -82,7 +61,7 @@ import { onMounted, watch } from "vue";
             storeInWordSet(word, left, length, -1)
             dropWord(word, fall)
           } 
-        } else if (props.msg.type == check) {
+        } else if (props.msg.type == 'check') {
           
           let removeWords = props.msg.removeWords
           for (i=0; i<removeWords.length; i++) {
@@ -119,9 +98,6 @@ import { onMounted, watch } from "vue";
         
         //점수채우기
         
-
-
-
 // 초기화-----------------------------------------------------------------
             const COLS = 11;      // size
             const ROWS = 11;      // size
@@ -134,39 +110,7 @@ import { onMounted, watch } from "vue";
             ctx.canvas.height = ROWS * BLOCK_SIZE;
             // ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
-            const wordSet = {
-              // 테스트용 예시모음집
-              '떡볶이' : {
-                left : 0,
-                length : 3,
-                height : -1,
-                // fall : 10,
-              },
-              '햄버거' : {
-                left : 6,
-                length : 3,          
-                height : -1,
-                // fall : 10,
-              },
-              '김밥' : {
-                left : 8,
-                length : 2,
-                height : -1,
-                // fall : 9,
-              },
-              '감자튀김' : {
-                left : 1,
-                length : 4,          
-                height : -1,
-                // fall : 9 ,
-              },
-              '아이스크림' : {
-                left : 4,
-                length : 5,          
-                height : -1,
-                // fall : 8,
-              }
-            }
+            const wordSet = {}
 // 초기화-----------------------------------------------------------------
 
 // -----------------------------------------> 단어 drop 함수
@@ -180,8 +124,6 @@ import { onMounted, watch } from "vue";
           let height = wordBlock.height;
 
                 // 높이 0일때, 주어졌을 때 구분하기
-
-
 
           // 단어 옮기기  
           let z = height; 
@@ -198,7 +140,6 @@ import { onMounted, watch } from "vue";
                 removeWordInWordSet(word);
                 inputAnswer = -1;
 
-                // console.log(wordSet);
                 // height 새로 저장하고, removeWord로 지우기
                 return
               }
@@ -288,173 +229,31 @@ import { onMounted, watch } from "vue";
 
 
 
-
-
-
-
-
-
-
-
-//-------------------------------------------> 통신
-
-        // 실험용
-        var start = document.getElementById("game_start")
-            start.addEventListener('click', hi)
-
-            function hi(e){
-              console.log('hi')
-            }
-
-// --------------------------next-------------------------------
-// status 확인하고, continue면---------------
-// word = words.word
-// left = words.left
-// length = words.length
-// fall = words.fall 
-
-// storeInWordSet(word, left, length, -1)
-// dropWord(word, fall)
-
-// status 확인하고, gameover면-------------
-// finish로?
-
-        // if (message.type == next) {
-        //   let status = words.status
-        //   if (status == "continue") {
-        //     nextBlockDrop()
-        //   } else {
-        //     gameover()
-        //   }
-        // }
-
-        // 위에서 블록 생성하고 내려가기 
-        // function nextBlockDrop () {
-        //   let word = words.word;
-        //   let left = words.left;
-        //   let length = words.length;
-        //   let fall = words.fall
-
-        //   storeInWordSet(word, left, length, -1)
-        //   dropWord(word, fall)
-        // }
-
-        function gameover () {
-          // 대충 적기
-          // 게임 끝났다고 서버로 보내기
-          // 화면 정리.. 캔버스 지우기? 결과창 띄우기?
-        }
-// --------------------------next-------------------------------
-
-// --------------------------check-------------------------------
-// removeWords = words.removeWords
-// for (i=0; i < removeWords.length; i++) {
-//   removeWord(removeWords);
-// }
-
-// drop 실행(나중에 옮길 수 있음)
-      //moveinfo에서 word로 필요한 정보(height, left, length) 찾기 + fall 로 내려올 값
-// moveInfo = words.moveInfo
-// let i = 0;
-// for (i = 0; i < moveInfo.length; i++) {
-//   // moveInfo 없을 경우 생각하기 
-//   let newword = moveInfo[i][0];
-//   let fall = moveInfo[i][1];
-//   console.log(newword)
-//   console.log(fall)
-//   dropWord(newword, fall)
-// }
-
-        // 정답 맞출 경우, 해당 블록 지우고, 나머지 지우는 함수 
-        function answerRemove() {
-          // 단어 먼저 지우기
-          let removeWords = props.msg.removeWords
-          for (i=0; i<removeWords.length; i++) {
-            removeWord(removeWords[i])
-          }
-
-          // 나머지 블록 내리기
-          let moveInfo = props.msg.moveInfo
-          for (i=0; i < moveInfo.length; i++){
-            let newword = moveInfo[i][0];
-            let fall = moveInfo[i][1]
-            dropWord(newword, fall)
-          }
-        }
-
-        //점수채우기
-        
-
-// --------------------------check-------------------------------
-// <------------------------------------------- 통신---------
-            
-
-
-
-
 // 테스트 공간--------------------------------------
-        const fallSet = [10, 10, 9, 9, 8]
-          
-            let i = 0;
-            const testdrop = setInterval (function() {
-              let word = Object.keys(wordSet)[i];
-              let fall = fallSet[i]
-              dropWord(word, fall)  
-              i = i + 1;
-              if (i > 4) {
-                clearInterval(testdrop)
-              }
-            }, 1000);              
-            
     
-            let moveInfo1 = [['김밥', 1]]
-            let moveInfo2 = [['아이스크림', 1]]
-            
-            setTimeout(removeWord, 6000, '햄버거')
-            
-            setTimeout(removeWord, 6000, '감자튀김')
-            setTimeout(()=> {
-              for (i = 0; i < moveInfo1.length; i++) {
-              // moveInfo 없을 경우 생각하기 
-              let newword = moveInfo1[i][0];
-              let fall = moveInfo1[i][1];
-              dropWord(newword, fall)
-            }}, 6500)
-            setTimeout(()=> {
-            for (i = 0; i < moveInfo2.length; i++) {
-              // moveInfo 없을 경우 생각하기 
-              let newword = moveInfo2[i][0];
-              let fall = moveInfo2[i][1];
-              dropWord(newword, fall)
-            }}, 6500)
-
             
             //단어 입력하면 삭제시키기
             var inputAnswer = -1
-            const input = document.getElementById('input_answer');
-            const button = document.getElementById('submit_answer');
-            button.addEventListener('click', function(event) {
-              console.log("단어 입력 함수 동작함")
-              let a = input.value;
-              console.log("입력값 :", a)
-              let b = Object.keys(wordSet)
-              for (i=0; i < b.length; i++) {
+            // const input = document.getElementById('input_answer');
+            // const button = document.getElementById('submit_answer');
+            // button.addEventListener('click', function(event) {
+            //   console.log("단어 입력 함수 동작함")
+            //   let a = input.value;
+            //   console.log("입력값 :", a)
+            //   let b = Object.keys(wordSet)
+            //   for (i=0; i < b.length; i++) {
                 
-                if (b[i] == a && wordSet[b[i]].height != -1) {
-                  removeWord(a);
-                } 
-                inputAnswer = a
-              }
-            }
-            )
+            //     if (b[i] == a && wordSet[b[i]].height != -1) {
+            //       removeWord(a);
+            //     } 
+            //     inputAnswer = a
+            //   }
+            // }
+            // )
 
-            const button2 = document.getElementById('submit_answer2');
-            button2.addEventListener('click', function(event) {
-              console.log(inputAnswer)
-            })
     },)
 
-    return { init } ;
+    return { } ;
   },
 };
 </script>
