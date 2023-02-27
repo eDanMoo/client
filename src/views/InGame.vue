@@ -532,7 +532,7 @@
 // import VueSocketIO from "vue-socket.io";
 //import WordCard from "../components/WordCard.vue";
 import modal from "../components/ResultPop.vue";
-import { defineAsyncComponent } from "vue";
+import { defineAsyncComponent, markRaw } from "vue";
 // let url_segs = window.location.pathname.split("/");
 let url_segs = "";
 // var room_name = url_segs[1];
@@ -1095,7 +1095,7 @@ export default {
             const component = await defineAsyncComponent(() =>
                 import(`../components/${game_mode}.vue`)
             );
-            this.game_mode = component;
+            this.game_mode = markRaw(component);
             this.game_mode_text = game_mode;
             this.game_selected = 1;
         },
