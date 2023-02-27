@@ -1,13 +1,20 @@
 <template>
-    <div id="login-wrapper">
+    <div id="login-wrapper" v-show="showLogin" ref="floatLogin">
+        <div id="loginBar" @mousedown="dragLogin" @touchmove="dragLogin">
+            <span style="margin-left: 10px; font-size: 1.5rem">단어게임 접속</span>
+            <img
+                src="../assets/gamecomp/Xbutton.png"
+                style="
+                    width: 30px;
+                    height: 30px;
+                    cursor: pointer;
+                    margin-right: 10px;
+                "
+                alt=""
+                @click="closeLogin()"
+            />
+        </div>
         <div id="loginbox">
-            <div id="logo">
-                <img
-                    src="../assets/image/logo.png"
-                    alt=""
-                    style="width: 50%; margin-bottom: 5vh"
-                />
-            </div>
             <div id="entrance">
                 <input
                     id="input-room-id"
@@ -44,6 +51,7 @@
                         document.getElementById('close-modal').focus();
                                                 } "
                     :maxlength="6"
+                    @keypress.enter="createPage"
                 />
 
                 <br />
@@ -52,24 +60,24 @@
             </div>
         </div>
     </div>
-    <div id="modal-wrapper">
-        <div id="modal">
-            <div id="modal-title">경고</div>
-            <div id="modal-content">
+    <div class="modal-wrapper" id="modal-wrapper">
+        <div class="modal" id="modal">
+            <div class="modal-title" id="modal-title">경고</div>
+            <div class="modal-content" id="modal-content">
                 <div>영문과 숫자만 입력 가능합니다!</div>
                 <div class="close-modal">
-                    <button id="close-modal">알겠습니다</button>
+                    <button class="modal-close-button" id="close-modal">확 인</button>
                 </div>
             </div>
         </div>
     </div>
-    <div id="modal-wrapper-2">
-        <div id="modal-2">
-            <div id="modal-title-2">경고</div>
-            <div id="modal-content-2">
+    <div class="modal-wrapper" id="modal-wrapper-2">
+        <div class="modal" id="modal-2">
+            <div class="modal-title" id="modal-title-2">경고</div>
+            <div class="modal-content" id="modal-content-2">
                 <div>입력값을 적어주세요</div>
-                <div class="close-modal-2">
-                    <button id="close-modal-2">알겠습니다</button>
+                <div class="close-modal">
+                    <button class="modal-close-button" id="close-modal-2">확 인</button>
                 </div>
             </div>
         </div>
@@ -81,7 +89,70 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
+    data () {
+        return {
+            logPos1: 0,
+            logPos2: 0,
+            logPos3: 0,
+            logPos4: 0,
+        };
+    },
+    methods: {
+        closeLogin() {
+            const audio = new Audio("../src/assets/soundEffect/click.mp3");
+            audio.volume = 0.6;
+            audio.play();
+            this.showLogin = false;
+        },
+        openLogin() {
+            this.$refs.floatLogin.style.top = "5%";
+            this.$refs.floatLogin.style.left = "10%";
+            this.showLogin = true;
+        },
+        dragLogin(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // get the mouse cursor position at startup:
+            this.logPos3 = e.clientX;
+            this.logPos4 = e.clientY;
+            document.onmouseup = this.closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = this.loginDrag;
+        },
+        loginDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            this.logPos1 = this.logPos3 - e.clientX;
+            this.logPos2 = this.logPos4 - e.clientY;
+            this.logPos3 = e.clientX;
+            this.logPos4 = e.clientY;
+            // set the element's new position:
+            this.$refs.floatLogin.style.top =
+                Math.max(
+                    Math.min(
+                        this.$refs.floatLogin.offsetTop - this.logPos2,
+                        window.innerHeight - this.$refs.floatLogin.style.height
+                    ),
+                    -150
+                ) + "px";
+            this.$refs.floatLogin.style.left =
+                Math.max(
+                    Math.min(
+                        this.$refs.floatLogin.offsetLeft - this.logPos1,
+                        window.innerWidth - this.$refs.floatLogin.style.width
+                    ),
+                    -500
+                ) + "px";
+        },
+        closeDragElement() {
+            // stop moving when mouse button is released:
+            document.onmouseup = null;
+            document.onmousemove = null;
+        },
+    },
     setup() {
+        let showLogin = ref(true);
         onMounted(() => {
             //모달창
             const closeModal = document.getElementById("close-modal");
@@ -101,11 +172,9 @@ export default {
                     }
                 }
             });
-
             closeModal2.onclick = () => {
                 modal2.style.display = "none";
             };
-
             closeModal2.addEventListener("keydown", function (e) {
                 if (e.keyCode === 13) {
                     if (modal2.style.display === "flex") {
@@ -145,10 +214,14 @@ export default {
         const createPage = () => {
             const userID = document.getElementById("input-user-id");
             const modal2 = document.getElementById("modal-wrapper-2");
+            const roomID = document.getElementById("input-room-id");
 
             if (userID.value == "") {
                 modal2.style.display = "flex";
                 document.getElementById("close-modal-2").focus();
+            }
+            if (!roomID.value == "") {
+                return joinPage();
             }
             const new_room_code = generateRandomCode(6);
             const audio = new Audio("../src/assets/soundEffect/enterRoom.wav");
@@ -175,31 +248,35 @@ export default {
             return randomcode;
         }
 
-        return { room_code, user_id, joinPage, createPage, generateRandomCode };
+        return {
+            room_code,
+            user_id,
+            joinPage,
+            createPage,
+            showLogin,
+            generateRandomCode,
+        };
     },
-};
+}
 </script>
 
 <style scoped>
 #login-wrapper {
-    height: 100%;
-    min-height: 100vh;
-    max-width: 100%;
-    background: linear-gradient(
-        351.27deg,
-        #ffffff -854.98%,
-        #eeeeee -854.98%,
-        #cacaca -91.55%
-    );
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
+    position: absolute;
+    box-sizing: border-box;
+    top: 5%;
+    right: 10%;
+    width: 80%;
+    height: 80%;
+    background-color: #000;
+    border: 10px sloid rgb(22, 255, 94);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 #loginbox {
-    width: fit-content;
+    width: 100%;
     height: fit-content;
 }
 
@@ -209,69 +286,75 @@ export default {
 }
 #entrance {
     text-align: center;
+    width: 100%;
     /* height: 50%; */
 }
 #input-room-id {
     margin: 5px;
-    box-shadow: 1px 1px black, inset 2px 2px white;
-    width: 325px;
+    width: 40%;
+    min-width: 30px;
     height: 50px;
     font-family: "DungGeunMo";
     font-size: large;
     text-align: center;
+    background-color: transparent;
+    border: 3px solid rgb(22, 255, 94);
+    color: rgb(22, 255, 94);
 }
 
 #input-user-id {
     margin: 5px;
-    box-shadow: 1px 1px black, inset 2px 2px white;
-    width: 325px;
+    width: 40%;
+    min-width: 30px;
     height: 50px;
     font-family: "DungGeunMo";
     font-size: large;
     text-align: center;
+    background-color: transparent;
+    border: 3px solid rgb(22, 255, 94);
+    color: rgb(22, 255, 94);
 }
 
 #create-button {
-    background-image: radial-gradient(
-        #d7d7d7 0%,
-        #f3f3f3 47.92%,
-        #e6e6e6 100%,
-        #dbdbdb 100%
-    );
-    width: 160px;
+    width: 25%;
+    max-width: 160px;
+    min-width: 88px;
     height: 50px;
-    display: inline-block;
-    border: 1px solid rgb(80, 80, 80);
-    box-shadow: 1px 1px black, inset 2px 2px white;
+    border: 2px solid rgb(22, 255, 94);
+    background-color: transparent;
+    color: rgb(22, 255, 94);
     margin-right: 5px;
     margin-top: 10px;
     font-family: "DungGeunMo";
     font-size: x-large;
 }
-
+#create-button:hover {
+    background-color: rgb(22, 255, 94);
+    color: #000;
+}
 #join-buttom {
-    background-image: radial-gradient(
-        #d7d7d7 0%,
-        #f3f3f3 47.92%,
-        #e6e6e6 100%,
-        #dbdbdb 100%
-    );
-    width: 160px;
+    width: 25%;
+    max-width: 160px;
+    min-width: 88px;
     height: 50px;
-    display: inline-block;
-    border: 1px solid rgb(80, 80, 80);
     margin-top: 10px;
-    box-shadow: 1px 1px black, inset 2px 2px white;
+    border: 2px solid rgb(22, 255, 94);
+    background-color: transparent;
+    color: rgb(22, 255, 94);
     font-family: "DungGeunMo";
     font-size: x-large;
 }
+#join-buttom:hover {
+    background-color: rgb(22, 255, 94);
+    color: #000;
+}
 
-#modal-wrapper {
-    position: fixed;
+.modal-wrapper {
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     display: none;
     justify-content: center;
     align-items: center;
@@ -279,28 +362,28 @@ export default {
     font-size: x-large;
 }
 
-#modal {
+.modal {
     background-color: rgb(172, 172, 172);
-    padding: 10px;
     width: 25vw;
-    height: 30vh;
+    min-width: 250px;
+    height: 20vw;
     border: 2px solid rgb(80, 80, 80);
-    box-shadow: 1px 1px black, inset 2px 2px white;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
-#modal-title {
+.modal-title {
     background-image: linear-gradient(270deg, #1085d2 0%, #00007b 100%);
-    flex-basis: 10%;
+    box-sizing: border-box;
+    width: 100%;
     border: 2px solid rgb(80, 80, 80);
     box-shadow: 1px 1px black, inset 2px 2px white;
     padding-left: 10px;
     color: white;
 }
 
-#modal-content {
+.modal-content {
     background-color: rgb(172, 172, 172);
     flex-basis: 80%;
     display: flex;
@@ -316,64 +399,25 @@ export default {
     justify-content: center;
 }
 
-#close-modal {
+.modal-close-button {
     border: 2px solid rgb(80, 80, 80);
     box-shadow: 1px 1px black, inset 2px 2px white;
+    cursor: pointer;
 }
 
-#modal-wrapper-2 {
-    position: fixed;
+#loginBar {
+    box-sizing: border-box;
+    background-image: linear-gradient(270deg, #a0d9ff 0%, #00007b 100%);
+    border: 2px solid rgb(80, 80, 80);
+    box-shadow: 1px 1px black, inset 2px 2px white;
+    position: absolute;
     top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    font-family: "DungGeunMo";
-    font-size: x-large;
-}
-
-#modal-2 {
-    background-color: rgb(172, 172, 172);
-    padding: 10px;
-    width: 25vw;
-    height: 30vh;
-    border: 2px solid rgb(80, 80, 80);
-    box-shadow: 1px 1px black, inset 2px 2px white;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-#modal-title-2 {
-    background-image: linear-gradient(270deg, #1085d2 0%, #00007b 100%);
-    flex-basis: 10%;
-    border: 2px solid rgb(80, 80, 80);
-    box-shadow: 1px 1px black, inset 2px 2px white;
-    padding-left: 10px;
     color: white;
-}
-
-#modal-content-2 {
-    background-color: rgb(172, 172, 172);
-    flex-basis: 80%;
+    width: 100%;
+    height: 38px;
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    padding: 10px;
-    font-size: large;
-}
-
-.close-modal-2 {
     align-items: center;
-    flex-basis: 20%;
-    display: flex;
-    justify-content: center;
-}
-
-#close-modal-2 {
-    border: 2px solid rgb(80, 80, 80);
-    box-shadow: 1px 1px black, inset 2px 2px white;
+    cursor: grab;
 }
 </style>

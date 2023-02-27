@@ -1,7 +1,7 @@
 <template>
     <div class="hancomWindow" v-show="showHancom" ref="floatHancom">
-        <div id="hancom" v-show="showHancom">
-            <div id="hancom-title" @mousedown="dragMouseDown">
+        <div id="hancom">
+            <div id="hancom-title" @mousedown="dragHancom">
                 <span style="margin-left: 10px">정글타자연습</span>
                 <img
                     src="../assets/gamecomp/Xbutton.png"
@@ -36,10 +36,10 @@ import { onMounted, ref, onBeforeUnmount } from "vue";
 export default {
     data() {
         return {
-            pos1: 0,
-            pos2: 0,
-            pos3: 0,
-            pos4: 0,
+            hancomPos1: 0,
+            hancomPos2: 0,
+            hancomPos3: 0,
+            hancomPos4: 0,
         };
     },
     methods: {
@@ -54,29 +54,29 @@ export default {
             this.$refs.floatHancom.style.left = "5%";
             this.showHancom = true;
         },
-        dragMouseDown(e) {
+        dragHancom(e) {
             e = e || window.event;
             e.preventDefault();
             // get the mouse cursor position at startup:
-            this.pos3 = e.clientX;
-            this.pos4 = e.clientY;
+            this.hancomPos3 = e.clientX;
+            this.hancomPos4 = e.clientY;
             document.onmouseup = this.closeDragElement;
             // call a function whenever the cursor moves:
-            document.onmousemove = this.elementDrag;
+            document.onmousemove = this.hancomDrag;
         },
-        elementDrag(e) {
+        hancomDrag(e) {
             e = e || window.event;
             e.preventDefault();
             // calculate the new cursor position:
-            this.pos1 = this.pos3 - e.clientX;
-            this.pos2 = this.pos4 - e.clientY;
-            this.pos3 = e.clientX;
-            this.pos4 = e.clientY;
+            this.hancomPos1 = this.hancomPos3 - e.clientX;
+            this.hancomPos2 = this.hancomPos4 - e.clientY;
+            this.hancomPos3 = e.clientX;
+            this.hancomPos4 = e.clientY;
             // set the element's new position:
             this.$refs.floatHancom.style.top =
                 Math.max(
                     Math.min(
-                        this.$refs.floatHancom.offsetTop - this.pos2,
+                        this.$refs.floatHancom.offsetTop - this.hancomPos2,
                         window.innerHeight - 150
                     ),
                     -150
@@ -84,7 +84,7 @@ export default {
             this.$refs.floatHancom.style.left =
                 Math.max(
                     Math.min(
-                        this.$refs.floatHancom.offsetLeft - this.pos1,
+                        this.$refs.floatHancom.offsetLeft - this.hancomPos1,
                         window.innerWidth - 150
                     ),
                     -500
@@ -97,7 +97,7 @@ export default {
         },
     },
     setup() {
-        let showHancom = ref(true);
+        let showHancom = ref(false);
         let drawInterval = null;
         let downInterval = null;
         onMounted(() => {
