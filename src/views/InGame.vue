@@ -337,15 +337,18 @@
             <div class="centerBox" id="centerBox">
                 <div class="gameWindow" id="gameWindow">
                     <div id="gameBox">
-                        <WordCard
+                        <component :is="game_mode" :msg="wordUpdate" :delete_board="delete_board" @scriptCheck="scriptCheck"></component>
+                        <button @click="loadComponent('WordCard')" v-show="!isGameStarted">경쟁</button>
+                        <button @click="loadComponent('Login')" v-show="!isGameStarted">협동</button>
+                        <!-- <WordCard
                             :msg="wordUpdate"
                             :delete_board="delete_board"
                             @scriptCheck="scriptCheck"
-                        />
+                        /> -->
                         <button
                             id="game_start"
                             @click="boardInit()"
-                            v-show="!isGameStarted"
+                            v-show="!isGameStarted && game_selected"
                         ></button>
                     </div>
                 </div>
@@ -507,8 +510,9 @@
 <script>
 // import { onMounted, ref } from "vue";
 // import VueSocketIO from "vue-socket.io";
-import WordCard from "../components/WordCard.vue";
+//import WordCard from "../components/WordCard.vue";
 import modal from "../components/ResultPop.vue";
+import { defineAsyncComponent } from "vue";
 // let url_segs = window.location.pathname.split("/");
 let url_segs = "";
 // var room_name = url_segs[1];
@@ -558,7 +562,9 @@ let process_image = "";
 
 export default {
     name: "cam_comp",
-    components: { WordCard, modal },
+    components: {
+        modal,
+    },
     data() {
         return {
             isOpenLeft: true,
@@ -580,6 +586,8 @@ export default {
             openModal: false,
             // musicPlayer
             openMusicPlayer: 0,
+            game_mode: "WordCard",
+            game_mode_text: "",
             musicSources: [
                 {
                     fileName: "Welcome Player! - Visager.ogg",
@@ -716,6 +724,7 @@ export default {
             pos4: 0,
             showHowTo: 0,
             isGameStarted: 0,
+            game_selected: 0,
         };
     },
     watch: {
@@ -774,7 +783,6 @@ export default {
 
         video.width = w;
         video.height = h;
-
 
         canvas = document.getElementById("videoOutput");
 
@@ -1020,6 +1028,10 @@ export default {
                 // todo. 여기 아이디가 다 같아서 안지워지는 문제임
                 const log_tab = document.getElementById("log_tab");
                 log_tab.parentNode.removeChild(log_tab);
+
+                const answer_text_box = document.getElementById("input_answer");
+                answer_text_box.disabled = true;
+                this.time = 12;
             } else if (event_data.type == "video_off") {
                 if (current_user != userid_str) {
                     const subFrame = document.getElementById(userid_str);
@@ -1054,11 +1066,22 @@ export default {
         testbutton() {
             this.time--;
         },
+        /** 필요시에만 컴포넌트 import */
+        async loadComponent(game_mode) {
+            const component = await defineAsyncComponent(() =>
+                import(`../components/${game_mode}.vue`)
+            );
+            this.game_mode = component;
+            this.game_mode_text = game_mode;
+            this.game_selected = 1;
+        },
         /** 유저가 웹캡이 있는지 체크 */
         async checkWebcam() {
             try {
                 const devices = await navigator.mediaDevices.enumerateDevices();
-                const videoDevices = devices.filter(device => device.kind === "videoinput");
+                const videoDevices = devices.filter(
+                    (device) => device.kind === "videoinput"
+                );
                 if (videoDevices.length > 0) {
                     // User has a webcam, call the myCam function
                     this.myCam(constraints);
@@ -1168,7 +1191,7 @@ export default {
                 this.send_user_turn("true", remove_count);
                 const answer_text_box = document.getElementById("input_answer");
                 answer_text_box.disabled = true;
-                this.time = 100;
+                this.time = 12;
             }
         },
         getLimitTimer() {
@@ -1234,6 +1257,7 @@ export default {
 
             const jsonData = JSON.stringify({
                 type: "game_server",
+                game_mode: this.game_mode_text,
                 method: "POST",
                 path: "init",
                 params: {
@@ -1248,6 +1272,7 @@ export default {
             const user_answer = answer_text_box.value;
             const jsonData = JSON.stringify({
                 type: "game_server",
+                game_mode: this.game_mode_text,
                 method: "POST",
                 path: "check",
                 params: {
