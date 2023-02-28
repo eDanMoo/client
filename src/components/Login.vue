@@ -1,7 +1,9 @@
 <template>
     <div id="login-wrapper" v-show="showLogin" ref="floatLogin">
         <div id="loginBar" @mousedown="dragLogin" @touchmove="dragLogin">
-            <span style="margin-left: 10px; font-size: 1.5rem">단어게임 접속</span>
+            <span style="margin-left: 10px; font-size: 1.5rem"
+                >단어게임 접속</span
+            >
             <img
                 src="../assets/gamecomp/Xbutton.png"
                 style="
@@ -21,8 +23,6 @@
                     type="text"
                     v-model="room_code"
                     placeholder="입장코드 입력(영문, 숫자)"
-                    onfocus="this.placeholder = ''"
-                    onblur="this.placeholder = '입장코드 or 만들기(영문, 숫자)'"
                     oninput="javascript: 
                     if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
 
@@ -39,8 +39,6 @@
                     type="text"
                     v-model="user_id"
                     placeholder="닉네임 입력(영문, 숫자)"
-                    onfocus="this.placeholder = ''"
-                    onblur="this.placeholder = '닉네임 입력(영문, 숫자)'"
                     oninput="javascript: 
                     if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
 
@@ -66,7 +64,9 @@
             <div class="modal-content" id="modal-content">
                 <div>영문과 숫자만 입력 가능합니다!</div>
                 <div class="close-modal">
-                    <button class="modal-close-button" id="close-modal">확 인</button>
+                    <button class="modal-close-button" id="close-modal">
+                        확 인
+                    </button>
                 </div>
             </div>
         </div>
@@ -77,7 +77,9 @@
             <div class="modal-content" id="modal-content-2">
                 <div>입력값을 적어주세요</div>
                 <div class="close-modal">
-                    <button class="modal-close-button" id="close-modal-2">확 인</button>
+                    <button class="modal-close-button" id="close-modal-2">
+                        확 인
+                    </button>
                 </div>
             </div>
         </div>
@@ -89,7 +91,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
-    data () {
+    data() {
         return {
             logPos1: 0,
             logPos2: 0,
@@ -257,7 +259,7 @@ export default {
             generateRandomCode,
         };
     },
-}
+};
 </script>
 
 <style scoped>
@@ -301,7 +303,14 @@ export default {
     border: 3px solid rgb(22, 255, 94);
     color: rgb(22, 255, 94);
 }
-
+#input-room-id::placeholder {
+    color: rgb(11, 121, 46);
+}
+#input-room-id:focus {
+    outline: none !important;
+    border-color: rgb(22, 255, 94);
+    box-shadow: 0 0 10px 5px rgb(22, 255, 94);
+}
 #input-user-id {
     margin: 5px;
     width: 40%;
@@ -313,6 +322,14 @@ export default {
     background-color: transparent;
     border: 3px solid rgb(22, 255, 94);
     color: rgb(22, 255, 94);
+}
+#input-user-id::placeholder {
+    color: rgb(11, 121, 46);
+}
+#input-user-id:focus {
+    outline: none !important;
+    border-color: rgb(22, 255, 94);
+    box-shadow: 0 0 10px 5px rgb(22, 255, 94);
 }
 
 #create-button {

@@ -1107,7 +1107,8 @@ export default {
             laser.setAttribute("id", "laser");
             laser.style.width = "10px";
             laser.style.height = "12px";
-            laser.style.background = "linear-gradient(90deg, yellow 35%, transparent 35.1%, transparent 54.9%, yellow 55%)"
+            laser.style.background =
+                "linear-gradient(90deg, yellow 35%, transparent 35.1%, transparent 54.9%, yellow 55%)";
             laser.style.zIndex = "-1";
             laser.style.position = "absolute";
             laser.style.left = x - 5 + "px";
