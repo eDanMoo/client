@@ -54,13 +54,7 @@ export default {
     watch: {
         msg(message) {
             if (message != null) {
-                if (message.type == "init") {
-                    this.start(message.moves[0]);
-                    this.startbondFlag = true;
-                    // this.metamong(message.table);
-                    // this.metamong(message.table);
-                    this.$emit("scriptCheck", "init"); // table 생성 완료 시 서버에 턴 요청
-                } else if (message.type == "check") {
+                if (message.type == "check") {
                     console.log(message);
                     if (message.moves.length === 5) {
                         console.log("판갈이 셋 되어있음");
@@ -78,6 +72,12 @@ export default {
                     //       this.msg.user,
                     //       this.msg.increment
                     //   ); // 정답 체크 완료 시 서버에 턴 요청
+                } else if (message.type == "init") {
+                    this.start(message.moves[0]);
+                    this.startbondFlag = true;
+                    // this.metamong(message.table);
+                    // this.metamong(message.table);
+                    this.$emit("scriptCheck", "init"); // table 생성 완료 시 서버에 턴 요청
                 }
             }
         },
@@ -106,7 +106,7 @@ export default {
             console.log(mode);
             console.log(mode.id);
         },
-        onAfterEnter(el) {
+        onAfterEnter() {
             /* 시작했을 때 이어주는 용 */
             if (this.startbondFlag === true) {
                 this.metamong(this.msg.table);
@@ -138,7 +138,7 @@ export default {
         },
 
         /** 삭제 모션 후 작동 */
-        onAfterLeave(el) {
+        onAfterLeave() {
             this.wordcard.forEach((element) => {
                 element.show = true;
             });
@@ -155,10 +155,20 @@ export default {
 
         /* 삭제(1) -> 이동 -> 삭제(2) -> 추가 -> sorting -> class변경 */
         answerCheck(command) {
-            this.clearmeta();
+            // this.clearmeta();
             this.invisibleElem(command[0]);
             this.moveElem(command[1]);
             this.addElem(command);
+        },
+        clearmeta() {
+            this.wordcard.forEach((element) => {
+                element.Up = false;
+                element.Down = false;
+                element.Right = false;
+                element.Left = false;
+                element.Updown = false;
+                element.Rleft = false;
+            });
         },
         /** 삭제될 요소를 투명화 처리한다 */
         invisibleElem(command) {
@@ -176,6 +186,19 @@ export default {
             info.forEach((element) => {
                 this.wordcard[element[0]].posy = mapinfo[element[1]].posY;
                 this.wordcard[element[0]].id = element[1];
+            });
+        },
+        addElem(command) {
+            let info = Object.values(command);
+            // console.log("추가");
+            // console.log(info);
+            let i = 0;
+            info[2].forEach((element) => {
+                this.wordcard[info[0][i][0]].id = element[1];
+                this.wordcard[info[0][i][0]].value = element[2];
+                this.wordcard[info[0][i][0]].posx = mapinfo[element[1]].posX;
+                this.wordcard[info[0][i][0]].posy = mapinfo[element[1]].posY;
+                i++;
             });
         },
         start(command) {
@@ -198,21 +221,6 @@ export default {
                 this.global++;
             });
         },
-
-        addElem(command) {
-            let info = Object.values(command);
-            // console.log("추가");
-            // console.log(info);
-            let i = 0;
-            info[2].forEach((element) => {
-                this.wordcard[info[0][i][0]].id = element[1];
-                this.wordcard[info[0][i][0]].value = element[2];
-                this.wordcard[info[0][i][0]].posx = mapinfo[element[1]].posX;
-                this.wordcard[info[0][i][0]].posy = mapinfo[element[1]].posY;
-                i++;
-            });
-        },
-
         newtable(command) {
             let info = Object.values(command);
 
@@ -264,16 +272,6 @@ export default {
 
             this.wordcard.sort((a, b) => a.id - b.id);
         },
-        clearmeta() {
-            this.wordcard.forEach((element) => {
-                element.Up = false;
-                element.Down = false;
-                element.Right = false;
-                element.Left = false;
-                element.Updown = false;
-                element.Rleft = false;
-            });
-        },
     },
 };
 </script>
@@ -284,80 +282,159 @@ export default {
     height: 700px;
     position: relative;
     overflow: hidden;
+    background: rgba(0, 0, 0, 0.7);
     /* display: grid; */
     /* border: 1px solid;
   margin-left: 200px; */
 }
 
 .ball {
-    border-radius: 5px;
+    box-sizing: border-box;
     width: 8.1818%;
     height: 8.1818%;
-    background: #ccc;
+    background: rgba(32, 32, 32, 0.7);
     position: absolute;
     transition: all 0.1s;
     /* transition-delay: 0.5s; */
     z-index: 5;
-    font-size: 1.3rem;
+    font-size: 200%;
+    color: rgb(150, 150, 150);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
+/* up down */
+@keyframes blinkU {
+    0% {
+        border: 3px solid rgb(150, 0, 115);
+        border-top: 3px solid transparent;
+        color: rgb(0, 195, 255);
+    }
+    100% {
+        border: 3px solid rgb(160, 10, 125);
+        border-top: 3px solid transparent;
+        color: rgb(0, 220, 255);
+    }
+}
 .bondU {
-    background: #be7655;
+    background: transparent;
     height: 8.64%;
-    margin-top: -0.6%;
+    /* margin-top: -0.6%; */
+    margin-top: -1.6%;
+    animation: blinkU 0.5s alternate infinite;
+    border-bottom-right-radius: 50%;
+    border-bottom-left-radius: 50%;
 }
-
+@keyframes blinkD {
+    0% {
+        border: 3px solid rgb(150, 0, 115);
+        border-bottom: 3px solid transparent;
+        color: rgb(0, 195, 255);
+    }
+    100% {
+        border: 3px solid rgb(160, 10, 125);
+        border-bottom: 3px solid transparent;
+        color: rgb(0, 220, 255);
+    }
+}
 .bondD {
+    background: transparent;
     height: 8.64%;
-    background: #be7655;
+    margin-top: 1.6%;
+    animation: blinkD 0.5s alternate infinite;
+    border-top-right-radius: 50%;
+    border-top-left-radius: 50%;
 }
-
-.bondL {
-    background: #be7655;
-    width: 8.64%;
-    margin-left: -0.6%;
+@keyframes blinkUD {
+    0% {
+        border: 3px solid rgb(150, 0, 115);
+        border-top: 3px solid transparent;
+        border-bottom: 3px solid transparent;
+        color: rgb(0, 195, 255);
+    }
+    100% {
+        border: 3px solid rgb(160, 10, 125);
+        border-top: 3px solid transparent;
+        border-bottom: 3px solid transparent;
+        color: rgb(0, 220, 255);
+    }
 }
-
-.bondR {
-    width: 8.64%;
-    background: #be7655;
-}
-
 .bondUD {
-    background: #be7655;
-    height: 10%;
-    margin-top: -0.6%;
+    background: transparent;
+    /* height: 10%; */
+    height: 11.5%;
+    margin-top: -1.6%;
+    animation: blinkUD 0.5s alternate infinite;
 }
 
+/* left right */
+@keyframes blinkL {
+    0% {
+        border: 3px solid rgb(80, 80, 140);
+        border-left: 3px solid transparent;
+        color: rgb(255, 210, 0);
+    }
+    100% {
+        border: 3px solid rgb(80, 80, 170);
+        border-left: 3px solid transparent;
+        color: rgb(255, 215, 70);
+    }
+}
+.bondL {
+    background: transparent;
+    width: 8.64%;
+    /* margin-left: -0.6%; */
+    margin-left: -1.4%;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    animation: blinkL 0.5s alternate infinite;
+}
+@keyframes blinkR {
+    0% {
+        border: 3px solid rgb(80, 80, 140);
+        border-right: 3px solid transparent;
+        color: rgb(255, 210, 0);
+    }
+    100% {
+        border: 3px solid rgb(80, 80, 170);
+        border-right: 3px solid transparent;
+        color: rgb(255, 215, 70);
+    }
+}
+.bondR {
+    background: transparent;
+    width: 8.64%;
+    margin-left: 1.4%;
+    border: 3px solid rgb(80, 80, 150);
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+    animation: blinkR 0.5s alternate infinite;
+}
+
+@keyframes blinkRL {
+    0% {
+        border: 3px solid rgb(80, 80, 140);
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        color: rgb(255, 210, 0);
+    }
+    100% {
+        border: 3px solid rgb(80, 80, 170);
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        color: rgb(255, 215, 70);
+    }
+}
 .bondRL {
-    background: #be7655;
-    width: 10%;
-    margin-left: -0.6%;
+    background: transparent;
+    /* width: 10%; */
+    width: 11.6%;
+    margin-left: -1.6%;
+    animation: blinkRL 0.5s alternate infinite;
 }
 
 /* ========================== 애니메이션 =========================== */
-.wordBlock-move {
-    transition: test 2s cubic-bezier(0.55, 0, 0.1, 1);
-}
-
-/* 진입 애니메이션 */
-.wordBlock-enter-from {
-    /* transition-delay: 0.2s; */
-    transform: translateY(-700px);
-}
-
-.wordBlock-enter-active {
-    transition: 0.4s;
-    /* transition-delay: 1.5s; */
-}
-
-/* 제거 애니메이션 */
-.wordBlock-leave-to,
-.wordBlock-leave-from {
-    opacity: 1;
-}
-
-@keyframes test {
+@keyframes moveBlock {
     0% {
         background-color: rgb(115, 116, 115);
     }
@@ -384,6 +461,26 @@ export default {
     }
 }
 
+.wordBlock-move {
+    transition: moveBlock 2s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* 진입 애니메이션 */
+.wordBlock-enter-from {
+    /* transition-delay: 0.2s; */
+    transform: translateY(-700px);
+}
+
+.wordBlock-enter-active {
+    transition: 0.4s;
+    /* transition-delay: 1.5s; */
+}
+
+/* 제거 애니메이션 */
+.wordBlock-leave-to,
+.wordBlock-leave-from {
+    opacity: 1;
+}
 .wordBlock-leave-active {
     animation: bounce-in 2s;
     z-index: 100;
@@ -393,18 +490,26 @@ export default {
 @keyframes bounce-in {
     0% {
         transform: scale(1);
+        border: none;
+        background-color: transparent;
     }
 
-    5% {
-        transform: scale(2);
+    15% {
+        color: rgb(22, 255, 94);
     }
 
-    90% {
-        transform: scale(2);
+    70% {
+        transform: translateX(30px) translateY(30px) scale(2);
     }
 
-    100% {
+    /* 100% {
         transform: scale(0.2);
+    } */
+    100% {
+        transform: scale(0.2) translateX(1000px) translateY(-1000px);
+        border: none;
+        background-color: transparent;
+        color: rgb(255, 30, 30);
     }
 }
 </style>

@@ -577,14 +577,17 @@ export default {
     width: 100%;
     height: 100%;
     display: flex;
+    overflow: hidden;
     background-color: rgb(0, 0, 0);
 }
 .containerOuter {
+    position: relative;
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
     background-color: rgb(0, 0, 0);
 }
 
@@ -650,13 +653,14 @@ export default {
     position: absolute;
     width: 280px;
     height: 460px;
-    max-height: 100vw;
+    max-height: 90vw;
     /* overflow-y: scroll; */
     bottom: 35px;
     background-color: rgb(220, 220, 220);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
         inset 3px 3px 0px #ffffff;
     z-index: 5;
+    overflow: hidden;
     display: flex;
 }
 .menuBar::-webkit-scrollbar {
@@ -691,7 +695,7 @@ export default {
     left: 0px;
     width: 100%;
     height: 100%;
-    z-index: 999;
+    z-index: 100;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -700,7 +704,9 @@ export default {
 
 .inAccessModal {
     height: 15%;
+    min-height: 150px;
     width: 25%;
+    min-width: 200px;
     background-color: rgb(220, 220, 220);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
         inset 3px 3px 0px #ffffff;
@@ -708,7 +714,7 @@ export default {
 
 .inAccessBar {
     margin: 5px;
-    height: 30px;
+    height: 25px;
     background: linear-gradient(270deg, #1085d2 0%, #00007b 100%);
     cursor: not-allowed;
 }
@@ -759,6 +765,7 @@ export default {
     min-height: 355px;
     display: flex;
     justify-content: center;
+    overflow: hidden;
     align-items: center;
     background-color: rgb(245, 245, 230);
     box-sizing: border-box;

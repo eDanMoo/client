@@ -438,14 +438,20 @@
                             </template>
                         </component>
                         <button
+                            class="gameSelectButton"
+                            id="btnCompetition"
                             @click="loadComponent('WordCard')"
                             v-show="!isGameStarted"
+                            v-bind:class="{ gameSelected: isComp }"
                         >
                             경쟁
                         </button>
                         <button
+                            class="gameSelectButton"
+                            id="btnCoop"
                             @click="loadComponent('CoOpGame')"
                             v-show="!isGameStarted"
+                            v-bind:class="{ gameSelected: isCoop }"
                         >
                             협동
                         </button>
@@ -835,6 +841,9 @@ export default {
             audio_home: null,
             audio_page: null,
             audio_fail: null,
+            isCoop: false,
+            isComp: false,
+
         };
     },
     watch: {
@@ -867,8 +876,8 @@ export default {
             current_user = url_segs[2] + "#" + uniqCode;
 
             const socket = new WebSocket(
-                // ws_scheme + "webdev-test.site/ws/" + room_name
-                "ws://127.0.0.1:8888/ws/" + room_name
+                ws_scheme + "webdev-test.site/ws/" + room_name
+                // "ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
@@ -977,16 +986,6 @@ export default {
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
                         subFrame.setAttribute("src", event_data.video);
-                    } else {
-                        //console.log("New video is created");
-                        // const videoFrame =
-                        //     document.getElementById("videoFrame");
-                        // const newFrame = document.createElement("img");
-                        // const div = document.createElement("div");
-                        // newFrame.setAttribute("id", userid_str);
-                        // newFrame.setAttribute("src", event_data.video);
-                        // div.setAttribute("id", "grid" + userid_str);
-                        // videoFrame.appendChild(newFrame);
                     }
                 }
             } else if (event_data.type == "info") {
@@ -1015,19 +1014,11 @@ export default {
                     0;
                 } else {
                     const subFrame = document.getElementById(userid_str);
-                    //console.log(subFrame);
                     if (subFrame) {
                         subFrame.setAttribute("src", event_data.video);
                     } else {
                         connection.send(JSON.stringify(info_obj));
                         console.log("New video is created");
-                        // const videoFrame =
-                        //     document.getElementById("videoFrame");
-                        // const newFrame = document.createElement("img");
-                        // newFrame.setAttribute("id", userid_str);
-                        // newFrame.setAttribute("class", "videoOutput");
-                        // newFrame.setAttribute("src", event_data.video);
-                        // videoFrame.appendChild(newFrame);
                         const leftBox = document.getElementById("leftBox");
                         const newFrame =
                             '<div id="' +
@@ -1068,8 +1059,6 @@ export default {
                     delete_score_val.parentNode.removeChild(delete_score_val);
                 }
             } else if (event_data.type == "init") {
-                // console.log(typeof event_data);
-                //console.log(event_data);
                 this.wordUpdate = event_data;
                 first_turn = event_data.users[0];
                 this.isGameStarted = 1;
@@ -1108,8 +1097,6 @@ export default {
                 event_data.removedWords.forEach((element) => {
                     span_remove_word.innerHTML += element + " ";
                 });
-
-                //log_tab.appendChild(span_user_id);
                 log_tab.appendChild(span_user_input);
                 log_tab.appendChild(span_remove_word);
                 log_board.appendChild(log_tab);
@@ -1129,7 +1116,6 @@ export default {
                 connection.close();
                 alert("이미 진행중인 게임입니다.");
             } else if (event_data.type == "limit_time_start") {
-                //console.log(event_data.remain_time);
                 this.game_time = event_data.remain_time;
                 if (
                     first_turn == current_user &&
@@ -1139,7 +1125,6 @@ export default {
                     this.send_user_turn();
                 }
             } else if (event_data.type == "turn_timer") {
-                //턴이 누군지랑 몇초 인지 전달받음 userid_str
                 const answer_text_box = document.getElementById("input_answer");
                 if (userid_str == current_user) {
                     // 해당 턴이 내 턴이면 타이머 반영
@@ -1182,7 +1167,6 @@ export default {
                     }
                 }
             } else if (event_data.type == "next") {
-                // console.log(typeof event_data);
                 this.wordUpdate = event_data;
             } else if (event_data.type == "change_game") {
                 if (current_user != userid_str) {
@@ -1196,7 +1180,6 @@ export default {
         } else {
             console.log("getUserMedia not supported on this browser");
         }
-        // this.updateProgressbar();
         this.playMusic();
         this.colored();
     },
@@ -1248,13 +1231,7 @@ export default {
         },
         /** 필요시에만 컴포넌트 import */
         async loadComponent(game_mode) {
-            const component = await defineAsyncComponent(() =>
-                import(`../components/${game_mode}.vue`)
-            );
-            this.game_mode = shallowRef(component);
-            this.game_mode_text = game_mode;
-            this.game_selected = 1;
-
+            this.changeGame(game_mode);
             const jsonData = JSON.stringify({
                 type: "change_game",
                 game_mode: this.game_mode_text,
@@ -1267,6 +1244,13 @@ export default {
             const component = await defineAsyncComponent(() =>
                 import(`../components/${game_mode}.vue`)
             );
+            if (game_mode == "WordCard") {
+                this.isComp = true;
+                this.isCoop = false;
+            } else {
+                this.isComp = false;
+                this.isCoop = true;
+            }
             this.game_mode = shallowRef(component);
             this.game_mode_text = game_mode;
             this.game_selected = 1;
@@ -1815,13 +1799,13 @@ button {
 }
 @keyframes startPulse {
     0% {
-        border-left: 100px solid rgb(22, 255, 94);
+        border-left: 160px solid rgb(22, 255, 94);
     }
     50% {
-        border-left: 100px solid rgb(255, 82, 43);
+        border-left: 160px solid rgb(255, 82, 43);
     }
     100% {
-        border-left: 100px solid rgb(22, 255, 94);
+        border-left: 160px solid rgb(22, 255, 94);
     }
 }
 
@@ -1830,14 +1814,14 @@ button {
     font-size: 2rem;
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 70%;
     z-index: 98;
     cursor: pointer;
     background-color: transparent;
-    border-top: 50px solid transparent;
-    border-bottom: 50px solid transparent;
+    border-top: 80px solid transparent;
+    border-bottom: 80px solid transparent;
     border-right: 0px;
-    margin: -50px 0 0 -45px;
+    margin: -40px 0 0 -70px;
     animation: startPulse 5s linear infinite;
 }
 #game_start:hover {
@@ -1895,6 +1879,7 @@ button {
     height: 700px;
     border: 3px solid rgb(22, 255, 94);
     border-radius: 10px;
+    position: relative;
 }
 .videoFrame {
     width: 300px;
@@ -2884,5 +2869,47 @@ span {
     100% {
         transform: scale(0.1) translateY(-200);
     }
+}
+@keyframes selected {
+    0% {
+        border: 5px solid rgb(22, 255, 94);
+    }
+    20% {
+        border: 10px solid rgb(255, 255, 80);
+    }
+    40% {
+        border: 15px solid rgb(100, 255, 255);
+    }
+    60% {
+        border: 20px solid rgb(255, 255, 255);
+    }
+    80% {
+        border: 25px solid rgb(255, 255, 80);
+    }
+    100% {
+        border: 30px solid rgb(22, 255, 94);
+    }
+}
+.gameSelectButton {
+    position: absolute;
+    box-sizing: border-box;
+    top: 20%;
+    width: 40%;
+    height: 40%;
+    font-size: 4rem;
+    color: rgba(22, 255, 94, 0.4);
+    background-color: rgba(30, 30, 100, 0.7);
+    border: 2px solid rgb(22, 255, 94);
+    cursor: pointer;
+}
+.gameSelected {
+    animation: selected 0.4s linear alternate infinite;
+}
+
+#btnCompetition {
+    left: 5%;
+}
+#btnCoop {
+    left: 55%;
 }
 </style>
