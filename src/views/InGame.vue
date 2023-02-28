@@ -343,9 +343,9 @@
                             :delete_board="delete_board"
                             @scriptCheck="scriptCheck"
                         ></component> -->
-                        <component :is="game_mode" :msg="wordUpdate">
+                        <component :is="game_mode" :msg="wordUpdate" :delete_board="delete_board">
                             <template v-if="game_mode === 'WordCard'">
-                                <component :is="game_mode" :delete_board="delete_board" @scriptCheck="scriptCheck" />
+                                <component :is="game_mode" @scriptCheck="scriptCheck" />
                             </template>
                         </component>
                         <button
@@ -532,7 +532,7 @@
 // import VueSocketIO from "vue-socket.io";
 //import WordCard from "../components/WordCard.vue";
 import modal from "../components/ResultPop.vue";
-import { defineAsyncComponent, markRaw } from "vue";
+import { defineAsyncComponent, shallowRef } from "vue";
 // let url_segs = window.location.pathname.split("/");
 let url_segs = "";
 // var room_name = url_segs[1];
@@ -957,13 +957,13 @@ export default {
                 }
             } else if (event_data.type == "init") {
                 // console.log(typeof event_data);
-                // console.log(event_data);
+                //console.log(event_data);
                 this.wordUpdate = event_data;
                 first_turn = event_data.users[0];
                 this.isGameStarted = 1;
                 this.delete_board = 0;
             } else if (event_data.type == "check") {
-                console.log(event_data.increment);
+                console.log(event_data);
                 this.wordUpdate = event_data;
 
                 const my_score = document.getElementById(
@@ -1003,10 +1003,15 @@ export default {
                 log_board.appendChild(log_tab);
                 log_board.scrollTop = 9999999;
             } else if (event_data.type == "game_start") {
+                console.log(event_data.game_mode);
+                if (event_data.game_mode == "CoOpGame") {
+                    const answer_text_box =
+                        document.getElementById("input_answer");
+                    answer_text_box.disabled = false;
+                }
                 const game_start = document.getElementById("game_start");
                 const game_box = document.getElementById("game_box");
                 const sejong_img = document.getElementById("initImage");
-                console.log(game_box);
                 game_start.style.display = "none";
                 sejong_img.style.display = "none";
                 game_box.style.position = "position";
@@ -1069,6 +1074,10 @@ export default {
             } else if (event_data.type == "next") {
                 // console.log(typeof event_data);
                 this.wordUpdate = event_data;
+            } else if (event_data.type == "change_game") {
+                if (current_user != userid_str) {
+                    this.changeGame(event_data.game_mode);
+                }
             }
         };
 
@@ -1095,7 +1104,23 @@ export default {
             const component = await defineAsyncComponent(() =>
                 import(`../components/${game_mode}.vue`)
             );
-            this.game_mode = markRaw(component);
+            this.game_mode = shallowRef(component);
+            this.game_mode_text = game_mode;
+            this.game_selected = 1;
+
+            const jsonData = JSON.stringify({
+                type: "change_game",
+                game_mode: this.game_mode_text,
+                userid: current_user,
+            });
+            connection.send(jsonData);
+        },
+        /** 선택한 게임 모드에 따라 컴포넌트 변환  */
+        async changeGame(game_mode) {
+            const component = await defineAsyncComponent(() =>
+                import(`../components/${game_mode}.vue`)
+            );
+            this.game_mode = shallowRef(component);
             this.game_mode_text = game_mode;
             this.game_selected = 1;
         },
@@ -1301,8 +1326,8 @@ export default {
                 path: "check",
                 params: {
                     type: "check",
-                    answer: user_answer,
                     user: current_user,
+                    answer: user_answer,
                 },
             });
             connection.send(jsonData);
@@ -1313,6 +1338,7 @@ export default {
                 type: "game_start",
                 method: "POST",
                 path: "check",
+                game_mode: this.game_mode_text,
                 params: {},
             });
             connection.send(jsonData);
