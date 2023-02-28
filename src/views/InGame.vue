@@ -36,7 +36,19 @@
         <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
             <div id="playerHeader" @mousedown="dragMouseDown">
                 <span style="margin-left: 10px">음악 재생기</span>
-                <div style="width: 30px; height: 30px; text-align: center; text-justify: center; font-size: 20px; cursor: pointer;" @click="closePlayer">X</div>
+                <div
+                    style="
+                        width: 30px;
+                        height: 30px;
+                        text-align: center;
+                        text-justify: center;
+                        font-size: 20px;
+                        cursor: pointer;
+                    "
+                    @click="closePlayer"
+                >
+                    X
+                </div>
             </div>
             <div id="audioPlayer">
                 <audio ref="playAudio" loop volume="0.6">
@@ -98,8 +110,14 @@
                             class="radioBtn"
                             @click="prevMusic()"
                             id="radioPrevBtn"
-                        >   
-                            <span style="display: flex; justify-content: center; align-items: center;">
+                        >
+                            <span
+                                style="
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                "
+                            >
                                 <span
                                     class="btnMark"
                                     style="
@@ -128,7 +146,13 @@
                             @click="nextMusic()"
                             id="radioNextBtn"
                         >
-                            <span style="display: flex; justify-content: center; align-items: center;">
+                            <span
+                                style="
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                "
+                            >
                                 <span
                                     class="btnMark"
                                     style="
@@ -401,9 +425,16 @@
                             :delete_board="delete_board"
                             @scriptCheck="scriptCheck"
                         ></component> -->
-                        <component :is="game_mode" :msg="wordUpdate" :delete_board="delete_board">
+                        <component
+                            :is="game_mode"
+                            :msg="wordUpdate"
+                            :delete_board="delete_board"
+                        >
                             <template v-if="game_mode === 'WordCard'">
-                                <component :is="game_mode" @scriptCheck="scriptCheck" />
+                                <component
+                                    :is="game_mode"
+                                    @scriptCheck="scriptCheck"
+                                />
                             </template>
                         </component>
                         <button
@@ -880,10 +911,18 @@ export default {
         const audio_message = new Audio(
             "https://storage.cloud.google.com/koword_bucket/message.mp3"
         );
-        this.audio_start = new Audio("https://storage.cloud.google.com/koword_bucket/gameStart.mp3");
-        this.audio_home = new Audio("https://storage.cloud.google.com/koword_bucket/close.wav");
-        this.audio_page = new Audio("https://storage.cloud.google.com/koword_bucket/page.mp3");
-        this.audio_fail = new Audio("https://storage.cloud.google.com/koword_bucket/fail.mp3");
+        this.audio_start = new Audio(
+            "https://storage.cloud.google.com/koword_bucket/gameStart.mp3"
+        );
+        this.audio_home = new Audio(
+            "https://storage.cloud.google.com/koword_bucket/close.wav"
+        );
+        this.audio_page = new Audio(
+            "https://storage.cloud.google.com/koword_bucket/page.mp3"
+        );
+        this.audio_fail = new Audio(
+            "https://storage.cloud.google.com/koword_bucket/fail.mp3"
+        );
         audio_message.volume = 0.7;
         this.audio_home.volume = 0.6;
         this.audio_start.volume = 0.6;

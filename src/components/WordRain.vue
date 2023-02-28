@@ -44,7 +44,9 @@ export default {
     },
     methods: {
         closeHancom() {
-            const click_sound = new Audio("../src/assets/soundEffect/basic_click.mp3");
+            const click_sound = new Audio(
+                "../src/assets/soundEffect/basic_click.mp3"
+            );
             click_sound.volume = 0.6;
             click_sound.play();
             this.showHancom = false;

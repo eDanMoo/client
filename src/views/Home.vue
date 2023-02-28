@@ -58,7 +58,9 @@
                     <div class="containerOuter">
                         <div class="container">
                             <div class="menuBar" v-show="isOpenMenuBar">
-                                <div style="width: 13%; height: 98%; margin: 1%">
+                                <div
+                                    style="width: 13%; height: 98%; margin: 1%"
+                                >
                                     <div id="menuColorBar"></div>
                                 </div>
                                 <div
@@ -264,7 +266,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="windowsWindow" @click="closeMenuBar()" v-show="isPowerOn">
+                            <div
+                                class="windowsWindow"
+                                @click="closeMenuBar()"
+                                v-show="isPowerOn"
+                            >
                                 <div class="iconBox">
                                     <div
                                         class="iconElem"
@@ -297,7 +303,9 @@
                                                 "
                                             ></div>
                                         </div>
-                                        <div class="iconTitle">정글타자연습</div>
+                                        <div class="iconTitle">
+                                            정글타자연습
+                                        </div>
                                     </div>
                                     <div
                                         class="iconElem"
@@ -382,8 +390,14 @@
                     <div class="workButtonOff" v-show="!isPowerOn"></div>
                     <div class="statusButton" v-show="isPowerOn"></div>
                     <div class="statusButtonOff" v-show="!isPowerOn"></div>
-                    <div class="powerButton powerButton-power" @click="togglePower"></div>
-                    <div class="powerButton powerButton-reset" @click="reload"></div>
+                    <div
+                        class="powerButton powerButton-power"
+                        @click="togglePower"
+                    ></div>
+                    <div
+                        class="powerButton powerButton-reset"
+                        @click="reload"
+                    ></div>
                 </div>
             </div>
             <div class="desktopPannel" id="backPannel"></div>
@@ -396,18 +410,32 @@
                     Thanks To
                     <div class="innerThanks" id="thanksContent">
                         <span>
-                            DEVELOP<br/>
-                            <a href="https://github.com/eDanMoo">@TEAM eDanMoo<br/></a>
-                            <br/>
-                            MEMBER<br/>
-                            <a href="https://github.com/Jungeun04">PARK JUNGEUN<br/></a>
-                            <a href="https://github.com/sj0917">LEE SANGJUN<br/></a>
-                            <a href="https://github.com/Heruing">LEE HYUNHONG<br/></a>
-                            <a href="https://github.com/hierrr">SON CHANGHAN<br/></a>
-                            <a href="https://github.com/hunkicho">CHO HUNKI<br/></a>
-                            <br/>
-                            Special Thanks To<br/>
-                            <a href="https://jungle.krafton.com/">KRAFTON Jungle</a>
+                            DEVELOP<br />
+                            <a href="https://github.com/eDanMoo"
+                                >@TEAM eDanMoo<br
+                            /></a>
+                            <br />
+                            MEMBER<br />
+                            <a href="https://github.com/Jungeun04"
+                                >PARK JUNGEUN<br
+                            /></a>
+                            <a href="https://github.com/sj0917"
+                                >LEE SANGJUN<br
+                            /></a>
+                            <a href="https://github.com/Heruing"
+                                >LEE HYUNHONG<br
+                            /></a>
+                            <a href="https://github.com/hierrr"
+                                >SON CHANGHAN<br
+                            /></a>
+                            <a href="https://github.com/hunkicho"
+                                >CHO HUNKI<br
+                            /></a>
+                            <br />
+                            Special Thanks To<br />
+                            <a href="https://jungle.krafton.com/"
+                                >KRAFTON Jungle</a
+                            >
                         </span>
                     </div>
                 </div>
@@ -464,7 +492,9 @@ export default {
             this.isAccessError = true;
         },
         shutDownAll() {
-            const audio = new Audio("https://storage.cloud.google.com/koword_bucket/shutdown.wav");
+            const audio = new Audio(
+                "https://storage.cloud.google.com/koword_bucket/shutdown.wav"
+            );
             audio.volume = 0.6;
             audio.play();
             this.isShutdown = true;
@@ -1047,7 +1077,7 @@ export default {
     font-size: 1.5rem;
     padding: 5%;
 }
-#thanksContent >span >a {
+#thanksContent > span > a {
     color: rgb(22, 255, 94);
     cursor: pointer;
 }

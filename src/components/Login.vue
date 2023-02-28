@@ -101,7 +101,9 @@ export default {
     },
     methods: {
         closeLogin() {
-            const click_sound = new Audio("../src/assets/soundEffect/basic_click.mp3");
+            const click_sound = new Audio(
+                "../src/assets/soundEffect/basic_click.mp3"
+            );
             click_sound.volume = 0.6;
             click_sound.play();
             this.showLogin = false;
@@ -182,7 +184,9 @@ export default {
 
         const room_code = ref("");
         const user_id = ref("");
-        const audio_enter = new Audio("https://storage.cloud.google.com/koword_bucket/enterRoom.wav");
+        const audio_enter = new Audio(
+            "https://storage.cloud.google.com/koword_bucket/enterRoom.wav"
+        );
         audio_enter.volume = 0.6;
         const joinPage = () => {
             const roomID = document.getElementById("input-room-id");
