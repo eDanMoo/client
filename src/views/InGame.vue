@@ -1,5 +1,26 @@
 <template>
     <div id="inGameContainer space stars1">
+        <div class="starField" id="starField">
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="layer"></div>
+            <div class="meteor-1"></div>
+            <div class="meteor-2"></div>
+            <div class="meteor-3"></div>
+            <div class="meteor-4"></div>
+            <div class="meteor-5"></div>
+            <div class="meteor-6"></div>
+            <div class="meteor-7"></div>
+            <div class="meteor-8"></div>
+            <div class="meteor-9"></div>
+            <div class="meteor-10"></div>
+            <div class="meteor-11"></div>
+            <div class="meteor-12"></div>
+            <div class="meteor-13"></div>
+            <div class="meteor-14"></div>
+            <div class="meteor-15"></div>
+        </div>
         <div class="main"></div>
         <div class="chuvaMeteoro"></div>
         <!-- Game End Pop -->
@@ -162,7 +183,7 @@
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        border: 2px solid rgb(22, 255, 255);
+                        border: 2px solid rgb(22, 255, 94);
                         border-radius: 5px;
                         margin: 10px;
                     "
@@ -176,7 +197,7 @@
                             background-color: transparent;
                             border-top: 12.5px transparent;
                             border-bottom: 12.5px transparent;
-                            border-left: 25px rgb(22, 255, 255);
+                            border-left: 25px rgb(22, 255, 94);
                             border-right: 0px transparent;
                             border-style: solid;
                             margin-left: 10px;
@@ -190,8 +211,8 @@
                             background-color: transparent;
                             border-top: 0 transparent;
                             border-bottom: 0 transparent;
-                            border-left: 7px rgb(22, 255, 255);
-                            border-right: 7px rgb(22, 255, 255);
+                            border-left: 7px rgb(22, 255, 94);
+                            border-right: 7px rgb(22, 255, 94);
                             border-style: solid;
                         "
                     ></button>
@@ -279,7 +300,7 @@
                     @click="toggleLeft()"
                     v-show="!isOpenLeft"
                 >
-                    <span> > </span>
+                    <span style="writing-mode: vertical-lr"> 영 상 통 신 </span>
                 </div>
             </Transition>
             <Transition name="right">
@@ -289,22 +310,22 @@
                     @click="toggleRight()"
                     v-show="!isOpenRight"
                 >
-                    <span> &lt; </span>
+                    <span style="writing-mode: vertical-rl"> 게 임 정 보 </span>
                 </div>
             </Transition>
             <Transition name="left">
                 <div id="leftBox" v-show="isOpenLeft">
                     <!-- 닫기 버튼 -->
                     <div class="toggleBtn" @click="toggleLeft()">
-                        <span>참여자 영상</span>
+                        <span>영 상 통 신</span>
                         <span> &lt; </span>
                     </div>
                     <div class="videoWindow">
                         <div class="videoBarCover">
                             <div class="videoBar">
                                 <span style="color: rgb(22, 255, 94)"
-                                    >내 영상</span
-                                >
+                                    >내 영상
+                                </span>
                             </div>
                         </div>
                         <div class="videoFrame">
@@ -316,7 +337,7 @@
                                 ></canvas>
                                 <div v-show="!isStreaming">
                                     <img
-                                        src="../assets/gamecomp/userBlank.jpg"
+                                        src="../assets/gamecomp/userBlank.png"
                                         alt="Camera Off"
                                         style="width: 300px; height: 240px"
                                     />
@@ -379,13 +400,13 @@
                     <!--------------------- 닫기 버튼 ------------------>
                     <div class="toggleBtn" @click="toggleRight()">
                         <span> > </span>
-                        <span>정보</span>
+                        <span>게 임 정 보</span>
                     </div>
                     <!---------------------점수화면--------------------->
                     <div class="innerWindow">
                         <div class="barCover">
                             <div class="windowBar">
-                                <span>점수</span
+                                <span>점 수</span
                                 ><button
                                     class="minBtn"
                                     @click="ScoreVisible = !ScoreVisible"
@@ -411,7 +432,7 @@
                     <div class="innerWindow">
                         <div class="barCover">
                             <div class="windowBar">
-                                <span>기록</span
+                                <span>기 록</span
                                 ><button
                                     class="minBtn"
                                     @click="LogVisible = !LogVisible"
@@ -437,7 +458,7 @@
                     <div class="innerWindow">
                         <div class="barCover">
                             <div class="windowBar">
-                                <span>대화</span
+                                <span>대 화</span
                                 ><button
                                     class="minBtn"
                                     @click="ChatVisible = !ChatVisible"
@@ -457,47 +478,41 @@
                         <div v-show="ChatVisible" class="chatBoxOuter">
                             <div class="chatBox">
                                 <div class="chatBoxChat" id="chatBoxChat">
-                                    <ul id="messages"></ul>
-                                    <div class="chatRow" id="footer">
-                                        <form
-                                            name="chat-form"
-                                            action=""
-                                            @submit.prevent="sendMessage"
-                                        >
-                                            <div class="chatRow">
-                                                <div
-                                                    style="
-                                                        display: inline-flex;
-                                                        width: 95%;
-                                                        position: absolute;
-                                                        bottom: 4px;
-                                                        height: 20px;
-                                                    "
-                                                >
-                                                    <input
-                                                        type="text"
-                                                        autocomplete="off"
-                                                        id="messageText"
-                                                        class="materialize-textarea"
-                                                        @click="
-                                                            checkWebSocket(
-                                                                event
-                                                            )
-                                                        "
-                                                    />
-                                                    <button
-                                                        type="submit"
-                                                        name="action"
-                                                        id="send_message"
-                                                    >
-                                                        보내기
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
+                                    <div id="messages"></div>
                                 </div>
                             </div>
+                        </div>
+                        <div v-show="ChatVisible" class="chatRow" id="footer">
+                            <form
+                                name="chat-form"
+                                action=""
+                                @submit.prevent="sendMessage"
+                            >
+                                <div
+                                    style="
+                                        display: inline-flex;
+                                        width: 100%;
+                                        position: absolute;
+                                        bottom: 4px;
+                                        height: 20px;
+                                    "
+                                >
+                                    <input
+                                        type="text"
+                                        autocomplete="off"
+                                        id="messageText"
+                                        class="materialize-textarea"
+                                        @click="checkWebSocket(event)"
+                                    />
+                                    <button
+                                        type="submit"
+                                        name="action"
+                                        id="send_message"
+                                    >
+                                        보내기
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -518,7 +533,12 @@
                         id="input_answer"
                         disabled
                         @keypress.enter="answerCheck()"
-                        style="width: 250px; height: 38px; font-size: 2rem"
+                        style="
+                            width: 250px;
+                            height: 38px;
+                            font-size: 2rem;
+                            border: 2px solid rgb(22, 255, 94);
+                        "
                     />
                 </div>
             </div>
@@ -745,6 +765,10 @@ export default {
             showHowTo: 0,
             isGameStarted: 0,
             game_selected: 0,
+            audio_start: null,
+            audio_home: null,
+            audio_page: null,
+            audio_fail: null,
         };
     },
     watch: {
@@ -757,6 +781,19 @@ export default {
         connection.close();
     },
     async mounted() {
+        // const bgCanvas = this.$refs.bgCanvas;
+        // bgCanvas.setAttribute("width", window.innerWidth);
+        // bgCanvas.setAttribute("height", window.innerHeight);
+        // this.context = bgCanvas.getContext("2d");
+        // window.addEventListener("resize", () => {
+        //     bgCanvas.width = window.innerWidth;
+        //     bgCanvas.height = window.innerHeight;
+        // });
+        document.addEventListener("click", (event) => {
+            const x = event.clientX;
+            const y = event.clientY;
+            this.drawLaser(x, y);
+        });
         document.body.style.background =
             "radial-gradient(circle at bottom, rgb(10, 10, 60) 0, black 100%)";
         // test.inintOutputVideo();
@@ -817,10 +854,27 @@ export default {
             userid: current_user,
         };
         connection.send(JSON.stringify(info_obj));
-
+        // audio import
+        const audio_message = new Audio(
+            "../src/assets/soundEffect/message.mp3"
+        );
+        const audio_click = new Audio("../src/assets/soundEffect/click.mp3");
+        this.audio_start = new Audio("../src/assets/soundEffect/gameStart.mp3");
+        this.audio_home = new Audio("../src/assets/soundEffect/close.wav");
+        this.audio_page = new Audio("../src/assets/soundEffect/page.mp3");
+        this.audio_fail = new Audio("../src/assets/soundEffect/fail.mp3");
+        audio_message.volume = 0.7;
+        audio_click.vloume = 0.5;
+        this.audio_home.volume = 0.6;
+        this.audio_start.volume = 0.6;
+        this.audio_page.volume = 0.3;
+        this.audio_fail.volume = 0.6;
+        document.addEventListener("click", function () {
+            audio_click.play();
+        });
         connection.onmessage = (event) => {
             // Get message back from websocket and display
-            const message = document.createElement("li");
+            const message = document.createElement("div");
             message.setAttribute("class", "message");
             message.style.clear = "both";
 
@@ -833,22 +887,25 @@ export default {
                 const content_tag = document.createElement("div");
                 content_tag.appendChild(text);
                 content_tag.setAttribute("class", "content_tag");
-
+                content_tag.style.width = "100%";
+                content_tag.style.overflowWrap = "anywhere";
                 const userid_tag = document.createElement("div");
                 userid_tag.appendChild(userid);
                 userid_tag.setAttribute("class", "userid_tag");
 
                 if (userid_str == current_user) {
                     userid_tag.setAttribute("class", "userid_tag_right");
-                    content_tag.style.color = "rgb(255, 152, 78)";
+                    content_tag.style.textAlign = "end";
+                    content_tag.style.color = "rgb(255, 120, 0)";
                     message.style.float = "right";
                     content_tag.style.float = "right";
-                    userid_tag.style.color = "#9d44f0";
+                    userid_tag.style.color = "rgb(200, 80, 255)";
                     userid_tag.style.backgroundColor = "userid_tag";
+                    userid_tag.style.textAlign = "end";
                 } else {
                     userid_tag.setAttribute("class", "userid_tag_left");
-                    content_tag.style.color = "rgb(255, 152, 78)";
-                    userid_tag.style.color = "#9d44f0";
+                    content_tag.style.color = "rgb(255, 255, 30)";
+                    userid_tag.style.color = "rgb(100, 255, 255)";
                     message.style.float = "left";
                     content_tag.style.float = "left";
                 }
@@ -856,6 +913,7 @@ export default {
                 message.appendChild(userid_tag);
                 messages.appendChild(message);
                 document.getElementById("chatBoxChat").scrollTop = 999999999;
+                audio_message.play();
             } else if (event_data.type == "video") {
                 if (userid_str == current_user) {
                     0;
@@ -920,9 +978,7 @@ export default {
                             userid_str +
                             '_frame" style="width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 1.5rem">' +
                             userid_str +
-                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="' +
-                            event_data.video +
-                            '" id="' +
+                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="../src/assets/gamecomp/userBlank.png" id="' +
                             userid_str +
                             '" style="width: 95%;"/></div></div>';
                         leftBox.insertAdjacentHTML("beforeend", newFrame);
@@ -1011,10 +1067,8 @@ export default {
                 }
                 const game_start = document.getElementById("game_start");
                 const game_box = document.getElementById("game_box");
-                const sejong_img = document.getElementById("initImage");
+                console.log(game_box);
                 game_start.style.display = "none";
-                sejong_img.style.display = "none";
-                game_box.style.position = "position";
             } else if (event_data.type == "game_ing") {
                 connection.close();
                 alert("이미 진행중인 게임입니다.");
@@ -1091,6 +1145,39 @@ export default {
         this.colored();
     },
     methods: {
+        drawLaser(x, y) {
+            // context.fillStyle = "yellow";
+            // context.fillRect(x - 5, y, 4, -10);
+            // context.fillRect(x + 1, y, 4, -10);
+            const background = document.getElementById("body");
+            const laser = document.createElement("span");
+            laser.setAttribute("id", "laser");
+            laser.style.width = "10px";
+            laser.style.height = "12px";
+            laser.style.background =
+                "linear-gradient(90deg, yellow 35%, transparent 35.1%, transparent 54.9%, yellow 55%)";
+            laser.style.zIndex = "-1";
+            laser.style.position = "absolute";
+            laser.style.left = x - 5 + "px";
+            laser.style.top = y - 10 + "px";
+            laser.style.boxShadow = "0 0 10px 0 rgb(255, 255, 0)";
+            laser.style.opacity = 0;
+            laser.animate(
+                [
+                    { transform: "scale(1) translateY(0)", opacity: 1 },
+                    { transform: "scale(0) translateY(-100px)", opacity: 0.3 },
+                ],
+                {
+                    duration: 1000,
+                    iteration: 1,
+                    easing: "linear",
+                }
+            );
+            background.appendChild(laser);
+            setTimeout(function () {
+                laser.remove();
+            }, 990);
+        },
         colored() {
             document.body.style.backgroundColor = "rgb(0, 0, 0)";
             document.body.style.background =
@@ -1298,9 +1385,7 @@ export default {
         },
         boardInit() {
             this.GameStart();
-            const audio = new Audio("../src/assets/soundEffect/gameStart.mp3");
-            audio.volume = 0.6;
-            audio.play();
+            this.audio_start.play();
             this.isGameStarted = 1;
             this.delete_board = 0;
 
@@ -1466,9 +1551,7 @@ export default {
             this.showHowTo = 0;
         },
         backHome() {
-            const audio = new Audio("../src/assets/soundEffect/close.wav");
-            audio.volume = 0.6;
-            audio.play();
+            this.audio_home.play();
             this.$router.push("/");
         },
         // Game End Pop
@@ -1479,15 +1562,11 @@ export default {
             this.openModal = true;
         },
         toggleRight() {
-            const audio = new Audio("../src/assets/soundEffect/page.wav");
-            audio.volume = 0.6;
-            audio.play();
+            this.audio_page.play();
             this.isOpenRight = !this.isOpenRight;
         },
         toggleLeft() {
-            const audio = new Audio("../src/assets/soundEffect/page.wav");
-            audio.volume = 0.6;
-            audio.play();
+            this.audio_page.play();
             this.isOpenLeft = !this.isOpenLeft;
             this.blockVideo(this.isOpenLeft);
         },
@@ -1561,6 +1640,7 @@ button {
 .videoWindow {
     box-sizing: border-box;
     width: 100%;
+    min-height: 300px;
     display: flex;
     align-items: center;
     justify-items: center;
@@ -1599,6 +1679,7 @@ button {
 .innerbar {
     box-sizing: border-box;
     width: 100%;
+    max-width: 700px;
     height: 100%;
     text-align: right;
     margin: 0;
@@ -1623,7 +1704,7 @@ button {
     align-items: flex-end;
     flex-direction: row;
     overflow-y: auto;
-    background-color: #000000;
+    /* background-color: #000000; */
     width: 95%;
     height: 95%;
 }
@@ -1703,9 +1784,9 @@ button {
     animation: startPulse 0.5s infinite;
 }
 .blackBox {
-    background-color: #000000;
-    color: rgb(255, 152, 78);
-    font-size: 1.2rem;
+    /* background-color: #000000; */
+    color: rgb(255, 120, 0);
+    font-size: 1rem;
 }
 #scoreBoard {
     max-height: 240px;
@@ -1715,20 +1796,15 @@ button {
     display: none;
 }
 
-@media (min-width: 1420px) {
-    #rightBox {
-        right: 0;
-    }
-}
-
 #rightBox {
     position: absolute;
+    right: 0;
     width: 340px;
-    margin-left: 1070px;
-    margin-right: 0;
     max-height: 80vh;
     overflow-y: scoll;
     overflow-x: hidden;
+    background-color: rgba(32, 32, 32, 0.7);
+    z-index: 6;
 }
 #rightBox::-webkit-scrollbar {
     display: none;
@@ -1740,6 +1816,8 @@ button {
     max-height: 80vh;
     overflow-y: scroll;
     overflow-x: hidden;
+    background-color: rgba(32, 32, 32, 0.7);
+    z-index: 6;
 }
 #leftBox::-webkit-scrollbar {
     display: none;
@@ -1769,11 +1847,10 @@ button {
 }
 .videoFrame:hover .hoverButton {
     z-index: 2;
-    margin-top: 6px;
     top: 78px;
     left: 20px;
     width: 300px;
-    height: 245px;
+    height: 242px;
     border: none;
     display: block;
     background-color: rgba(32, 32, 32, 0.7);
@@ -1791,17 +1868,27 @@ button {
     border-radius: 10px;
     animation: borderPulse 7s infinite;
     margin: 50px;
-    box-shadow: 0 0 50px 10px rgb(22, 255, 94);
+    box-shadow: 0 0 30px 5px rgb(22, 255, 94);
 }
 .chatRow {
     width: 100%;
+    margin: 0 auto;
 }
 #messageText {
-    width: 80%;
+    box-sizing: border-box;
+    border: 1px solid rgb(22, 255, 94);
+    background-color: transparent;
+    width: 75%;
+    margin-left: 3%;
+    margin-right: 2%;
+    color: rgb(22, 255, 94);
 }
 #send_message {
-    width: 20%;
-    background-color: rgb(22, 255, 94);
+    box-sizing: border-box;
+    border: 1px solid rgb(22, 255, 94);
+    color: rgb(22, 255, 94);
+    width: 17%;
+    background-color: transparent;
 }
 /*############################### Music Player */
 @font-face {
@@ -1881,7 +1968,7 @@ button {
 
 .musicTitle {
     width: 100%;
-    color: #afffb3;
+    color: rgb(22, 255, 94);
     font-family: "retroFont";
     font-size: 100%;
     word-break: nowrap;
@@ -2063,9 +2150,10 @@ button {
 }
 .chatBoxChat {
     width: 100%;
-    height: 100%;
+    height: 95%;
     overflow-y: scroll;
     -ms-overflow-style: none;
+    margin-bottom: 15px;
 }
 .chatBoxChat::-webkit-scrollbar {
     display: none;
@@ -2082,7 +2170,7 @@ button {
     height: 30%;
 }
 span {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin: 2px;
 }
 
@@ -2100,7 +2188,7 @@ span {
     float: left;
 }
 .answerArea {
-    position: fixed;
+    position: absolute;
     bottom: 0%;
     width: 100%;
     height: 100px;
@@ -2115,7 +2203,7 @@ span {
         background-color: rgb(22, 255, 94);
     }
     50% {
-        background-color: rgb(52, 255, 134);
+        background-color: rgb(110, 255, 170);
     }
     100% {
         background-color: rgb(22, 255, 94);
@@ -2127,13 +2215,14 @@ span {
     margin-top: 40px;
     background-size: 400% 400%;
     animation: bgPulse 7s ease infinite;
+    box-shadow: 0 0 10px 0 rgb(22, 255, 94);
 }
 @keyframes borderPulse {
     0% {
         border-color: rgb(22, 255, 94);
     }
     50% {
-        border-color: rgb(52, 255, 134);
+        border-color: rgb(110, 255, 170);
     }
     100% {
         border-color: rgb(22, 255, 94);
@@ -2148,6 +2237,7 @@ span {
     border-radius: 5px;
     border-bottom: 0px;
     animation: borderPulse 7s infinite;
+    box-shadow: 0 0 30px 5px rgb(22, 255, 94);
 }
 .left-enter-from {
     transform: translateX(-360px);
@@ -2164,10 +2254,10 @@ span {
 }
 
 .left-leave-active {
-    transition: all 0.4s;
+    transition: all 0.3s;
 }
 .left-enter-active {
-    transition: all 0.4s;
+    transition: all 0.3s;
 }
 
 .right-enter-from {
@@ -2185,10 +2275,10 @@ span {
 }
 
 .right-leave-active {
-    transition: all 0.4s;
+    transition: all 0.3s;
 }
 .right-enter-active {
-    transition: all 0.4s;
+    transition: all 0.3s;
 }
 #inGameContainer {
     width: 100vw;
@@ -2303,18 +2393,455 @@ span {
 
 @keyframes zoom {
     0% {
-        transform: scale(1) rotate(0deg);
+        transform: scale(1) rotate(0deg) translateZ(0px);
     }
     50% {
-        transform: scale(2) rotate(360deg);
+        transform: scale(2) rotate(360deg) translateZ(600px);
     }
     100% {
-        transform: scale(1) rotate(720deg);
+        transform: scale(1) rotate(720deg) translateZ(1200px);
     }
 }
 
 .videoStreaming {
     height: fit-content;
-    margin: 10px auto;
+    margin-top: 11px;
+}
+#bgCanvas {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+@keyframes sf-fly-by-1 {
+    from {
+        transform: translateZ(200px) rotate(0deg);
+        opacity: 0.5;
+    }
+    to {
+        transform: translateZ(400px) rotate(360deg);
+        opacity: 0.5;
+    }
+}
+@keyframes sf-fly-by-2 {
+    from {
+        transform: translateZ(200px) rotate(90deg);
+        opacity: 0.5;
+    }
+    to {
+        transform: translateZ(400px) rotate(450deg);
+        opacity: 0.5;
+    }
+}
+@keyframes sf-fly-by-3 {
+    from {
+        transform: translateZ(-800px) rotate(0deg);
+        opacity: 0.5;
+    }
+    to {
+        transform: translateZ(-600px) rotate(360deg);
+        opacity: 0.5;
+    }
+}
+.starField {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    perspective: 600px;
+    -webkit-perspective: 600px;
+    z-index: -1;
+}
+.starField .layer {
+    box-shadow: -411px -476px #cccccc, 777px -407px #d4d4d4,
+        -387px -477px #fcfcfc, -91px -235px #d4d4d4, 491px -460px #f7f7f7,
+        679px -535px #e3e3e3, 158px 399px #ededed, 157px 249px #ededed,
+        81px -450px #ebebeb, 719px -360px #c2c2c2, -499px 473px #e8e8e8,
+        -384px 369px #e3e3e3, 641px -413px #fcfcfc, 822px 516px #dbdbdb,
+        449px 132px #c2c2c2, 727px 146px #f7f7f7, -315px -488px #e6e6e6,
+        952px -70px #e3e3e3, -869px -29px #dbdbdb, 502px 80px #dedede,
+        764px 342px #e0e0e0, -150px -380px #dbdbdb, 654px -426px #e3e3e3,
+        -325px -263px #c2c2c2, 755px -447px #c7c7c7, 729px -177px #c2c2c2,
+        468px -265px #fcfcfc, 74px -500px #c7c7c7, -514px 383px #dbdbdb,
+        730px -92px #cfcfcf, -112px 287px #c9c9c9, -853px 79px #d6d6d6,
+        828px 475px #d6d6d6, -681px 13px #fafafa, -176px 209px #f0f0f0,
+        758px 457px #fafafa, -383px -454px #ededed, 813px 179px #d1d1d1,
+        608px 98px whitesmoke, -860px -65px #c4c4c4, -572px 272px #f7f7f7,
+        459px 533px #fcfcfc, 624px -481px #e6e6e6, 790px 477px #dedede,
+        774px 293px #c9c9c9, -362px 97px #c2c2c2, 563px 47px #dedede,
+        313px 475px #e0e0e0, 839px -491px #e3e3e3, -217px 377px #d4d4d4,
+        -581px 239px #c2c2c2, -857px 72px #cccccc, -23px 340px #dedede,
+        -837px 246px white, 170px -502px #cfcfcf, 822px -443px #e0e0e0,
+        795px 497px #e0e0e0, -814px -337px #cfcfcf, 206px -339px #f2f2f2,
+        -779px 108px #e6e6e6, 808px 2px #d4d4d4, 665px 41px #d4d4d4,
+        -564px 64px #cccccc, -380px 74px #cfcfcf, -369px -60px #f7f7f7,
+        47px -495px #e3e3e3, -383px 368px #f7f7f7, 419px 288px #d1d1d1,
+        759px 288px #ebebeb, 98px -412px #c4c4c4, -911px -277px #c9c9c9,
+        147px -495px #e3e3e3, -83px 368px #f7f7f7, 41px 688px #d1d1d1,
+        -798px -150px #c2c2c2, -833px -187px #c4c4c4, -378px -325px whitesmoke,
+        703px -375px #d6d6d6, -392px -520px #d9d9d9, -492px -60px #c4c4c4,
+        -759px -288px #ebebeb, -98px -412px #c4c4c4, -911px -277px #c9c9c9,
+        1878px 530px whitesmoke;
+    transform-style: preserve-3d;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 4px;
+    width: 4px;
+    border-radius: 2px;
+}
+.starField .layer:nth-child(1) {
+    animation: sf-fly-by-1 150s alternate infinite;
+}
+.starField .layer:nth-child(2) {
+    animation: sf-fly-by-2 150s alternate infinite;
+}
+.starField .layer:nth-child(3) {
+    animation: sf-fly-by-3 150s alternate infinite;
+}
+.meteor-1 {
+    position: absolute;
+    top: 5%;
+    left: 87%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 7.1s linear infinite;
+}
+.meteor-1:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-2 {
+    position: absolute;
+    top: 9%;
+    left: 44%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 9s linear infinite;
+}
+.meteor-2:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-3 {
+    position: absolute;
+    top: 20%;
+    left: 16%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 5.4s linear infinite;
+}
+.meteor-3:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-4 {
+    position: absolute;
+    top: 25%;
+    left: 30%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 9.8s linear infinite;
+}
+.meteor-4:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-5 {
+    position: absolute;
+    top: 8%;
+    left: 80%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 7.2s linear infinite;
+}
+.meteor-5:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-6 {
+    position: absolute;
+    top: 6%;
+    left: 29%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 5.4s linear infinite;
+}
+.meteor-6:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-7 {
+    position: absolute;
+    top: 7%;
+    left: 88%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 9s linear infinite;
+}
+.meteor-7:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-8 {
+    position: absolute;
+    top: 8%;
+    left: 64%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 6.2s linear infinite;
+}
+.meteor-8:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-9 {
+    position: absolute;
+    top: 28%;
+    left: 36%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 6.8s linear infinite;
+}
+.meteor-9:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-10 {
+    position: absolute;
+    top: 67%;
+    left: 75%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 8.8s linear infinite;
+}
+.meteor-10:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-11 {
+    position: absolute;
+    top: 87%;
+    left: 17%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 9.6s linear infinite;
+}
+.meteor-11:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-12 {
+    position: absolute;
+    top: 59%;
+    left: 84%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 8.3s linear infinite;
+}
+.meteor-12:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-13 {
+    position: absolute;
+    top: 38%;
+    left: 26%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 9.1s linear infinite;
+}
+.meteor-13:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-14 {
+    position: absolute;
+    top: 38%;
+    left: 49%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 3.7s linear infinite;
+}
+.meteor-14:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+.meteor-15 {
+    position: absolute;
+    top: 73%;
+    left: 57%;
+    width: 300px;
+    height: 1px;
+    transform: rotate(-45deg);
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+    animation: meteor 6.2s linear infinite;
+}
+.meteor-15:before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: -2px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px 3px #fff;
+}
+
+@keyframes meteor {
+    0% {
+        opacity: 1;
+        margin-top: -300px;
+        margin-right: -300px;
+    }
+    12% {
+        opacity: 0;
+    }
+    15% {
+        margin-top: 300px;
+        margin-left: -600px;
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes missile {
+    0% {
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        transform: scale(0.1) translateY(-200);
+    }
 }
 </style>

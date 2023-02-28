@@ -1,257 +1,425 @@
 <template>
-    <div class="shutDownPage" v-show="isShutdown">
-        이제 전원을<br />
-        끄셔도 됩니다.
-    </div>
-    <div class="inAccessable" v-show="isAccessError">
-        <div class="inAccessModal">
-            <div class="inAccessBar">
-                <div
-                    class="innerContent"
-                    style="
-                        justify-content: space-between;
-                        color: white;
-                        cursor: not-allowed;
-                    "
-                >
-                    <span>경고</span>
-                    <img
-                        src="../assets/gamecomp/Xbutton.png"
-                        alt=""
-                        style="width: 24px; cursor: pointer"
-                        @click="closeAlert()"
-                    />
-                </div>
-            </div>
-            <div class="inAccessContent">
-                <div class="innerContent" style="justify-content: center">
-                    <div>
-                        <span>허가되지 않은 접근입니다.</span>
-                    </div>
-                </div>
-                <div
-                    style="width: 100%; display: flex; justify-content: center"
-                >
-                    <div id="alertBtn" @click="closeAlert()">닫 기</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="container">
-        <div class="menuBar" v-show="isOpenMenuBar">
-            <div style="width: 13%; height: 98%; margin: 1%">
-                <div id="menuColorBar"></div>
-            </div>
-            <div style="width: 85%; height: 100%; position: relative">
-                <div
-                    class="menuItems"
-                    style="bottom: 410px"
-                    @click="openAlert()"
-                >
-                    <img
-                        style="
-                            height: 45px;
-                            margin-left: 7px;
-                            margin-right: 4px;
-                        "
-                        src="../assets/icon/icon_updates.png"
-                        alt=""
-                    />
-                    <span style="margin-right: 10px">Mindows Update</span>
-                </div>
-                <hr style="position: absolute; bottom: 400px; width: 99%" />
-                <div
-                    class="menuItems"
-                    style="bottom: 360px"
-                    @click="openAlert()"
-                >
-                    <img
-                        style="
-                            height: 45px;
-                            margin-left: 7px;
-                            margin-right: 4px;
-                        "
-                        src="../assets/icon/icon_programs.png"
-                        alt=""
-                    />
-                    <span style="margin-right: 10px">프로그램(P)</span>
-                </div>
-                <div
-                    class="menuItems"
-                    style="bottom: 315px"
-                    @click="openAlert()"
-                >
-                    <img
-                        style="
-                            height: 45px;
-                            margin-left: 7px;
-                            margin-right: 4px;
-                        "
-                        src="../assets/icon/icon_favorites.png"
-                        alt=""
-                    />
-                    <span style="margin-right: 10px">즐겨찾기(A)</span>
-                </div>
-                <div
-                    class="menuItems"
-                    style="bottom: 270px"
-                    @click="openAlert()"
-                >
-                    <img
-                        style="
-                            height: 45px;
-                            margin-left: 7px;
-                            margin-right: 4px;
-                        "
-                        src="../assets/icon/icon_documents.png"
-                        alt=""
-                    />
-                    <span style="margin-right: 10px">문서(D)</span>
-                </div>
-                <div
-                    class="menuItems"
-                    style="bottom: 225px"
-                    @click="openAlert()"
-                >
-                    <img
-                        style="
-                            height: 45px;
-                            margin-left: 7px;
-                            margin-right: 4px;
-                        "
-                        src="../assets/icon/icon_settings.png"
-                        alt=""
-                    />
-                    <span style="margin-right: 10px">설정(S)</span>
-                </div>
-                <div
-                    class="menuItems"
-                    style="bottom: 180px"
-                    @click="openAlert()"
-                >
-                    <img
-                        style="
-                            height: 45px;
-                            margin-left: 7px;
-                            margin-right: 4px;
-                        "
-                        src="../assets/icon/icon_find.png"
-                        alt=""
-                    />
-                    <span style="margin-right: 10px">찾기(F)</span>
-                </div>
-                <div
-                    class="menuItems"
-                    style="bottom: 135px"
-                    @click="openAlert()"
-                >
-                    <img
-                        style="
-                            height: 45px;
-                            margin-left: 7px;
-                            margin-right: 4px;
-                        "
-                        src="../assets/icon/icon_help.png"
-                        alt=""
-                    />
-                    <span style="margin-right: 10px">도움말(H)</span>
-                </div>
-                <div
-                    class="menuItems"
-                    style="bottom: 90px"
-                    @click="openAlert()"
-                >
-                    <img
-                        style="
-                            height: 45px;
-                            margin-left: 7px;
-                            margin-right: 4px;
-                        "
-                        src="../assets/icon/icon_run.png"
-                        alt=""
-                    />
-                    <span style="margin-right: 10px">실행(R)</span>
-                </div>
-                <hr style="position: absolute; bottom: 85px; width: 99%" />
-                <div
-                    class="menuItems"
-                    style="bottom: 45px"
-                    @click="openAlert()"
-                >
-                    <img
-                        style="
-                            height: 45px;
-                            margin-left: 7px;
-                            margin-right: 4px;
-                        "
-                        src="../assets/icon/icon_logOff.png"
-                        alt=""
-                    />
-                    <span style="margin-right: 10px"
-                        >나만무 로그오프(L)...</span
+    <div class="computerSet">
+        <div class="monitor">
+            <div class="outerComputer" id="outerComputer">
+                <div class="inComputer" id="inComputer">
+                    <div
+                        class="shutDownPage"
+                        id="shutDownPage"
+                        v-show="isShutdown"
+                        @click="powerOff"
                     >
-                </div>
-                <div
-                    class="menuItems"
-                    style="bottom: 0px"
-                    @click="shutDownAll()"
-                >
-                    <img
-                        style="
-                            height: 45px;
-                            margin-left: 7px;
-                            margin-right: 4px;
-                        "
-                        src="../assets/icon/icon_shutdown.png"
-                        alt=""
-                    />
-                    <span style="margin-right: 10px">시스템 종료(U)...</span>
+                        이제 전원을<br />
+                        끄셔도 됩니다.
+                    </div>
+                    <div class="inAccessable" v-show="isAccessError">
+                        <div class="inAccessModal">
+                            <div class="inAccessBar">
+                                <div
+                                    class="innerContent"
+                                    style="
+                                        justify-content: space-between;
+                                        color: white;
+                                        cursor: not-allowed;
+                                    "
+                                >
+                                    <span>경고</span>
+                                    <img
+                                        src="../assets/gamecomp/Xbutton.png"
+                                        alt=""
+                                        style="width: 24px; cursor: pointer"
+                                        @click="closeAlert()"
+                                    />
+                                </div>
+                            </div>
+                            <div class="inAccessContent">
+                                <div
+                                    class="innerContent"
+                                    style="justify-content: center"
+                                >
+                                    <div>
+                                        <span>허가되지 않은 접근입니다.</span>
+                                    </div>
+                                </div>
+                                <div
+                                    style="
+                                        width: 100%;
+                                        display: flex;
+                                        justify-content: center;
+                                    "
+                                >
+                                    <div id="alertBtn" @click="closeAlert()">
+                                        닫 기
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerOuter">
+                        <div class="container">
+                            <div class="menuBar" v-show="isOpenMenuBar">
+                                <div style="width: 13%; height: 98%; margin: 1%">
+                                    <div id="menuColorBar"></div>
+                                </div>
+                                <div
+                                    style="
+                                        width: 85%;
+                                        height: 100%;
+                                        position: relative;
+                                    "
+                                >
+                                    <div
+                                        class="menuItems"
+                                        style="bottom: 410px"
+                                        @click="openAlert()"
+                                    >
+                                        <img
+                                            style="
+                                                height: 45px;
+                                                margin-left: 7px;
+                                                margin-right: 4px;
+                                            "
+                                            src="../assets/icon/icon_updates.png"
+                                            alt=""
+                                        />
+                                        <span style="margin-right: 10px"
+                                            >Mindows Update</span
+                                        >
+                                    </div>
+                                    <hr
+                                        style="
+                                            position: absolute;
+                                            bottom: 400px;
+                                            width: 99%;
+                                        "
+                                    />
+                                    <div
+                                        class="menuItems"
+                                        style="bottom: 360px"
+                                        @click="openAlert()"
+                                    >
+                                        <img
+                                            style="
+                                                height: 45px;
+                                                margin-left: 7px;
+                                                margin-right: 4px;
+                                            "
+                                            src="../assets/icon/icon_programs.png"
+                                            alt=""
+                                        />
+                                        <span style="margin-right: 10px"
+                                            >프로그램(P)</span
+                                        >
+                                    </div>
+                                    <div
+                                        class="menuItems"
+                                        style="bottom: 315px"
+                                        @click="openAlert()"
+                                    >
+                                        <img
+                                            style="
+                                                height: 45px;
+                                                margin-left: 7px;
+                                                margin-right: 4px;
+                                            "
+                                            src="../assets/icon/icon_favorites.png"
+                                            alt=""
+                                        />
+                                        <span style="margin-right: 10px"
+                                            >즐겨찾기(A)</span
+                                        >
+                                    </div>
+                                    <div
+                                        class="menuItems"
+                                        style="bottom: 270px"
+                                        @click="openAlert()"
+                                    >
+                                        <img
+                                            style="
+                                                height: 45px;
+                                                margin-left: 7px;
+                                                margin-right: 4px;
+                                            "
+                                            src="../assets/icon/icon_documents.png"
+                                            alt=""
+                                        />
+                                        <span style="margin-right: 10px"
+                                            >문서(D)</span
+                                        >
+                                    </div>
+                                    <div
+                                        class="menuItems"
+                                        style="bottom: 225px"
+                                        @click="openAlert()"
+                                    >
+                                        <img
+                                            style="
+                                                height: 45px;
+                                                margin-left: 7px;
+                                                margin-right: 4px;
+                                            "
+                                            src="../assets/icon/icon_settings.png"
+                                            alt=""
+                                        />
+                                        <span style="margin-right: 10px"
+                                            >설정(S)</span
+                                        >
+                                    </div>
+                                    <div
+                                        class="menuItems"
+                                        style="bottom: 180px"
+                                        @click="openAlert()"
+                                    >
+                                        <img
+                                            style="
+                                                height: 45px;
+                                                margin-left: 7px;
+                                                margin-right: 4px;
+                                            "
+                                            src="../assets/icon/icon_find.png"
+                                            alt=""
+                                        />
+                                        <span style="margin-right: 10px"
+                                            >찾기(F)</span
+                                        >
+                                    </div>
+                                    <div
+                                        class="menuItems"
+                                        style="bottom: 135px"
+                                        @click="openAlert()"
+                                    >
+                                        <img
+                                            style="
+                                                height: 45px;
+                                                margin-left: 7px;
+                                                margin-right: 4px;
+                                            "
+                                            src="../assets/icon/icon_help.png"
+                                            alt=""
+                                        />
+                                        <span style="margin-right: 10px"
+                                            >도움말(H)</span
+                                        >
+                                    </div>
+                                    <div
+                                        class="menuItems"
+                                        style="bottom: 90px"
+                                        @click="openAlert()"
+                                    >
+                                        <img
+                                            style="
+                                                height: 45px;
+                                                margin-left: 7px;
+                                                margin-right: 4px;
+                                            "
+                                            src="../assets/icon/icon_run.png"
+                                            alt=""
+                                        />
+                                        <span style="margin-right: 10px"
+                                            >실행(R)</span
+                                        >
+                                    </div>
+                                    <hr
+                                        style="
+                                            position: absolute;
+                                            bottom: 85px;
+                                            width: 99%;
+                                        "
+                                    />
+                                    <div
+                                        class="menuItems"
+                                        style="bottom: 45px"
+                                        @click="openAlert()"
+                                    >
+                                        <img
+                                            style="
+                                                height: 45px;
+                                                margin-left: 7px;
+                                                margin-right: 4px;
+                                            "
+                                            src="../assets/icon/icon_logOff.png"
+                                            alt=""
+                                        />
+                                        <span style="margin-right: 10px"
+                                            >나만무 로그오프(L)...</span
+                                        >
+                                    </div>
+                                    <div
+                                        class="menuItems"
+                                        style="bottom: 0px"
+                                        @click="shutDownAll()"
+                                    >
+                                        <img
+                                            style="
+                                                height: 45px;
+                                                margin-left: 7px;
+                                                margin-right: 4px;
+                                            "
+                                            src="../assets/icon/icon_shutdown.png"
+                                            alt=""
+                                        />
+                                        <span style="margin-right: 10px"
+                                            >시스템 종료(U)...</span
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="windowsWindow" @click="closeMenuBar()" v-show="isPowerOn">
+                                <div class="iconBox">
+                                    <div
+                                        class="iconElem"
+                                        id="iconExplorer"
+                                        @dblclick="openNaver()"
+                                    >
+                                        <div class="iconWrapper">
+                                            <div
+                                                class="iconImage"
+                                                style="
+                                                    background-image: url('src/assets/icon/icon_explorer.png');
+                                                "
+                                            ></div>
+                                        </div>
+                                        <div class="iconTitle">
+                                            Internet<br />
+                                            Explorer
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="iconElem"
+                                        id="iconHancom"
+                                        @dblclick="openHancom()"
+                                    >
+                                        <div class="iconWrapper">
+                                            <div
+                                                class="iconImage"
+                                                style="
+                                                    background-image: url('src/assets/icon/icon_hancom.png');
+                                                "
+                                            ></div>
+                                        </div>
+                                        <div class="iconTitle">정글타자연습</div>
+                                    </div>
+                                    <div
+                                        class="iconElem"
+                                        id="iconWordgame"
+                                        @dblclick="openLogin()"
+                                    >
+                                        <div class="iconWrapper">
+                                            <div
+                                                class="iconImage"
+                                                style="
+                                                    background-image: url('src/assets/icon/icon_wordgame.png');
+                                                "
+                                            ></div>
+                                        </div>
+                                        <div class="iconTitle">단어게임</div>
+                                    </div>
+                                    <div
+                                        class="iconElem"
+                                        id="iconLaundry"
+                                        @dblclick="openLaundry()"
+                                    >
+                                        <div class="iconWrapper">
+                                            <div
+                                                class="iconImage"
+                                                style="
+                                                    background-image: url('src/assets/icon/icon_laundry.png');
+                                                "
+                                            ></div>
+                                        </div>
+                                        <div class="iconTitle">
+                                            Laundry<br />
+                                            Jungle
+                                        </div>
+                                    </div>
+                                </div>
+                                <WordRain ref="wordRain" />
+                                <Login ref="Login" />
+                            </div>
+                            <div class="windowsSystemBar" v-show="isPowerOn">
+                                <div
+                                    class="windowsSystemButton"
+                                    @click="toggleMenuBar()"
+                                >
+                                    <img
+                                        style="
+                                            height: 30px;
+                                            margin-left: 7px;
+                                            margin-right: 4px;
+                                        "
+                                        src="../assets/icon/icon_windows.png"
+                                        alt=""
+                                    />
+                                    <span style="margin-right: 10px">
+                                        <b>시 작</b></span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="monitorPannel" id="monitorTopPannel"></div>
+            <div class="monitorPannel" id="monitorLeftPannel"></div>
+            <div class="monitorPannel" id="monitorRightPannel"></div>
+            <div class="monitorPannel" id="monitorBackPannel"></div>
         </div>
-        <div class="windowsWindow" @click="closeMenuBar()">
-            <div class="iconBox">
-                <div class="iconElem" id="iconHancom" @dblclick="openHancom()">
-                    <div class="iconWrapper">
-                        <div
-                            class="iconImage"
-                            style="
-                                background-image: url('src/assets/icon/icon_hancom.png');
-                            "
-                        ></div>
-                    </div>
-                    <div class="iconTitle">정글타자연습</div>
+        <div class="desktop">
+            <div class="desktopPannel" id="frontPannel">
+                <div class="pannelComp">
+                    <div class="oddInput" id="cdInput"></div>
+                    <div class="oddInputButton"></div>
                 </div>
-                <div class="iconElem" id="iconHancom" @dblclick="openNaver()">
-                    <div class="iconWrapper">
-                        <div
-                            class="iconImage"
-                            style="
-                                background-image: url('src/assets/icon/icon_explorer.png');
-                            "
-                        ></div>
-                    </div>
-                    <div class="iconTitle">
-                        Internet<br />
-                        Explorer
+                <div class="pannelComp pannelComp-short">
+                    <div class="oddInput" id="diskInput"></div>
+                    <div
+                        class="oddInputButton"
+                        style="border-radius: 999%"
+                    ></div>
+                </div>
+                <div class="pannelComp pannelComp-tall">
+                    <div class="workButton" v-show="isPowerOn"></div>
+                    <div class="workButtonOff" v-show="!isPowerOn"></div>
+                    <div class="statusButton" v-show="isPowerOn"></div>
+                    <div class="statusButtonOff" v-show="!isPowerOn"></div>
+                    <div class="powerButton powerButton-power" @click="togglePower"></div>
+                    <div class="powerButton powerButton-reset" @click="reload"></div>
+                </div>
+            </div>
+            <div class="desktopPannel" id="backPannel"></div>
+            <div class="desktopPannel" id="leftPannel"></div>
+            <div class="desktopPannel" id="rightPannel"></div>
+        </div>
+        <div class="thanksFrame">
+            <div class="thanksPannel" id="thanksFront">
+                <div class="innerThanks">
+                    Thanks To
+                    <div class="innerThanks" id="thanksContent">
+                        <span>
+                            DEVELOP<br/>
+                            <a href="https://github.com/eDanMoo">@TEAM eDanMoo<br/></a>
+                            <br/>
+                            MEMBER<br/>
+                            <a href="https://github.com/Jungeun04">PARK JUNGEUN<br/></a>
+                            <a href="https://github.com/sj0917">LEE SANGJUN<br/></a>
+                            <a href="https://github.com/Heruing">LEE HYUNHONG<br/></a>
+                            <a href="https://github.com/hierrr">SON CHANGHAN<br/></a>
+                            <a href="https://github.com/hunkicho">CHO HUNKI<br/></a>
+                            <br/>
+                            Special Thanks To<br/>
+                            <a href="https://jungle.krafton.com/">KRAFTON Jungle</a>
+                        </span>
                     </div>
                 </div>
             </div>
-            <WordRain ref="wordRain" />
+            <div class="thanksPannel" id="thanksBack"></div>
+            <div class="thanksPannel" id="thanksLeft"></div>
+            <div class="thanksPannel" id="thanksRight"></div>
+            <div class="thanksPannel" id="thanksTop"></div>
+            <div class="thanksPannel" id="thanksBottom"></div>
+            <div class="thanksPannel" id="thanksrod"></div>
         </div>
-        <div class="windowsSystemBar">
-            <div class="windowsSystemButton" @click="toggleMenuBar()">
-                <img
-                    style="height: 30px; margin-left: 7px; margin-right: 4px"
-                    src="../assets/icon/icon_windows.png"
-                    alt=""
-                />
-                <span style="margin-right: 10px"> <b>시 작</b></span>
-            </div>
-        </div>
-        <div class="loginPannel">
-            <Login />
-        </div>
+        <div id="woodTable"></div>
     </div>
 </template>
 
@@ -263,9 +431,10 @@ import { ref } from "vue";
 export default {
     data() {
         return {
-            isOpenMenuBar: 0,
-            isAccessError: 0,
-            isShutdown: 0,
+            isOpenMenuBar: false,
+            isAccessError: false,
+            isShutdown: false,
+            isPowerOn: true,
         };
     },
     components: {
@@ -273,35 +442,78 @@ export default {
         WordRain,
     },
     methods: {
+        reload() {
+            this.$router.go(this.$router.currentRoute);
+        },
         openHancom() {
             this.$refs.wordRain.openHancom();
         },
+        openLogin() {
+            this.$refs.Login.openLogin();
+        },
         closeMenuBar() {
-            this.isOpenMenuBar = 0;
+            this.isOpenMenuBar = false;
         },
         toggleMenuBar() {
-            this.isOpenMenuBar = (this.isOpenMenuBar + 1) % 2;
+            this.isOpenMenuBar = !this.isOpenMenuBar;
         },
         closeAlert() {
-            this.isAccessError = 0;
+            this.isAccessError = false;
         },
         openAlert() {
-            this.isAccessError = 1;
+            this.isAccessError = true;
         },
         shutDownAll() {
             const audio = new Audio("../src/assets/soundEffect/shutdown.wav");
             audio.volume = 0.6;
             audio.play();
-            this.isShutdown = 1;
+            this.isShutdown = true;
         },
 
         openNaver() {
             window.location.href = "https://www.naver.com";
         },
+        openLaundry() {
+            window.location.href = "http://laundry-jungle.com/";
+        },
+        powerOff() {
+            this.isShutdown = false;
+            this.isPowerOn = false;
+            this.isOpenMenuBar = false;
+        },
+        togglePower() {
+            this.isPowerOn = !this.isPowerOn;
+            this.isShutdown = false;
+        }
     },
     setup() {
         let showHancom = ref(true);
-        return { showHancom };
+        let showLogin = ref(true);
+        return { showHancom, showLogin };
+    },
+    mounted() {
+        var pannelR = document.getElementById("monitorRightPannel");
+        var pannelL = document.getElementById("monitorLeftPannel");
+        var pannelT = document.getElementById("monitorTopPannel");
+        document.body.style.background = "rgb(10, 45, 10)";
+        var rect = document
+            .getElementById("outerComputer")
+            .getBoundingClientRect();
+        pannelR.style.left = rect.right - 200 + "px";
+        pannelR.style.height = rect.height + "px";
+        pannelL.style.height = rect.height + "px";
+        pannelT.style.width = rect.width + "px";
+        pannelT.style.bottom = rect.height - 125 + "px";
+        window.addEventListener("resize", () => {
+            var rect = document
+                .getElementById("outerComputer")
+                .getBoundingClientRect();
+            pannelR.style.left = rect.right - 200 + "px";
+            pannelR.style.height = rect.height + "px";
+            pannelL.style.height = rect.height + "px";
+            pannelT.style.width = rect.width + "px";
+            pannelT.style.bottom = rect.height - 125 + "px";
+        });
     },
     unmounted() {
         clearInterval();
@@ -314,31 +526,32 @@ export default {
     font-family: "DungGeunMo";
     src: url(../assets/font/DungGeunMo.ttf);
 }
-.loginPannel {
-    width: 400px;
-    position: fixed;
-    right: 0;
-}
 .windowsWindow {
     width: 100%;
-    /* max-width: 1700px; */
-    height: 100vh;
-    min-height: 800px;
-    max-height: 100vh;
+    height: 100%;
     display: flex;
     overflow: hidden;
     position: relative;
+    background-color: rgb(32, 119, 93);
+    box-shadow: 0 0 30px 1px rgb(32, 119, 93);
 }
 .container {
-    width: 100vw;
-    height: 100vh;
-    min-height: 820px;
+    width: 100%;
+    height: 100%;
     display: flex;
-    background-color: rgb(32, 119, 93);
+    background-color: rgb(0, 0, 0);
+}
+.containerOuter {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(0, 0, 0);
 }
 
 .windowsSystemBar {
-    position: fixed;
+    position: absolute;
     bottom: 0px;
     width: 100%;
     height: 35px;
@@ -373,6 +586,7 @@ export default {
     justify-content: center;
     flex-wrap: wrap;
     cursor: pointer;
+    margin-bottom: 10px;
 }
 .iconImage {
     width: 60px;
@@ -437,8 +651,8 @@ export default {
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     z-index: 999;
     display: flex;
     justify-content: center;
@@ -447,8 +661,8 @@ export default {
 }
 
 .inAccessModal {
-    height: 150px;
-    width: 400px;
+    height: 15%;
+    width: 25%;
     background-color: rgb(220, 220, 220);
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
         inset 3px 3px 0px #ffffff;
@@ -484,7 +698,7 @@ export default {
 }
 .shutDownPage {
     position: absolute;
-    z-index: 99999999999999;
+    z-index: 100;
     width: 100%;
     height: 100%;
     background-color: #000000;
@@ -494,5 +708,339 @@ export default {
     color: orange;
     font-size: 4vw;
     text-align: center;
+}
+#outerComputer {
+    position: absolute;
+    bottom: 50px;
+    left: 5vw;
+    width: 90vw;
+    max-width: 90vh;
+    min-width: 355px;
+    height: 90vw;
+    max-height: 90vh;
+    min-height: 355px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(245, 245, 230);
+    box-sizing: border-box;
+    border: 10px solid #000;
+    transform: translateZ(100px);
+}
+#inComputer {
+    position: relative;
+    width: 90%;
+    height: 90%;
+    background-color: rgb(32, 119, 93);
+    border: 10px solid #000;
+}
+
+.computerSet {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    min-height: 800px;
+    perspective: 1000px;
+}
+#woodTable {
+    width: 200%;
+    left: -5%;
+    height: 500px;
+    position: fixed;
+    z-index: -2;
+    bottom: 0;
+    background: linear-gradient(rgb(125, 25, 0), rgb(80, 20, 0));
+    border: 5px solid #000;
+    transform: rotateX(70deg) translateZ(-200px);
+}
+.desktop {
+    position: absolute;
+    bottom: 0;
+    left: 110vh;
+    width: 30vw;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: translateZ(-200px);
+    z-index: 2;
+}
+.desktopPannel {
+    position: absolute;
+    bottom: 0;
+    width: 500px;
+    height: 50vh;
+    background: rgb(245, 245, 200);
+    box-sizing: border-box;
+    border: 10px solid rgb(0, 0, 0);
+}
+#frontPannel {
+    height: 100vh;
+    background: rgb(245, 245, 230);
+    transform: translateZ(100px);
+}
+#backPannel {
+    height: 100vh;
+    background: rgb(245, 245, 230);
+    transform: translateZ(-100px);
+}
+#leftPannel {
+    width: 200px;
+    height: 100vh;
+    background: rgb(235, 235, 210);
+    transform: rotateY(90deg) translateZ(-100px);
+}
+#rightPannel {
+    width: 200px;
+    height: 100vh;
+    background: rgb(235, 235, 210);
+    transform: rotateY(-90deg) translateZ(-100px);
+}
+.pannelComp {
+    position: relative;
+    box-sizing: border-box;
+    margin-top: 10%;
+    margin-left: 10%;
+    width: 80%;
+    height: 10%;
+    background: rgb(240, 240, 220);
+    border: 3px solid rgb(50, 50, 50);
+}
+.pannelComp-short {
+    height: 5%;
+}
+.pannelComp-tall {
+    height: 65%;
+    box-shadow: inset 2px 2px 5px 3px rgb(60, 60, 60);
+}
+.oddInput {
+    position: absolute;
+    box-sizing: border-box;
+    width: 98%;
+    height: 50%;
+    background: rgb(245, 245, 230);
+    top: 1%;
+    left: 1%;
+    border: 2px solid #000;
+    box-shadow: inset 1px 1px 0px 2px rgb(32, 32, 32);
+}
+#diskInput {
+    width: 70%;
+    height: 50%;
+    left: 15%;
+    top: 20%;
+}
+.oddInputButton {
+    position: absolute;
+    width: 10%;
+    height: 10%;
+    min-height: 10px;
+    border: 1px solid #000;
+    right: 1%;
+    bottom: 30%;
+    box-shadow: 1px 1px 2px 1px #000;
+}
+
+@keyframes blinkGreen {
+    0% {
+        background: rgb(10, 225, 70);
+    }
+    100% {
+        background: rgb(22, 255, 94);
+        box-shadow: 0 0 1px 1px rgb(22, 255, 94);
+    }
+}
+@keyframes blinkOrange {
+    0% {
+        background: rgb(234, 110, 0);
+    }
+    99% {
+        background: rgb(234, 110, 0);
+    }
+    100% {
+        background: rgb(255, 145, 40);
+        box-shadow: 0 0 1px 1px rgb(255, 145, 40);
+    }
+}
+.workButton {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    left: 50%;
+    bottom: 48%;
+    border-radius: 99%;
+    border: 1px solid rgb(234, 110, 0);
+    box-shadow: 0px 0px 1px 1px #000;
+    animation: blinkOrange 0.5s alternate infinite;
+}
+.workButtonOff {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    left: 50%;
+    bottom: 48%;
+    border-radius: 99%;
+    border: 1px solid rgb(234, 110, 0);
+    background-color: rgb(234, 110, 0);
+    box-shadow: 0px 0px 1px 1px #000;
+}
+.statusButton {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    left: 50%;
+    bottom: 45%;
+    border-radius: 99%;
+    border: 1px solid rgb(10, 225, 70);
+    box-shadow: 0px 0px 1px 1px #000;
+    animation: blinkGreen 0.2s infinite;
+}
+.statusButtonOff {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    left: 50%;
+    bottom: 45%;
+    border-radius: 99%;
+    border: 1px solid rgb(10, 225, 70);
+    background: rgb(10, 225, 70);
+    box-shadow: 0px 0px 1px 1px #000;
+}
+.powerButton {
+    position: absolute;
+    border-radius: 99%;
+    background: radial-gradient(
+        84.07% 84.07% at 26.67% 53.41%,
+        #d9d9d9 0%,
+        #969696 100%
+    );
+    border: 1px solid #000;
+    box-shadow: 0px 0px 1px 1px #000;
+}
+.powerButton-power {
+    bottom: 25%;
+    left: 47.5%;
+    width: 30px;
+    height: 15%;
+    cursor: pointer;
+}
+.powerButton-reset {
+    bottom: 15%;
+    left: 48.7%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+.monitor {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: translateZ(-100px);
+}
+.monitorPannel {
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 50px;
+    width: 200px;
+    height: 90vw;
+    max-height: 90vh;
+    min-height: 355px;
+    border: 10px solid #000;
+    background: rgb(240, 240, 220);
+    border-radius: 5%;
+}
+#monitorTopPannel {
+    left: 5vw;
+    height: 200px;
+    transform: rotateX(90deg) translateY(-70px) translateZ(-2px);
+}
+#monitorLeftPannel {
+    left: 5vw;
+    transform: rotateY(90deg) translateZ(-100px);
+}
+#monitorRightPannel {
+    transform: rotateY(-90deg) translateZ(-100px);
+}
+#monitorBackPannel {
+    transform: translateZ(-100px);
+    bottom: 50px;
+    left: 5vw;
+    width: 90vw;
+    max-width: 90vh;
+    min-width: 355px;
+    height: 90vw;
+    max-height: 90vh;
+    min-height: 355px;
+    transform: translateZ(-100px);
+}
+.thanksFrame {
+    position: absolute;
+    bottom: 0;
+    left: 170vh;
+    width: 300px;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: rotateX(30deg) translateY(-150px) translateZ(-350px);
+}
+.thanksPannel {
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    width: 350px;
+    background: rgb(0, 0, 0);
+    border: 5px solid rgb(22, 255, 94);
+}
+#thanksFront {
+    height: 600px;
+    padding: 20px;
+    transform: translateZ(10px);
+    overflow: hidden;
+}
+#thanksBack {
+    height: 600px;
+    transform: translateZ(-10px);
+}
+#thanksLeft {
+    width: 20px;
+    height: 600px;
+    transform: rotateY(-90deg) translateZ(10px);
+}
+#thanksRight {
+    height: 600px;
+    width: 20px;
+    transform: rotateY(90deg) translateZ(-10px);
+}
+#thanksTop {
+    height: 20px;
+    bottom: 600px;
+    transform: rotateX(-90deg) translateZ(10px);
+}
+#thanksBottom {
+    height: 20px;
+    transform: rotateX(90deg) translateZ(-10px);
+}
+#thanksrod {
+    background-color: rgb(22, 255, 94);
+    border-color: black;
+    height: 200px;
+    transform: rotateX(-40deg) translateZ(-100px);
+}
+.innerThanks {
+    width: 100%;
+    height: 100%;
+    color: rgb(22, 255, 94);
+    font-size: 2rem;
+}
+#thanksContent {
+    width: 90%;
+    height: 85%;
+    border: 1px solid rgb(22, 255, 94);
+    overflow: hidden;
+    font-size: 1.5rem;
+    padding: 5%;
+}
+#thanksContent >span >a {
+    color: rgb(22, 255, 94);
+    cursor: pointer;
 }
 </style>
