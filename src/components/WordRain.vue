@@ -4,7 +4,7 @@
             <div id="hancom-title" @mousedown="dragHancom">
                 <span style="margin-left: 10px">정글타자연습</span>
                 <img
-                    src="../assets/gamecomp/Xbutton.png"
+                    src="https://storage.cloud.google.com/koword_bucket/btn_close.png"
                     style="
                         width: 30px;
                         height: 30px;
@@ -44,9 +44,9 @@ export default {
     },
     methods: {
         closeHancom() {
-            const audio = new Audio("../src/assets/soundEffect/click.mp3");
-            audio.volume = 0.6;
-            audio.play();
+            const click_sound = new Audio("../src/assets/soundEffect/basic_click.mp3");
+            click_sound.volume = 0.6;
+            click_sound.play();
             this.showHancom = false;
         },
         openHancom() {

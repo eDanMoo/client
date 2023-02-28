@@ -5,7 +5,7 @@
                 >단어게임 접속</span
             >
             <img
-                src="../assets/gamecomp/Xbutton.png"
+                src="https://storage.cloud.google.com/koword_bucket/btn_close.png"
                 style="
                     width: 30px;
                     height: 30px;
@@ -101,9 +101,9 @@ export default {
     },
     methods: {
         closeLogin() {
-            const audio = new Audio("../src/assets/soundEffect/click.mp3");
-            audio.volume = 0.6;
-            audio.play();
+            const click_sound = new Audio("../src/assets/soundEffect/basic_click.mp3");
+            click_sound.volume = 0.6;
+            click_sound.play();
             this.showLogin = false;
         },
         openLogin() {
@@ -114,22 +114,18 @@ export default {
         dragLogin(e) {
             e = e || window.event;
             e.preventDefault();
-            // get the mouse cursor position at startup:
             this.logPos3 = e.clientX;
             this.logPos4 = e.clientY;
             document.onmouseup = this.closeDragElement;
-            // call a function whenever the cursor moves:
             document.onmousemove = this.loginDrag;
         },
         loginDrag(e) {
             e = e || window.event;
             e.preventDefault();
-            // calculate the new cursor position:
             this.logPos1 = this.logPos3 - e.clientX;
             this.logPos2 = this.logPos4 - e.clientY;
             this.logPos3 = e.clientX;
             this.logPos4 = e.clientY;
-            // set the element's new position:
             this.$refs.floatLogin.style.top =
                 Math.max(
                     Math.min(
@@ -148,7 +144,6 @@ export default {
                 ) + "px";
         },
         closeDragElement() {
-            // stop moving when mouse button is released:
             document.onmouseup = null;
             document.onmousemove = null;
         },
@@ -156,13 +151,10 @@ export default {
     setup() {
         let showLogin = ref(true);
         onMounted(() => {
-            //모달창
             const closeModal = document.getElementById("close-modal");
             const closeModal2 = document.getElementById("close-modal-2");
-
             const modal = document.getElementById("modal-wrapper");
             const modal2 = document.getElementById("modal-wrapper-2");
-
             closeModal.onclick = () => {
                 modal.style.display = "none";
             };
@@ -190,20 +182,17 @@ export default {
 
         const room_code = ref("");
         const user_id = ref("");
-
+        const audio_enter = new Audio("https://storage.cloud.google.com/koword_bucket/enterRoom.wav");
+        audio_enter.volume = 0.6;
         const joinPage = () => {
             const roomID = document.getElementById("input-room-id");
             const userID = document.getElementById("input-user-id");
             const modal2 = document.getElementById("modal-wrapper-2");
-
             if (userID.value == "" || roomID.value == "") {
                 modal2.style.display = "flex";
                 document.getElementById("close-modal-2").focus();
             }
-
-            const audio = new Audio("../src/assets/soundEffect/enterRoom.wav");
-            audio.volume = 0.6;
-            audio.play();
+            audio_enter.play();
             router.push({
                 name: "inGame",
                 params: {
@@ -226,9 +215,7 @@ export default {
                 return joinPage();
             }
             const new_room_code = generateRandomCode(6);
-            const audio = new Audio("../src/assets/soundEffect/enterRoom.wav");
-            audio.volume = 0.6;
-            audio.play();
+            audio_enter.play();
             router.push({
                 name: "inGame",
                 params: {

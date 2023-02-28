@@ -25,7 +25,7 @@
                                 >
                                     <span>경고</span>
                                     <img
-                                        src="../assets/gamecomp/Xbutton.png"
+                                        src="https://storage.cloud.google.com/koword_bucket/btn_close.png"
                                         alt=""
                                         style="width: 24px; cursor: pointer"
                                         @click="closeAlert()"
@@ -79,7 +79,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="../assets/icon/icon_updates.png"
+                                            src="https://storage.cloud.google.com/koword_bucket/icon_updates.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -104,7 +104,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="../assets/icon/icon_programs.png"
+                                            src="https://storage.cloud.google.com/koword_bucket/icon_programs.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -122,7 +122,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="../assets/icon/icon_favorites.png"
+                                            src="https://storage.cloud.google.com/koword_bucket/icon_favorites.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -140,7 +140,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="../assets/icon/icon_documents.png"
+                                            src="https://storage.cloud.google.com/koword_bucket/icon_documents.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -158,7 +158,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="../assets/icon/icon_settings.png"
+                                            src="https://storage.cloud.google.com/koword_bucket/icon_settings.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -176,7 +176,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="../assets/icon/icon_find.png"
+                                            src="https://storage.cloud.google.com/koword_bucket/icon_find.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -194,7 +194,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="../assets/icon/icon_help.png"
+                                            src="https://storage.cloud.google.com/koword_bucket/icon_help.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -212,7 +212,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="../assets/icon/icon_run.png"
+                                            src="https://storage.cloud.google.com/koword_bucket/icon_run.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -237,7 +237,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="../assets/icon/icon_logOff.png"
+                                            src="https://storage.cloud.google.com/koword_bucket/icon_logOff.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -255,7 +255,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="../assets/icon/icon_shutdown.png"
+                                            src="https://storage.cloud.google.com/koword_bucket/icon_shutdown.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -269,13 +269,13 @@
                                     <div
                                         class="iconElem"
                                         id="iconExplorer"
-                                        @dblclick="openNaver()"
+                                        @click="openNaver()"
                                     >
                                         <div class="iconWrapper">
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('src/assets/icon/icon_explorer.png');
+                                                    background-image: url('https://storage.cloud.google.com/koword_bucket/icon_explorer.png');
                                                 "
                                             ></div>
                                         </div>
@@ -287,13 +287,13 @@
                                     <div
                                         class="iconElem"
                                         id="iconHancom"
-                                        @dblclick="openHancom()"
+                                        @click="openHancom()"
                                     >
                                         <div class="iconWrapper">
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('src/assets/icon/icon_hancom.png');
+                                                    background-image: url('https://storage.cloud.google.com/koword_bucket/icon_hancom.png');
                                                 "
                                             ></div>
                                         </div>
@@ -302,13 +302,13 @@
                                     <div
                                         class="iconElem"
                                         id="iconWordgame"
-                                        @dblclick="openLogin()"
+                                        @click="openLogin()"
                                     >
                                         <div class="iconWrapper">
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('src/assets/icon/icon_wordgame.png');
+                                                    background-image: url('https://storage.cloud.google.com/koword_bucket/icon_wordgame.png');
                                                 "
                                             ></div>
                                         </div>
@@ -317,13 +317,13 @@
                                     <div
                                         class="iconElem"
                                         id="iconLaundry"
-                                        @dblclick="openLaundry()"
+                                        @click="openLaundry()"
                                     >
                                         <div class="iconWrapper">
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('src/assets/icon/icon_laundry.png');
+                                                    background-image: url('https://storage.cloud.google.com/koword_bucket/icon_laundry.png');
                                                 "
                                             ></div>
                                         </div>
@@ -347,7 +347,7 @@
                                             margin-left: 7px;
                                             margin-right: 4px;
                                         "
-                                        src="../assets/icon/icon_windows.png"
+                                        src="https://storage.cloud.google.com/koword_bucket/icon_windows.png"
                                         alt=""
                                     />
                                     <span style="margin-right: 10px">
@@ -464,7 +464,7 @@ export default {
             this.isAccessError = true;
         },
         shutDownAll() {
-            const audio = new Audio("../src/assets/soundEffect/shutdown.wav");
+            const audio = new Audio("https://storage.cloud.google.com/koword_bucket/shutdown.wav");
             audio.volume = 0.6;
             audio.play();
             this.isShutdown = true;
@@ -484,7 +484,23 @@ export default {
         togglePower() {
             this.isPowerOn = !this.isPowerOn;
             this.isShutdown = false;
-        }
+        },
+        updatePannel() {
+            var pannelR = document.getElementById("monitorRightPannel");
+            var pannelL = document.getElementById("monitorLeftPannel");
+            var pannelT = document.getElementById("monitorTopPannel");
+            var rect = document
+                .getElementById("outerComputer")
+                .getBoundingClientRect();
+            pannelR.style.left = rect.right - 200 + "px";
+            pannelR.style.height = rect.height + "px";
+            pannelL.style.height = rect.height + "px";
+            pannelT.style.width = rect.width + "px";
+            pannelT.style.bottom = rect.height - 125 + "px";
+        },
+        removeScrollListener() {
+            window.addEventListener("resize", this.updatePannel);
+        },
     },
     setup() {
         let showHancom = ref(true);
@@ -504,19 +520,11 @@ export default {
         pannelL.style.height = rect.height + "px";
         pannelT.style.width = rect.width + "px";
         pannelT.style.bottom = rect.height - 125 + "px";
-        window.addEventListener("resize", () => {
-            var rect = document
-                .getElementById("outerComputer")
-                .getBoundingClientRect();
-            pannelR.style.left = rect.right - 200 + "px";
-            pannelR.style.height = rect.height + "px";
-            pannelL.style.height = rect.height + "px";
-            pannelT.style.width = rect.width + "px";
-            pannelT.style.bottom = rect.height - 125 + "px";
-        });
+        window.addEventListener("resize", this.updatePannel);
     },
     unmounted() {
         clearInterval();
+        this.removeScrollListener();
     },
 };
 </script>
@@ -524,7 +532,7 @@ export default {
 <style scoped>
 @font-face {
     font-family: "DungGeunMo";
-    src: url(../assets/font/DungGeunMo.ttf);
+    src: url(../assets/font/DungGeunMo.woff2);
 }
 .windowsWindow {
     width: 100%;
