@@ -36,17 +36,7 @@
         <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
             <div id="playerHeader" @mousedown="dragMouseDown">
                 <span style="margin-left: 10px">음악 재생기</span>
-                <img
-                    src="../assets/gamecomp/Xbutton.png"
-                    style="
-                        width: 22px;
-                        height: 22px;
-                        margin-right: 10px;
-                        cursor: pointer;
-                    "
-                    alt=""
-                    @click="closePlayer()"
-                />
+                <div style="width: 30px; height: 30px; text-align: center; text-justify: center; font-size: 20px; cursor: pointer;" @click="closePlayer">X</div>
             </div>
             <div id="audioPlayer">
                 <audio ref="playAudio" loop volume="0.6">
@@ -76,10 +66,16 @@
                             @click="playMusic()"
                             id="radioPlayBtn"
                         >
-                            <img
+                            <span
                                 class="btnMark"
-                                src="../assets/image/btn_play.png"
-                                alt=""
+                                style="
+                                    width: 0px;
+                                    height: 0px;
+                                    border-left: 15px solid rgb(0, 0, 0);
+                                    border-top: 7.5px solid transparent;
+                                    border-bottom: 7.5px solid transparent;
+                                    border-right: 0px solid transparent;
+                                "
                             />
                         </button>
                         <button
@@ -87,33 +83,74 @@
                             @click="pauseMusic()"
                             id="radioPauseBtn"
                         >
-                            <img
+                            <span
                                 class="btnMark"
-                                src="../assets/image/btn_pause.png"
-                                alt=""
+                                style="
+                                    box-sizing: border-box;
+                                    width: 15px;
+                                    height: 15px;
+                                    border-left: 5px solid rgb(0, 0, 0);
+                                    border-right: 5px solid rgb(0, 0, 0);
+                                "
                             />
                         </button>
                         <button
                             class="radioBtn"
                             @click="prevMusic()"
                             id="radioPrevBtn"
-                        >
-                            <img
-                                class="btnMark"
-                                src="../assets/image/btn_prev.png"
-                                alt=""
-                            />
+                        >   
+                            <span style="display: flex; justify-content: center; align-items: center;">
+                                <span
+                                    class="btnMark"
+                                    style="
+                                        box-sizing: border-box;
+                                        width: 3px;
+                                        height: 15px;
+                                        border-right: 3px solid rgb(0, 0, 0);
+                                        margin-right: -3px;
+                                    "
+                                />
+                                <span
+                                    class="btnMark"
+                                    style="
+                                        width: 0px;
+                                        height: 0px;
+                                        border-right: 12px solid rgb(0, 0, 0);
+                                        border-top: 7.5px solid transparent;
+                                        border-bottom: 7.5px solid transparent;
+                                        border-left: 0px solid transparent;
+                                    "
+                                />
+                            </span>
                         </button>
                         <button
                             class="radioBtn"
                             @click="nextMusic()"
                             id="radioNextBtn"
                         >
-                            <img
-                                class="btnMark"
-                                src="../assets/image/btn_next.png"
-                                alt=""
-                            />
+                            <span style="display: flex; justify-content: center; align-items: center;">
+                                <span
+                                    class="btnMark"
+                                    style="
+                                        width: 0px;
+                                        height: 0px;
+                                        border-left: 12px solid rgb(0, 0, 0);
+                                        border-top: 7.5px solid transparent;
+                                        border-bottom: 7.5px solid transparent;
+                                        border-right: 0px solid transparent;
+                                    "
+                                />
+                                <span
+                                    class="btnMark"
+                                    style="
+                                        box-sizing: border-box;
+                                        width: 3px;
+                                        height: 15px;
+                                        border-right: 3px solid rgb(0, 0, 0);
+                                        margin-left: -3px;
+                                    "
+                                />
+                            </span>
                         </button>
                     </div>
                 </div>
@@ -133,7 +170,7 @@
         <nav style="display: flex; justify-content: space-between">
             <div style="display: flex; align-items: center">
                 <img
-                    src="../assets/image/exit_Icon.svg"
+                    src="https://storage.cloud.google.com/koword_bucket/exit_Icon.svg"
                     alt=""
                     style="
                         width: 40px;
@@ -229,21 +266,21 @@
                 >
                     <img
                         v-show="isPlaying"
-                        src="../assets/image/playerIcon.png"
+                        src="https://storage.cloud.google.com/koword_bucket/playerIcon.png"
                         alt="cdP"
                         id="playerIcon"
                         @click="toggleMusicBox()"
                     />
                     <img
                         v-show="!isPlaying"
-                        src="../assets/image/playerIcon.png"
+                        src="https://storage.cloud.google.com/koword_bucket/playerIcon.png"
                         alt="cdP"
                         id="playerIconStop"
                         @click="toggleMusicBox()"
                     />
                 </div>
                 <img
-                    src="../assets/image/questionIcon.png"
+                    src="https://storage.cloud.google.com/koword_bucket/questionIcon.png"
                     alt=""
                     style="
                         width: 30px;
@@ -262,7 +299,7 @@
                 <div class="popupBar">
                     <p style="margin-left: 10px">설명</p>
                     <img
-                        src="../assets/gamecomp/Xbutton.png"
+                        src="https://storage.cloud.google.com/koword_bucket/btn_close.png"
                         style="
                             width: 22px;
                             height: 22px;
@@ -337,7 +374,7 @@
                                 ></canvas>
                                 <div v-show="!isStreaming">
                                     <img
-                                        src="../assets/gamecomp/userBlank.png"
+                                        src="https://storage.cloud.google.com/koword_bucket/userBlank.png"
                                         alt="Camera Off"
                                         style="width: 300px; height: 240px"
                                     />
@@ -622,9 +659,7 @@ export default {
             game_over: null,
             delete_board: 0,
             isStreaming: 1,
-            // Game End Pop
             openModal: false,
-            // musicPlayer
             openMusicPlayer: 0,
             game_mode: "WordCard",
             game_mode_text: "",
@@ -781,24 +816,11 @@ export default {
         connection.close();
     },
     async mounted() {
-        // const bgCanvas = this.$refs.bgCanvas;
-        // bgCanvas.setAttribute("width", window.innerWidth);
-        // bgCanvas.setAttribute("height", window.innerHeight);
-        // this.context = bgCanvas.getContext("2d");
-        // window.addEventListener("resize", () => {
-        //     bgCanvas.width = window.innerWidth;
-        //     bgCanvas.height = window.innerHeight;
-        // });
         document.addEventListener("click", (event) => {
-            const x = event.clientX;
-            const y = event.clientY;
-            this.drawLaser(x, y);
+            this.clickEvent(event);
         });
         document.body.style.background =
             "radial-gradient(circle at bottom, rgb(10, 10, 60) 0, black 100%)";
-        // test.inintOutputVideo();
-        // test.initInputVideo();
-        // test.processImage();
         connection = await new Promise((resolve, reject) => {
             if (window.location.protocol == "https:") {
                 ws_scheme = "wss://";
@@ -856,22 +878,17 @@ export default {
         connection.send(JSON.stringify(info_obj));
         // audio import
         const audio_message = new Audio(
-            "../src/assets/soundEffect/message.mp3"
+            "https://storage.cloud.google.com/koword_bucket/message.mp3"
         );
-        const audio_click = new Audio("../src/assets/soundEffect/click.mp3");
-        this.audio_start = new Audio("../src/assets/soundEffect/gameStart.mp3");
-        this.audio_home = new Audio("../src/assets/soundEffect/close.wav");
-        this.audio_page = new Audio("../src/assets/soundEffect/page.mp3");
-        this.audio_fail = new Audio("../src/assets/soundEffect/fail.mp3");
+        this.audio_start = new Audio("https://storage.cloud.google.com/koword_bucket/gameStart.mp3");
+        this.audio_home = new Audio("https://storage.cloud.google.com/koword_bucket/close.wav");
+        this.audio_page = new Audio("https://storage.cloud.google.com/koword_bucket/page.mp3");
+        this.audio_fail = new Audio("https://storage.cloud.google.com/koword_bucket/fail.mp3");
         audio_message.volume = 0.7;
-        audio_click.vloume = 0.5;
         this.audio_home.volume = 0.6;
         this.audio_start.volume = 0.6;
         this.audio_page.volume = 0.3;
         this.audio_fail.volume = 0.6;
-        document.addEventListener("click", function () {
-            audio_click.play();
-        });
         connection.onmessage = (event) => {
             // Get message back from websocket and display
             const message = document.createElement("div");
@@ -978,7 +995,7 @@ export default {
                             userid_str +
                             '_frame" style="width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 1.5rem">' +
                             userid_str +
-                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="../src/assets/gamecomp/userBlank.png" id="' +
+                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="https://storage.cloud.google.com/koword_bucket/userBlank.png" id="' +
                             userid_str +
                             '" style="width: 95%;"/></div></div>';
                         leftBox.insertAdjacentHTML("beforeend", newFrame);
@@ -1145,10 +1162,14 @@ export default {
         this.colored();
     },
     methods: {
+        clickEvent(event) {
+            const x = event.clientX;
+            const y = event.clientY;
+            this.drawLaser(x, y);
+            const audio = new Audio("../src/assets/soundEffect/click.mp3");
+            audio.play();
+        },
         drawLaser(x, y) {
-            // context.fillStyle = "yellow";
-            // context.fillRect(x - 5, y, 4, -10);
-            // context.fillRect(x + 1, y, 4, -10);
             const background = document.getElementById("body");
             const laser = document.createElement("span");
             laser.setAttribute("id", "laser");
@@ -1440,10 +1461,10 @@ export default {
         /** Play Music for button */
         playMusic() {
             this.isPlaying = 1;
-            document.getElementById("radioPlayBtn").style.backgroundImage =
-                "url('../src/assets/image/btn_insert.png')";
-            document.getElementById("radioPauseBtn").style.backgroundImage =
-                "url('../src/assets/image/btn_pop.png')";
+            document.getElementById("radioPlayBtn").style.backgroundColor =
+                "rgb(22, 255, 94)";
+            document.getElementById("radioPauseBtn").style.backgroundColor =
+                "rgba(22, 255, 94, 0)";
             this.musicPlay();
         },
         /** Play Music for button */
@@ -1456,10 +1477,10 @@ export default {
         },
         pauseMusic() {
             this.isPlaying = 0;
-            document.getElementById("radioPlayBtn").style.backgroundImage =
-                "url('../src/assets/image/btn_pop.png')";
-            document.getElementById("radioPauseBtn").style.backgroundImage =
-                "url('../src/assets/image/btn_insert.png')";
+            document.getElementById("radioPlayBtn").style.backgroundColor =
+                "rgba(22, 255, 94, 0)";
+            document.getElementById("radioPauseBtn").style.backgroundColor =
+                "rgb(22, 255, 94)";
             this.musicPause();
         },
         reloadMusic() {
@@ -1489,7 +1510,7 @@ export default {
             const audio = this.$refs.playAudio;
             const gradientValue = 100 / event.target.max;
             audio.volume = (gradientValue * event.target.value) / 100;
-            event.target.style.background = `linear-gradient(to right, #0054e6 0%, #0054e6 ${
+            event.target.style.background = `linear-gradient(to right, rgb(22, 255, 94) 0%, rgb(22, 255, 94) ${
                 gradientValue * event.target.value
             }%, rgb(32, 32, 32) ${
                 gradientValue * event.target.value
@@ -1609,7 +1630,7 @@ export default {
 <style scoped>
 @font-face {
     font-family: "Dunggeunmo";
-    src: url("../assets/font/DungGeunMo.ttf");
+    src: url("../src/assets/font/DungGeunMo.woff2");
 }
 
 button {
@@ -1893,7 +1914,7 @@ button {
 /*############################### Music Player */
 @font-face {
     font-family: "retroFont";
-    src: url("../assets/font/digital.ttf") format("truetype");
+    src: url("../src/assets/font/digital.woff2");
 }
 @keyframes scrollText {
     from {
@@ -1916,40 +1937,26 @@ button {
     position: absolute;
     z-index: 10;
     text-align: center;
-    background: linear-gradient(
-        351.27deg,
-        #ffffff -854.98%,
-        #eeeeee -854.98%,
-        #cacaca -91.55%
-    );
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
+    background: rgba(10, 225, 80, 0.3);
     right: 150px;
     top: 5%;
     width: 20vw;
     min-width: 300px;
     z-index: 30;
+    border: 2px solid rgb(22, 255, 94);
 }
 
 #playerHeader {
+    box-sizing: border-box;
     width: 100%;
     height: 30px;
     cursor: move;
     z-index: 10;
-    background: linear-gradient(
-        351.27deg,
-        #ffffff -854.98%,
-        #eeeeee -854.98%,
-        #cacaca -91.55%
-    );
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), 1px 1px 0px #000000,
-        inset 3px 3px 0px #ffffff;
-    border-width: 3px 3px 0px 3px;
-    border-style: solid;
-    border-color: #000000;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border: 2px solid rgb(22, 255, 94);
+    color: rgb(22, 255, 94);
 }
 
 .flowBoxWrapper {
@@ -1982,10 +1989,6 @@ button {
 #audioPlayer {
     width: 100%;
     height: 210px;
-    background: linear-gradient(180deg, #c6c6c6 -15.29%, #ffffff 116.66%);
-    border-width: 3px;
-    border-style: solid;
-    border-color: #000000;
 }
 #radioPannel {
     display: flex;
@@ -1995,19 +1998,17 @@ button {
     height: 30%;
     margin: 0 auto;
     margin-top: 20px;
-    background-image: url("../assets/image/radio_pannel.png");
-    background-size: cover;
+    background: rgba(0, 0, 0, 0.7);
 }
 #radioBtnBox {
     width: 94%;
     height: 25%;
     margin: 0 auto;
     margin-top: 15px;
-    background-image: url("../assets/image/radio_btnBox.png");
-    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 2px solid rgb(22, 255, 94);
 }
 #radioVolume {
     display: flex;
@@ -2018,8 +2019,7 @@ button {
     min-height: 15px;
     margin: 0 auto;
     margin-top: 15px;
-    background-image: url("../assets/image/radio_volume.png");
-    background-size: cover;
+    border: 2px solid rgb(22, 255, 94);
 }
 .radioBtn {
     width: 24%;
@@ -2027,15 +2027,15 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url("../assets/image/btn_pop.png");
-    background-size: cover;
+    border: 2px solid rgb(22, 255, 94);
+    background-color: transparent;
 }
 .radioBtnWrapper {
     width: 99%;
     height: 85%;
     margin-bottom: 1%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
 }
 
@@ -2045,15 +2045,16 @@ button {
     border-radius: 1px; /* 슬라이더 모서리 */
     float: left;
     outline: none;
-    height: 70%;
+    height: 100%;
     cursor: pointer;
     background: linear-gradient(
         to right,
-        #0054e6 0%,
-        #0054e6 60%,
+        rgb(22, 255, 94) 0%,
+        rgb(22, 255, 94) 60%,
         RGB(32, 32, 32) 60%,
         RGB(32, 32, 32) 100%
     );
+    box-shadow: 0 0 15px rgb(22, 255, 94);
     outline: none; /* 슬라이더 테두리 없이 */
 }
 
@@ -2063,7 +2064,7 @@ button {
     width: 25px; /* 슬라이더 핸들 길이 */
     height: 29.5px; /* 슬라이더 핸들 높이 */
     border-radius: 0%; /* 핸들 모양을 원모양으로 만들기 위함 */
-    background: url("../assets/image/slider_btn.png"); /* 슬라이더 핸들 색상 */
+    background: rgb(255, 120, 0); /* 슬라이더 핸들 색상 */
     cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
 }
 #volume-slider::-moz-ramge-thumb {
@@ -2072,7 +2073,7 @@ button {
     width: 25px; /* 슬라이더 핸들 길이 */
     height: 29.5px; /* 슬라이더 핸들 높이 */
     border-radius: 0%; /* 핸들 모양을 원모양으로 만들기 위함 */
-    background: url("../assets/image/slider_btn.png"); /* 슬라이더 핸들 색상 */
+    background: rgb(255, 120, 0); /* 슬라이더 핸들 색상 */
     cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
 }
 @keyframes rotation {
@@ -2167,7 +2168,8 @@ button {
     display: none;
 }
 .btnMark {
-    height: 30%;
+    height: 15px;
+    width: 15px;
 }
 span {
     font-size: 1.2rem;

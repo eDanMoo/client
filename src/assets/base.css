@@ -4,7 +4,6 @@ body {
   min-height: 370px;
   width: 100vw;
   min-width: 370px;
-  transition: color 0.5s, background-color 0.5s;
   line-height: 1.6;
   font-family: 'DungGeunMo';
   font-size: 15px;
@@ -13,6 +12,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   overflow: scroll;
+  background-color: rgb(10, 45, 10);
 }
 body::-webkit-scrollbar{
   display: none;

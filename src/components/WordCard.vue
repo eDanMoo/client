@@ -160,11 +160,6 @@ export default {
 </script>
 
 <style scoped>
-@font-face {
-    font-family: "tests";
-    src: url(../fonts/BMYEONSUNG_ttf.ttf);
-}
-
 .gameBackgroud {
     min-width: 700px;
     height: 700px;
@@ -195,10 +190,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-
-    /* background-image: url("../assets/gamecomp/rectangle1.png");
-    background-size: cover; */
-    /* mono 100 */
     background: #f6f3f3;
     box-shadow: inset -2px -2px 0px #262626, inset 5px 50px 50px #f0f0f0,
         inset -4px -4px 0px #7e7e7e;
