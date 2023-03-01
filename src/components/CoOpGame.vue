@@ -10,7 +10,7 @@ import { onMounted, watch } from "vue";
 export default {
     props: {
         msg: {},
-        // delete_board: Number,
+        delete_board: Number,
     },
 
     setup(props) {
@@ -60,14 +60,18 @@ export default {
       })
 
 
-      // watch( () =>props.delete_board, (newValue)=> {
-      //   console.log('발동')
-      //   if (newValue == 1) {
-      //         wordSet = []
-      //         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      //         // clearInterval(drawWord);
-      //       }
-      // } )
+      watch( () =>props.delete_board, (newValue)=> {
+
+        if (newValue == 1) {
+
+            for (var key in wordSet) {
+              delete wordSet[key];
+            }
+
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+              // clearInterval(drawWord);
+            }
+      } )
 
 
             const COLS = 11; // size
@@ -85,7 +89,7 @@ export default {
             // let blockImage = new Image();
             // blockImage.src = "https://i.imgur.com/zdluTLl.png"
 
-            const wordSet = [];
+            const wordSet = {};
             const colorSet = [
               ['#FFF548', '#3C1A5B'],
               ['#CED46A', '#07553B'],
