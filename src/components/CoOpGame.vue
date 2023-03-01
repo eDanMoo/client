@@ -10,7 +10,7 @@ import { onMounted, watch } from "vue";
 export default {
     props: {
         msg: {},
-        // delete_board: Number,
+        delete_board: Number,
     },
 
     setup(props) {
@@ -28,7 +28,7 @@ export default {
               let fall = props.msg.fall
               let current = -1;
               let destination = current + fall;
-              let color = colorSet[Math.floor(Math.random() * 6)]
+              let color = colorSet[Math.floor(Math.random() * colorSet.length)]
               
 
             storeInWordSet(word, left, length, current, destination, color)
@@ -60,14 +60,16 @@ export default {
       })
 
 
-      // watch( () =>props.delete_board, (newValue)=> {
-      //   console.log('발동')
-      //   if (newValue == 1) {
-      //         wordSet = []
-      //         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      //         // clearInterval(drawWord);
-      //       }
-      // } )
+      watch( () =>props.delete_board, (newValue)=> {
+
+        if (newValue == 1) {
+
+            wordSet = {};
+
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+              // clearInterval(drawWord);
+            }
+      } )
 
 
             const COLS = 11; // size
@@ -85,14 +87,22 @@ export default {
             // let blockImage = new Image();
             // blockImage.src = "https://i.imgur.com/zdluTLl.png"
 
-            const wordSet = [];
+            let wordSet = {};
             const colorSet = [
-              ['#FFF548', '#3C1A5B'],
-              ['#CED46A', '#07553B'],
-              ['#FFDFDE', '#6A7BA2'],
-              ['#ADEFD1', '#00203F'],
-              ['#97BC62', '#2C5F2D'],
-              ['#9CC3D5', '#0063B2'],
+              // ['#FFF548', '#3C1A5B'],
+              // ['#CED46A', '#07553B'],
+              // ['#FFDFDE', '#6A7BA2'],
+              // ['#ADEFD1', '#00203F'],
+              // ['#97BC62', '#2C5F2D'], 
+              // ['#9CC3D5', '#0063B2'],
+
+              ['#38FF12'],
+              ['#FF00E3'],
+              ['#FFF100'],
+              ['#00F5FB'],
+              ['#FFBF00'], 
+              ['#006FFF'],
+              ['#9600FF'],
             ];
               
 
@@ -108,8 +118,8 @@ export default {
                 let current = wordSet[wordSetKey[i]].current
                 let destination = wordSet[wordSetKey[i]].destination
                 let word = wordSetKey[i]
-                let colorBackground = wordSet[wordSetKey[i]].color[0];
-                let colorText = wordSet[wordSetKey[i]].color[1];
+                let colorBackground = wordSet[wordSetKey[i]].color;
+                // let colorText = wordSet[wordSetKey[i]].color[1];
 
                 
                 let x = 0;
