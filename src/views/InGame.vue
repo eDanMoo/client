@@ -1014,7 +1014,7 @@ export default {
                 // const sejong_img = document.getElementById("initImage");
                 game_start.style.display = "none";
                 // sejong_img.style.display = "none";
-                game_box.style.position = "position";
+                game_box.style.position = "position"; 
             } else if (event_data.type == "game_ing") {
                 connection.close();
                 alert("이미 진행중인 게임입니다.");
@@ -1046,7 +1046,7 @@ export default {
                 }
             } else if (event_data.type == "finish") {
                 this.game_over = event_data;
-                this.modalOpen();
+                // this.modalOpen();
                 this.delete_board = 1;
                 this.isGameStarted = 0;
                 this.game_time = null;
