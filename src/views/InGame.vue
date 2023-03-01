@@ -1239,7 +1239,7 @@ export default {
         },
         /** 필요시에만 컴포넌트 import */
         async loadComponent(game_mode) {
-            this.changeGame(game_mode);
+            await this.changeGame(game_mode);
             const jsonData = JSON.stringify({
                 type: "change_game",
                 game_mode: this.game_mode_text,
@@ -1247,11 +1247,16 @@ export default {
             });
             connection.send(jsonData);
         },
-        /** 선택한 게임 모드에 따라 컴포넌트 변환  */
-        async changeGame(game_mode) {
+        /** 실제로 컴포넌트 가져오기 */
+        async getComponent(game_mode) {
+            console.log(game_mode);
             const component = await defineAsyncComponent(() =>
                 import(`../components/${game_mode}.vue`)
             );
+            return component;
+        },
+        /** 선택한 게임 모드에 따라 컴포넌트 변환  */
+        async changeGame(game_mode) {
             if (game_mode == "WordCard") {
                 this.isComp = true;
                 this.isCoop = false;
@@ -1259,9 +1264,9 @@ export default {
                 this.isComp = false;
                 this.isCoop = true;
             }
-            this.game_mode = shallowRef(component);
             this.game_mode_text = game_mode;
             this.game_selected = 1;
+            this.game_mode = shallowRef(await this.getComponent(game_mode));
         },
         /** 유저가 웹캡이 있는지 체크 */
         async checkWebcam() {
