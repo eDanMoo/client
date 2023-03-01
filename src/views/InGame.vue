@@ -1078,31 +1078,32 @@ export default {
 
                 this.isGameStarted = 1;
 
-                const log_board = document.getElementById("logBoard");
+                if (event_data.remWords.length > 0) {
+                    const log_board = document.getElementById("logBoard");
+                    const log_tab = document.createElement("div");
+                    const span_user_id = document.createElement("span");
+                    const span_user_input = document.createElement("span");
+                    const span_remove_word = document.createElement("span");
 
-                const log_tab = document.createElement("div");
-                const span_user_id = document.createElement("span");
-                const span_user_input = document.createElement("span");
-                const span_remove_word = document.createElement("span");
+                    log_tab.style.display = "flex";
+                    log_tab.style.justifyContent = "space-between";
+                    log_tab.style.margin = "0 2% 0 2%";
+                    log_tab.id = "log_tab";
+                    span_remove_word.style.textAlign = "right";
+                    span_remove_word.style.width = "240px";
+                    span_remove_word.style.wordBreak = "keep-all";
 
-                log_tab.style.display = "flex";
-                log_tab.style.justifyContent = "space-between";
-                log_tab.style.margin = "0 2% 0 2%";
-                log_tab.id = "log_tab";
-                span_remove_word.style.textAlign = "right";
-                span_remove_word.style.width = "240px";
-                span_remove_word.style.wordBreak = "keep-all";
+                    span_user_id.innerText = event_data.user;
+                    span_user_input.innerText = event_data.answer;
 
-                span_user_id.innerText = event_data.user;
-                span_user_input.innerText = event_data.answer;
-
-                event_data.remWords.forEach((element) => {
-                    span_remove_word.innerHTML += element + " ";
-                });
-                log_tab.appendChild(span_user_input);
-                log_tab.appendChild(span_remove_word);
-                log_board.appendChild(log_tab);
-                log_board.scrollTop = 9999999;
+                    event_data.remWords.forEach((element) => {
+                        span_remove_word.innerHTML += element + " ";
+                    });
+                    log_tab.appendChild(span_user_input);
+                    log_tab.appendChild(span_remove_word);
+                    log_board.appendChild(log_tab);
+                    log_board.scrollTop = 9999999;
+                }
             } else if (event_data.type == "game_start") {
                 console.log(event_data.game_mode);
                 if (event_data.game_mode == "CoOpGame") {
