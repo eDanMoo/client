@@ -411,8 +411,8 @@
                     <div class="innerWindow">
                         <div class="barCover">
                             <div class="windowBar">
-                                <span>기록</span
-                                ><button
+                                <span>기 록</span>
+                                <button
                                     class="minBtn"
                                     @click="LogVisible = !LogVisible"
                                     v-show="LogVisible"
@@ -899,7 +899,9 @@ export default {
                     scoreBoard.appendChild(scoreTab);
                 }
                 if (userid_str == current_user) {
-                    0;
+                    if (event_data.game_mode != "") {
+                        this.changeGame(event_data.game_mode);
+                    }
                 } else {
                     const subFrame = document.getElementById(userid_str);
                     //console.log(subFrame);
@@ -976,33 +978,32 @@ export default {
 
                 this.isGameStarted = 1;
 
-                const log_board = document.getElementById("logBoard");
+                if (event_data.remWords.length > 0) {
+                    const log_board = document.getElementById("logBoard");
+                    const log_tab = document.createElement("div");
+                    const span_user_id = document.createElement("span");
+                    const span_user_input = document.createElement("span");
+                    const span_remove_word = document.createElement("span");
 
-                const log_tab = document.createElement("div");
-                const span_user_id = document.createElement("span");
-                const span_user_input = document.createElement("span");
-                const span_remove_word = document.createElement("span");
+                    log_tab.style.display = "flex";
+                    log_tab.style.justifyContent = "space-between";
+                    log_tab.style.margin = "0 2% 0 2%";
+                    log_tab.id = "log_tab";
+                    span_remove_word.style.textAlign = "right";
+                    span_remove_word.style.width = "240px";
+                    span_remove_word.style.wordBreak = "keep-all";
 
-                log_tab.style.display = "flex";
-                log_tab.style.justifyContent = "space-between";
-                log_tab.style.margin = "0 2% 0 2%";
-                log_tab.id = "log_tab";
-                span_remove_word.style.textAlign = "right";
-                span_remove_word.style.width = "250px";
-                span_remove_word.style.wordBreak = "keep-all";
+                    span_user_id.innerText = event_data.user;
+                    span_user_input.innerText = event_data.answer;
 
-                span_user_id.innerText = event_data.user;
-                span_user_input.innerText = event_data.answer;
-
-                event_data.remWords.forEach((element) => {
-                    span_remove_word.innerHTML += element + " ";
-                });
-
-                //log_tab.appendChild(span_user_id);
-                log_tab.appendChild(span_user_input);
-                log_tab.appendChild(span_remove_word);
-                log_board.appendChild(log_tab);
-                log_board.scrollTop = 9999999;
+                    event_data.remWords.forEach((element) => {
+                        span_remove_word.innerHTML += element + " ";
+                    });
+                    log_tab.appendChild(span_user_input);
+                    log_tab.appendChild(span_remove_word);
+                    log_board.appendChild(log_tab);
+                    log_board.scrollTop = 9999999;
+                }
             } else if (event_data.type == "game_start") {
                 console.log(event_data.game_mode);
                 if (event_data.game_mode == "CoOpGame") {
@@ -1062,7 +1063,8 @@ export default {
                 if (current_user != userid_str) {
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
-                        subFrame.style.display = "none";
+                        subFrame.src =
+                            "https://storage.cloud.google.com/koword_bucket/userBlank.png";
                     }
                 }
             } else if (event_data.type == "video_on") {
