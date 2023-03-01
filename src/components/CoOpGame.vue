@@ -2,33 +2,6 @@
     <div>
         <canvas id="board" class="game-board"></canvas>
     </div>
-
-    <!-- 일단 복붙해옴 -->
-    <!-- <div class="answerBox">
-                        <input
-                            type="text"
-                            id="input_answer"
-                            style="width: 250px; font-size: 2rem"
-                        />
-                        <button
-                            id="submit_answer"
-                            style="margin-left: 10px; font-size: 2rem"
-                        >
-                            제출
-                        </button>
-                        <button
-                            id="submit_answer2"
-                            style="margin-left: 10px; font-size: 2rem"
-                        >
-                            제출2
-                        </button>
-                        <button
-                            id="game_start"
-                            @click="init()"
-                        >
-                            게임 시작
-                        </button>
-  </div> -->
 </template>
 
 <script>
@@ -41,56 +14,53 @@ export default {
 
     setup(props) {
         onMounted(() => {
-            // 나중에 연결하면 살리기
             watch(
                 () => props.msg,
-                () => {
-                    console.log(props.msg);
+                async () => {
                     if (props.msg.type == "next") {
                         let status = props.msg.status;
                         if (status == "continue") {
                             let word = props.msg.word;
                             let left = props.msg.left;
                             let length = props.msg.length;
-                            let fall = props.msg.fall;
 
-                            storeInWordSet(word, left, length, -1);
-                            dropWord(word, fall);
+                            let fall = props.msg.fall;
+                            let current = -1;
+                            let destination = current + fall;
+
+                            storeInWordSet(
+                                word,
+                                left,
+                                length,
+                                current,
+                                destination
+                            );
                         }
                     } else if (props.msg.type == "check") {
-                        let removeWords = props.msg.removeWords;
-                        for (i = 0; i < removeWords.length; i++) {
-                            removeWord(removeWords[i]);
+                        let remWords = props.msg.remWords;
+                        let i = 0;
+
+                        for (i = 0; i < remWords.length; i++) {
+                            let word = remWords[i];
+                            removeWordInWordSet(word);
                         }
+
                         let moveInfo = props.msg.moveInfo;
                         for (i = 0; i < moveInfo.length; i++) {
-                            let newword = moveInfo[i][0];
+                            let word = moveInfo[i][0];
                             let fall = moveInfo[i][1];
-                            dropWord(newword, fall);
+                            console.log(wordSet[word]);
+                            let destination = wordSet[word].destination;
+                            await setDestination(word, destination, fall);
+                            console.log("moveInfo : ", word, fall);
 
-                            // 떨어지는 글자 사라지게 구현하기
+                            // 이게 동시에 안되나?
                         }
                     }
                 }
             );
 
-            //단어 입력하면 삭제시키기
-            // var inputAnswer = -1
-
-            // button.addEventListener('click', function(event) {
-            //   console.log("단어 입력 함수 동작함")
-            //   let a = input.value;
-            //   console.log("입력값 :", a)
-            //   let b = Object.keys(wordSet)
-            //   for (i=0; i < b.length; i++) {
-
-            //     if (b[i] == a && wordSet[b[i]].height != -1) {
-            //       removeWord(a);
-            //     }
-            //     inputAnswer = a
-            //   }
-            // }
-            // )
+            // 초기화-----------------------------------------------------------------
 
             //점수채우기
 
@@ -106,77 +76,153 @@ export default {
             ctx.canvas.height = ROWS * BLOCK_SIZE;
             // ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
-            const wordSet = {};
+            //이미지 집어넣기
+            // let blockImage = new Image();
+            // blockImage.src = "https://i.imgur.com/zdluTLl.png"
+
+            const wordSet = [];
+            let stopWord = []; // 이름 고칠 것
+            const InputWord = []; // 안쓸거면 지우기
             // 초기화-----------------------------------------------------------------
+            setInterval(() => {
+                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                let i;
+                let wordSetKey = Object.keys(wordSet);
+                for (i = 0; i < wordSetKey.length; i++) {
+                    let left = wordSet[wordSetKey[i]].left;
+                    let length = wordSet[wordSetKey[i]].length;
+                    let current = wordSet[wordSetKey[i]].current;
+                    let destination = wordSet[wordSetKey[i]].destination;
+                    let word = wordSetKey[i];
 
-            // -----------------------------------------> 단어 drop 함수
-            function dropWord(word, fall) {
-                // 단어 받기
-                console.log(wordSet);
-                const wordBlock = findInfoByWord(word);
-
-                let left = wordBlock.left;
-                let length = wordBlock.length;
-                let height = wordBlock.height;
-
-                // 높이 0일때, 주어졌을 때 구분하기
-
-                // 단어 옮기기
-                let z = height;
-                let x = 0;
-                function render() {
+                    let x = 0;
                     for (x = left; x < left + length; x++) {
-                        ctx.fillStyle = "gray";
-
-                        // 이부분 삽입----------------------
-                        if (word == inputAnswer) {
-                            for (x = left; x < left + length; x++) {
-                                ctx.clearRect(
-                                    x * BLOCK_SIZE,
-                                    (z - 0.1) * BLOCK_SIZE,
-                                    1 * BLOCK_SIZE,
-                                    1 * BLOCK_SIZE
-                                );
-                            }
-                            removeWordInWordSet(word);
-                            inputAnswer = -1;
-
-                            // height 새로 저장하고, removeWord로 지우기
-                            return;
-                        }
-                        // 이부분 삽입 ----------------------
-
                         // 본체
+                        ctx.fillStyle = "gray";
                         ctx.fillRect(
                             x * BLOCK_SIZE,
-                            z * BLOCK_SIZE,
+                            current * BLOCK_SIZE,
                             1 * BLOCK_SIZE,
                             1 * BLOCK_SIZE
                         );
+                        // // ctx.drawImage(blockImage, x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+
+                        // // ctx.strokeRect((x+0.05)*BLOCK_SIZE, z*BLOCK_SIZE, 0.90*BLOCK_SIZE, 0.95*BLOCK_SIZE);
 
                         // 각종 그림자
+
                         ctx.clearRect(
                             x * BLOCK_SIZE,
-                            z * BLOCK_SIZE,
+                            current * BLOCK_SIZE,
                             0.05 * BLOCK_SIZE,
                             0.9 * BLOCK_SIZE
                         );
                         ctx.clearRect(
                             x * BLOCK_SIZE,
-                            z * BLOCK_SIZE,
+                            current * BLOCK_SIZE,
                             0.9 * BLOCK_SIZE,
                             0.05 * BLOCK_SIZE
                         );
                         ctx.fillStyle = "black";
                         ctx.fillRect(
                             x * BLOCK_SIZE + 0.9 * BLOCK_SIZE,
-                            z * BLOCK_SIZE,
+                            current * BLOCK_SIZE,
+                            0.05 * BLOCK_SIZE,
+                            0.9 * BLOCK_SIZE
+                        );
+
+                        ctx.fillRect(
+                            x * BLOCK_SIZE,
+                            current * BLOCK_SIZE + 0.9 * BLOCK_SIZE,
+                            0.9 * BLOCK_SIZE,
+                            0.05 * BLOCK_SIZE
+                        );
+                        // 텍스트
+                        ctx.fillStyle = "white";
+                        ctx.font = `${(48 / 63) * BLOCK_SIZE}px serif`;
+                        ctx.fillText(
+                            word[x - left],
+                            (x + 0.1) * BLOCK_SIZE,
+                            (current + 1 - 0.2) * BLOCK_SIZE
+                        );
+                    }
+                    if (current < destination) {
+                        wordSet[wordSetKey[i]].current = current + 0.1;
+                    }
+                }
+            }, 5);
+
+            // -----------------------------------------> 단어 drop 함수
+            function dropWord(word) {
+                // 단어 받기
+                const wordBlock = wordSet[word];
+
+                let left = wordBlock.left;
+                let length = wordBlock.length;
+                let current = wordBlock.current;
+                let destination = wordBlock.destination;
+
+                // 단어 옮기기
+                let x = 0;
+
+                // 윤곽선 넣는다면?
+                // let randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+                // ctx.strokeStyle = `${randomColor}`
+                // ctx.lineWidth = 5;
+
+                function render() {
+                    for (x = left; x < left + length; x++) {
+                        ctx.fillStyle = "gray";
+
+                        // 이부분 삽입----------------------
+                        // if (stopWord.includes(word)) {
+                        //   ctx.fillRect(x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+                        //   delete startWord[word];
+                        //   console.log(`${word} 중간에 터짐`)
+                        //   return
+                        // }
+
+                        // 이부분 삽입 ----------------------
+
+                        let checkWordInWordSet = word in wordSet;
+                        // if (checkWordInWordSet) {
+                        //   ctx.clearRect(x*BLOCK_SIZE, current *BLOCK_SIZE, length * BLOCK_SIZE, BLOCK_SIZE);
+                        //   return
+                        // }
+
+                        // 본체
+                        ctx.fillRect(
+                            x * BLOCK_SIZE,
+                            current * BLOCK_SIZE,
+                            1 * BLOCK_SIZE,
+                            1 * BLOCK_SIZE
+                        );
+                        // ctx.drawImage(blockImage, x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+                        // ctx.strokeRect((x+0.05)*BLOCK_SIZE, z*BLOCK_SIZE, 0.90*BLOCK_SIZE, 0.95*BLOCK_SIZE);
+
+                        // 각종 그림자
+                        ctx.clearRect(
+                            x * BLOCK_SIZE,
+                            current * BLOCK_SIZE,
+                            0.05 * BLOCK_SIZE,
+                            0.9 * BLOCK_SIZE
+                        );
+                        ctx.clearRect(
+                            x * BLOCK_SIZE,
+                            current * BLOCK_SIZE,
+                            0.9 * BLOCK_SIZE,
+                            0.05 * BLOCK_SIZE
+                        );
+                        ctx.fillStyle = "black";
+                        ctx.fillRect(
+                            x * BLOCK_SIZE + 0.9 * BLOCK_SIZE,
+                            current * BLOCK_SIZE,
                             0.05 * BLOCK_SIZE,
                             0.9 * BLOCK_SIZE
                         );
                         ctx.fillRect(
                             x * BLOCK_SIZE,
-                            z * BLOCK_SIZE + 0.9 * BLOCK_SIZE,
+                            current * BLOCK_SIZE + 0.9 * BLOCK_SIZE,
                             0.9 * BLOCK_SIZE,
                             0.05 * BLOCK_SIZE
                         );
@@ -187,54 +233,76 @@ export default {
                         ctx.fillText(
                             word[x - left],
                             (x + 0.1) * BLOCK_SIZE,
-                            (z + 1 - 0.2) * BLOCK_SIZE
+                            (current + 1 - 0.2) * BLOCK_SIZE
                         );
 
                         // 내려온 흔적 지우기
-                        if (z < wordBlock.height + 1) {
+                        if (current < wordBlock.current + 1) {
                             ctx.clearRect(
                                 x * BLOCK_SIZE,
-                                wordBlock.height * BLOCK_SIZE,
+                                current * BLOCK_SIZE,
                                 1 * BLOCK_SIZE,
-                                (z - wordBlock.height) * BLOCK_SIZE
+                                (current - wordBlock.height) * BLOCK_SIZE
                             );
                         } else {
                             ctx.clearRect(
                                 x * BLOCK_SIZE,
-                                (z - 1) * BLOCK_SIZE,
+                                (current - 1) * BLOCK_SIZE,
                                 1 * BLOCK_SIZE,
                                 1 * BLOCK_SIZE
                             );
                         }
                     }
 
-                    z += 0.1; // 내려오는 속도
+                    current += 0.05; // 내려오는 속도
 
                     stop = requestAnimationFrame(render);
 
-                    if (z > fall + height) {
+                    if (current > destination) {
                         cancelAnimationFrame(stop);
-
-                        // height 계산하기
-                        let height2 = height + fall;
-                        // 옮긴 단어 저장하기
-                        storeInWordSet(word, left, length, height2);
+                        wordSet[word].current = current;
                     }
                 }
                 render();
             }
             // <----------------------------------------->단어 drop 함수
 
+            function setDestination(word, destination, fall) {
+                wordSet[word].destination = destination + fall;
+            }
+
             // -----------------------------------------> 단어 목록에 단어 저장하기 함수
-            function storeInWordSet(word, left, length, height) {
+            function storeInWordSet(word, left, length, current, destination) {
                 let key = word;
                 wordSet[key] = {
+                    left: left,
+                    length: length,
+                    current: current,
+                    destination: destination,
+                };
+            }
+            // <----------------------------------------- 단어 목록에 단어 저장하기 함수
+
+            // 새로운 함수
+
+            function storeInStartWord(word, left, length, height) {
+                let key = word;
+                startWord[key] = {
+                    left: left,
+                    length: length,
+                    height: height,
+                };
+                console.log(`moveinfo에서 ${word} 저장 끝`);
+            }
+
+            function storeInEndWord(word, left, length, height) {
+                let key = word;
+                endWord[key] = {
                     left: left,
                     length: length,
                     height: height,
                 };
             }
-            // <----------------------------------------- 단어 목록에 단어 저장하기 함수
 
             // -----------------------------------------> 단어 목록에서 단어 삭제하기 함수
             function removeWordInWordSet(word) {
@@ -245,52 +313,23 @@ export default {
             // -----------------------------------------> 단어로 필요한 정보 찾기
             function findInfoByWord(word) {
                 return wordSet[word];
-                // left = wordblock.left
-                // length = wordblock.length
-                // height = wordblock.height
             }
             // <----------------------------------------- 단어로 필요한 정보 찾기
 
             // -----------------------------------------> 단어블록 지우기 함수
             function removeWord(word) {
-                // 필요한 정보(height, left, length) 찾기
-
                 let left = wordSet[word].left;
                 let length = wordSet[word].length;
-                let height = wordSet[word].height;
+                let current = wordSet[word].current;
                 // 화면 지우기
                 ctx.clearRect(
                     left * BLOCK_SIZE,
-                    height * BLOCK_SIZE,
+                    current * BLOCK_SIZE,
                     length * BLOCK_SIZE,
                     BLOCK_SIZE
                 );
-
-                // 단어 모음집에서 word 지우기
-                removeWordInWordSet(word);
             }
             // <----------------------------------------- 단어블록 지우기 함수
-
-            // 테스트 공간--------------------------------------
-
-            //단어 입력하면 삭제시키기
-            var inputAnswer = -1;
-            // const input = document.getElementById('input_answer');
-            // const button = document.getElementById('submit_answer');
-            // button.addEventListener('click', function(event) {
-            //   console.log("단어 입력 함수 동작함")
-            //   let a = input.value;
-            //   console.log("입력값 :", a)
-            //   let b = Object.keys(wordSet)
-            //   for (i=0; i < b.length; i++) {
-
-            //     if (b[i] == a && wordSet[b[i]].height != -1) {
-            //       removeWord(a);
-            //     }
-            //     inputAnswer = a
-            //   }
-            // }
-            // )
         });
 
         return {};

@@ -9,16 +9,15 @@
                 <div class="modal_cover">
                     <div class="ranking padding">
                         <span><b>순위</b></span
-                        ><br /><br />
-
+                        ><br />
                         <div
                             v-for="(user, index) in users"
                             :data-index="index"
                             :key="user.id"
                             style="font-size: 1.3rem"
                         >
-                            |점수: {{ user[2] }}, ID:{{ user[0] }}, 등:
-                            {{ user[1] }} |
+                            | {{ user[0] }}등: {{ user[1] }}, 점수:
+                            {{ user[2] }} |
                         </div>
                     </div>
 
@@ -39,15 +38,18 @@
                                     v-for="(word, index) in words[2]"
                                     :data-index="index"
                                     :key="word"
-                                    style="display: inline"
+                                    style="
+                                        display: inline;
+                                        word-break: keep-all;
+                                    "
                                 >
-                                    {{ word }}&nbsp,
+                                    {{ word }}&nbsp
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="closeButton padding">
-                        <div @click="closeModal">
+                        <div @click="closeModal" style="z-index: 50">
                             <span><b>닫기</b></span>
                         </div>
                     </div>
@@ -55,9 +57,9 @@
             </div>
             <div class="whiteBox_footer padding">
                 <div>
-                    <b>버전</b>
+                    <b>버전 1.0</b>
                 </div>
-                <div><b>정글</b> 2022-2023</div>
+                <div><b>정글</b> 2022.10-2023.3</div>
             </div>
         </div>
         <div class="blueScreen"></div>
@@ -136,8 +138,8 @@ export default {
 
 .blueScreen {
     position: absolute;
-    width: 200%;
-    height: 200%;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 170, 1);
     z-index: 99;
 }
