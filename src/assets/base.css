@@ -17,3 +17,13 @@ body {
 body::-webkit-scrollbar{
   display: none;
 }
+
+@font-face {
+  font-family: "retroFont";
+  src: url("./font/digital.woff2");
+}
+
+@font-face {
+  font-family: "DungGeunMo";
+  src: url("./font/DungGeunMo.woff2");
+}

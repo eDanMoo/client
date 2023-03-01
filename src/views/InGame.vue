@@ -1088,7 +1088,7 @@ export default {
                 log_tab.style.margin = "0 2% 0 2%";
                 log_tab.id = "log_tab";
                 span_remove_word.style.textAlign = "right";
-                span_remove_word.style.width = "250px";
+                span_remove_word.style.width = "220px";
                 span_remove_word.style.wordBreak = "keep-all";
 
                 span_user_id.innerText = event_data.user;
