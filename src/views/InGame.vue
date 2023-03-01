@@ -1006,6 +1006,7 @@ export default {
                     spanUserId.innerHTML = userid_str + "&nbsp";
                     spanUserId.setAttribute("class", "_score_user");
                     spanScore.setAttribute("id", userid_str + "_score_val");
+                    spanScore.setAttribute("class", "score-val-class");
                     spanScore.innerText = 0;
                     scoreTab.appendChild(spanUserId);
                     scoreTab.appendChild(spanScore);
@@ -1146,9 +1147,14 @@ export default {
                 this.delete_board = 1;
                 this.isGameStarted = 0;
                 this.game_time = null;
+
                 // todo. 여기 아이디가 다 같아서 안지워지는 문제임
-                const log_tab = document.getElementById("log_tab");
-                log_tab.parentNode.removeChild(log_tab);
+                const log_tab = document.getElementById("logBoard");
+                log_tab.textContent = "";
+                const scoreValueList = document.querySelectorAll('.score-val-class');
+                for (const item of scoreValueList) {
+                    item.innerText = 0;
+                }
 
                 const answer_text_box = document.getElementById("input_answer");
                 answer_text_box.disabled = true;
