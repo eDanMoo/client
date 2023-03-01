@@ -885,6 +885,7 @@ export default {
             });
             socket.addEventListener("error", (error) => {
                 console.log("Websocket connect error");
+                console.log(error);
                 alert("게임서버와의 연결이 종료되었습니다.");
                 location.href = "/";
                 reject(error);
@@ -1111,15 +1112,8 @@ export default {
                 }
                 const game_start = document.getElementById("game_start");
                 const game_box = document.getElementById("game_box");
-<<<<<<< HEAD
                 console.log(game_box);
                 game_start.style.display = "none";
-=======
-                // const sejong_img = document.getElementById("initImage");
-                game_start.style.display = "none";
-                // sejong_img.style.display = "none";
-                game_box.style.position = "position"; 
->>>>>>> sangjune
             } else if (event_data.type == "game_ing") {
                 connection.close();
                 alert("이미 진행중인 게임입니다.");
@@ -1149,7 +1143,7 @@ export default {
                 }
             } else if (event_data.type == "finish") {
                 this.game_over = event_data;
-                // this.modalOpen();
+                this.modalOpen();
                 this.delete_board = 1;
                 this.isGameStarted = 0;
                 this.game_time = null;
@@ -1189,7 +1183,7 @@ export default {
             }
         };
 
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia(constraints)) {
             this.checkWebcam();
         } else {
             console.log("getUserMedia not supported on this browser");
