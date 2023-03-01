@@ -7,7 +7,6 @@
                         class="shutDownPage"
                         id="shutDownPage"
                         v-show="isShutdown"
-                        @click="powerOff"
                     >
                         이제 전원을<br />
                         끄셔도 됩니다.
@@ -564,6 +563,7 @@ export default {
             audio.volume = 0.6;
             audio.play();
             this.isShutdown = true;
+            setTimeout(this.powerOff(), 3000);
         },
 
         openNaver() {
@@ -578,8 +578,11 @@ export default {
             this.isOpenMenuBar = false;
         },
         togglePower() {
-            this.isPowerOn = !this.isPowerOn;
-            this.isShutdown = false;
+            if (this.isPowerOn) {
+                this.shutDownAll();
+            } else {
+                this.isPowerOn = true;
+            }
         },
         updatePannel() {
             var pannelR = document.getElementById("monitorRightPannel");
@@ -876,7 +879,7 @@ export default {
     width: 30vw;
     height: 100%;
     transform-style: preserve-3d;
-    transform: translateZ(-200px);
+    transform: translateZ(-250px);
     z-index: 2;
 }
 .desktopPannel {
@@ -919,7 +922,8 @@ export default {
     height: 5%;
 }
 .pannelComp-tall {
-    height: 65%;
+    position: relative;
+    height: 60%;
     box-shadow: inset 2px 2px 5px 3px rgb(60, 60, 60);
 }
 .oddInput {
@@ -976,7 +980,7 @@ export default {
     width: 10px;
     height: 10px;
     left: 50%;
-    bottom: 48%;
+    bottom: 50%;
     border-radius: 99%;
     border: 1px solid rgb(234, 110, 0);
     box-shadow: 0px 0px 1px 1px #000;
@@ -987,7 +991,7 @@ export default {
     width: 10px;
     height: 10px;
     left: 50%;
-    bottom: 48%;
+    bottom: 50%;
     border-radius: 99%;
     border: 1px solid rgb(234, 110, 0);
     background-color: rgb(234, 110, 0);
@@ -1041,11 +1045,10 @@ export default {
     cursor: pointer;
 }
 .monitor {
-    position: relative;
     bottom: 0;
-    width: 100%;
     height: 100%;
     transform-style: preserve-3d;
+    z-index: 3;
 }
 .monitorPannel {
     box-sizing: border-box;

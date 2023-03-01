@@ -16,6 +16,7 @@
                 @click="closeLogin()"
             />
         </div>
+        <div id="alien"></div>
         <div id="loginbox">
             <div id="entrance">
                 <input
@@ -262,15 +263,43 @@ export default {
     width: 80%;
     height: 80%;
     background-color: #000;
-    border: 10px sloid rgb(22, 255, 94);
+    border-bottom: 2px solid rgb(180, 180, 180);
+    border-right: 2px solid rgb(180, 180, 180);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+@keyframes alien {
+    0% {
+        background-image: url("https://storage.googleapis.com/koword_bucket/alien_normal.svg");
+    }
+    49.9% {
+        background-image: url("https://storage.googleapis.com/koword_bucket/alien_normal.svg");
+    }
+    50.0% {
+        background-image: url("https://storage.googleapis.com/koword_bucket/alien_raise.svg");
+    }
+    100% {
+        background-image: url("https://storage.googleapis.com/koword_bucket/alien_raise.svg");
+    }
+}
+#alien {
+    position: absolute;
+    top: 15%;
+    left: 40%;
+    width: 17%;
+    height: 12%;
+    background-size: cover;
+    animation: alien 1s linear infinite;
+}
 #loginbox {
-    width: 100%;
-    height: fit-content;
+    width: 95%;
+    height: 95%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 4px solid rgb(22, 255, 94);
 }
 
 #logo {
