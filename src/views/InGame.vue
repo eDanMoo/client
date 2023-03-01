@@ -429,13 +429,14 @@
                             :is="game_mode"
                             :msg="wordUpdate"
                             :delete_board="delete_board"
+                            @scriptCheck="scriptCheck"
                         >
-                            <template v-if="game_mode === 'WordCard'">
+                            <!-- <template v-if="game_mode === 'WordCard'">
                                 <component
                                     :is="game_mode"
                                     @scriptCheck="scriptCheck"
                                 />
-                            </template>
+                            </template> -->
                         </component>
                         <button
                             class="gameSelectButton"
@@ -1072,7 +1073,7 @@ export default {
                 );
                 my_score.innerText =
                     parseInt(my_score.innerText) +
-                    parseInt(event_data.increment);
+                    parseInt(event_data.increase);
 
                 this.isGameStarted = 1;
 
@@ -1094,7 +1095,7 @@ export default {
                 span_user_id.innerText = event_data.user;
                 span_user_input.innerText = event_data.answer;
 
-                event_data.removedWords.forEach((element) => {
+                event_data.remWords.forEach((element) => {
                     span_remove_word.innerHTML += element + " ";
                 });
                 log_tab.appendChild(span_user_input);
