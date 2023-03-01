@@ -66,7 +66,7 @@ export default {
                         "scriptCheck",
                         "check",
                         this.msg.user,
-                        this.msg.increment
+                        this.msg.increase
                     ); // 정답 체크 완료 시 서버에 턴 요청
                 } else if (message.type == "init") {
                     this.start(message.moves[0]);
