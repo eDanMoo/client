@@ -92,7 +92,6 @@ export default {
             secondFlag: false,
             startbondFlag: false,
             checkbondFlag: false,
-            
         };
     },
 
@@ -143,7 +142,6 @@ export default {
             }
             // this.metamong(this.msg.table);
         },
- 
 
         /* 삭제(1) -> 이동 -> 삭제(2) -> 추가 -> sorting -> class변경 */
         answerCheck(command) {

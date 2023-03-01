@@ -844,7 +844,6 @@ export default {
             audio_fail: null,
             isCoop: false,
             isComp: false,
-
         };
     },
     watch: {
@@ -1151,7 +1150,8 @@ export default {
                 // todo. 여기 아이디가 다 같아서 안지워지는 문제임
                 const log_tab = document.getElementById("logBoard");
                 log_tab.textContent = "";
-                const scoreValueList = document.querySelectorAll('.score-val-class');
+                const scoreValueList =
+                    document.querySelectorAll(".score-val-class");
                 for (const item of scoreValueList) {
                     item.innerText = 0;
                 }
