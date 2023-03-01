@@ -1013,7 +1013,9 @@ export default {
                     scoreBoard.appendChild(scoreTab);
                 }
                 if (userid_str == current_user) {
-                    0;
+                    if (event_data.game_mode != "") {
+                        this.changeGame(event_data.game_mode);
+                    }
                 } else {
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
@@ -1164,7 +1166,8 @@ export default {
                 if (current_user != userid_str) {
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
-                        subFrame.style.display = "none";
+                        subFrame.src =
+                            "https://storage.cloud.google.com/koword_bucket/userBlank.png";
                     }
                 }
             } else if (event_data.type == "video_on") {
