@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <canvas id="board" class="game-board"></canvas>
-  </div>
+    <div>
+        <canvas id="board" class="game-board"></canvas>
+    </div>
 </template>
 
 <script>
@@ -12,18 +12,17 @@ export default {
         msg: {},
     },
 
-    setup (props) {
-
-      onMounted(() => {  
-
-        watch(() => props.msg, async ()=> {
-
-          if (props.msg.type == 'next') {  
-            let status = props.msg.status
-            if (status == "continue") {
-              let word = props.msg.word;
-              let left = props.msg.left;
-              let length = props.msg.length;
+    setup(props) {
+        onMounted(() => {
+            watch(
+                () => props.msg,
+                async () => {
+                    if (props.msg.type == "next") {
+                        let status = props.msg.status;
+                        if (status == "continue") {
+                            let word = props.msg.word;
+                            let left = props.msg.left;
+                            let length = props.msg.length;
 
               let fall = props.msg.fall
               let current = -1;
@@ -40,10 +39,10 @@ export default {
           let remWords = props.msg.remWords;
           let i = 0;
 
-          for (i=0; i<remWords.length; i++) {
-            let word = remWords[i]
-            await removeWordInWordSet(word)
-          }
+                        for (i = 0; i < remWords.length; i++) {
+                            let word = remWords[i];
+                            removeWordInWordSet(word);
+                        }
 
           let moveInfo = props.msg.moveInfo;
           for (i=0; i < moveInfo.length; i++ ){

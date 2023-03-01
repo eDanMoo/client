@@ -2,15 +2,6 @@
     <div id="inGameContainer space stars1">
         <div class="main"></div>
         <div class="chuvaMeteoro"></div>
-        <!-- Game End Pop -->
-        <div>
-            <modal
-                v-if="this.openModal == true"
-                @sendClose="closeModalView"
-                :msg="game_over"
-                style="z-index: 1000"
-            />
-        </div>
         <!-- Music Player -->
         <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
             <div id="playerHeader" @mousedown="dragMouseDown">
@@ -335,6 +326,15 @@
             </Transition>
             <!-- ############게임화면################# -->
             <div class="centerBox" id="centerBox">
+                <!-- Game End Pop -->
+                <div>
+                    <modal
+                        v-if="this.openModal == true"
+                        @sendClose="closeModalView"
+                        :msg="game_over"
+                        style="z-index: 1000"
+                    />
+                </div>
                 <div class="gameWindow" id="gameWindow">
                     <div id="gameBox">
                         <!-- <component
@@ -786,6 +786,7 @@ export default {
             });
             socket.addEventListener("error", (error) => {
                 console.log("Websocket connect error");
+                console.log(error);
                 alert("게임서버와의 연결이 종료되었습니다.");
                 location.href = "/";
                 reject(error);
@@ -1011,10 +1012,10 @@ export default {
                 }
                 const game_start = document.getElementById("game_start");
                 const game_box = document.getElementById("game_box");
-                // const sejong_img = document.getElementById("initImage");
+
+                console.log(game_box);
                 game_start.style.display = "none";
-                // sejong_img.style.display = "none";
-                game_box.style.position = "position"; 
+
             } else if (event_data.type == "game_ing") {
                 connection.close();
                 alert("이미 진행중인 게임입니다.");
@@ -1046,7 +1047,7 @@ export default {
                 }
             } else if (event_data.type == "finish") {
                 this.game_over = event_data;
-                // this.modalOpen();
+                this.modalOpen();
                 this.delete_board = 1;
                 this.isGameStarted = 0;
                 this.game_time = null;
@@ -1081,7 +1082,10 @@ export default {
             }
         };
 
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        if (
+            navigator.mediaDevices &&
+            navigator.mediaDevices.getUserMedia(constraints)
+        ) {
             this.checkWebcam();
         } else {
             console.log("getUserMedia not supported on this browser");
@@ -1101,12 +1105,8 @@ export default {
         },
         /** 필요시에만 컴포넌트 import */
         async loadComponent(game_mode) {
-            const component = await defineAsyncComponent(() =>
-                import(`../components/${game_mode}.vue`)
-            );
-            this.game_mode = shallowRef(component);
-            this.game_mode_text = game_mode;
-            this.game_selected = 1;
+
+            await this.changeGame(game_mode);
 
             const jsonData = JSON.stringify({
                 type: "change_game",
@@ -1115,14 +1115,28 @@ export default {
             });
             connection.send(jsonData);
         },
-        /** 선택한 게임 모드에 따라 컴포넌트 변환  */
-        async changeGame(game_mode) {
+        /** 실제로 컴포넌트 가져오기 */
+        async getComponent(game_mode) {
+            console.log(game_mode);
             const component = await defineAsyncComponent(() =>
                 import(`../components/${game_mode}.vue`)
             );
-            this.game_mode = shallowRef(component);
+
+            return component;
+        },
+        /** 선택한 게임 모드에 따라 컴포넌트 변환  */
+        async changeGame(game_mode) {
+            if (game_mode == "WordCard") {
+                this.isComp = true;
+                this.isCoop = false;
+            } else {
+                this.isComp = false;
+                this.isCoop = true;
+            }
+
             this.game_mode_text = game_mode;
             this.game_selected = 1;
+            this.game_mode = shallowRef(await this.getComponent(game_mode));
         },
         /** 유저가 웹캡이 있는지 체크 */
         async checkWebcam() {

@@ -1,5 +1,5 @@
 <template>
-    <div class="computerSet">
+    <div class="threeDimension">
         <div class="monitor">
             <div class="outerComputer" id="outerComputer">
                 <div class="inComputer" id="inComputer">
@@ -362,6 +362,10 @@
                                         <b>시 작</b></span
                                     >
                                 </div>
+                                <div id="windowTime">
+                                    {{ this.ymd }} <br/>
+                                    {{ this.hms }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -370,7 +374,6 @@
             <div class="monitorPannel" id="monitorTopPannel"></div>
             <div class="monitorPannel" id="monitorLeftPannel"></div>
             <div class="monitorPannel" id="monitorRightPannel"></div>
-            <div class="monitorPannel" id="monitorBackPannel"></div>
         </div>
         <div class="desktop">
             <div class="desktopPannel" id="frontPannel">
@@ -400,7 +403,6 @@
                     ></div>
                 </div>
             </div>
-            <div class="desktopPannel" id="backPannel"></div>
             <div class="desktopPannel" id="leftPannel"></div>
             <div class="desktopPannel" id="rightPannel"></div>
         </div>
@@ -448,6 +450,68 @@
             <div class="thanksPannel" id="thanksrod"></div>
         </div>
         <div id="woodTable"></div>
+        <div id="clock">
+            <div class="clockPannel" id="clockFront"></div>
+            <div class="clockPannel" id="clockPannel">
+                <div id="timePannel">
+                    {{ hms }}
+                </div>
+            </div>
+            <div class="clockPannel" id="clockLeft"></div>
+            <div class="clockPannel" id="clockRight"></div>
+            <div class="clockPannel" id="clockTop"></div>
+            <div class="clockPannel" id="clockBottom"></div>
+        </div>
+        <div class="cabinetBack">
+            <div class="cabinetPannel cabinetBackPannel" id="cabinetBackFront"></div>
+            <div class="cabinetPannel cabinetBackPannel" id="cabinetBackBottom"></div>
+        </div>
+        <div class="cabinetFront">
+            <div class="cabinetPannel cabinetFrontPannel" id="cabinetFrontFront"></div>
+            <div class="cabinetPannel cabinetFrontPannel" id="cabinetFrontLeft"></div>
+            <div class="cabinetPannel cabinetFrontPannel" id="cabinetFrontTop"></div>
+            <div class="cabinetPannel cabinetFrontPannel" id="cabinetFrontBottom"></div>
+        </div>
+        <div class="cube" id="cube-one">
+            <div class="cubePannel" id="cubeFront"></div>
+            <div class="cubePannel" id="cubeBack"></div>
+            <div class="cubePannel" id="cubeLeft"></div>
+            <div class="cubePannel" id="cubeRight"></div>
+            <div class="cubePannel" id="cubeTop"></div>
+            <div class="cubePannel" id="cubeBottom"></div>
+        </div>
+        <div class="cube" id="cube-two">
+            <div class="cubePannel" id="cubeFront"></div>
+            <div class="cubePannel" id="cubeBack"></div>
+            <div class="cubePannel" id="cubeLeft"></div>
+            <div class="cubePannel" id="cubeRight"></div>
+            <div class="cubePannel" id="cubeTop"></div>
+            <div class="cubePannel" id="cubeBottom"></div>
+        </div>
+        <div class="cube" id="cube-three">
+            <div class="cubePannel" id="cubeFront"></div>
+            <div class="cubePannel" id="cubeBack"></div>
+            <div class="cubePannel" id="cubeLeft"></div>
+            <div class="cubePannel" id="cubeRight"></div>
+            <div class="cubePannel" id="cubeTop"></div>
+            <div class="cubePannel" id="cubeBottom"></div>
+        </div>
+        <div class="cube" id="cube-four">
+            <div class="cubePannel" id="cubeFront"></div>
+            <div class="cubePannel" id="cubeBack"></div>
+            <div class="cubePannel" id="cubeLeft"></div>
+            <div class="cubePannel" id="cubeRight"></div>
+            <div class="cubePannel" id="cubeTop"></div>
+            <div class="cubePannel" id="cubeBottom"></div>
+        </div>
+        <div class="picture">
+            <div class="picturePannel" id="pictureFront"></div>
+            <div class="picturePannel" id="pictureBack"></div>
+            <div class="picturePannel" id="pictureLeft"></div>
+            <div class="picturePannel" id="pictureRight"></div>
+            <div class="picturePannel" id="pictureTop"></div>
+            <div class="picturePannel" id="pictureBottom"></div>
+        </div>
     </div>
 </template>
 
@@ -463,6 +527,8 @@ export default {
             isAccessError: false,
             isShutdown: false,
             isPowerOn: true,
+            hms: "",
+            ymd: "",
         };
     },
     components: {
@@ -526,11 +592,16 @@ export default {
             pannelR.style.height = rect.height + "px";
             pannelL.style.height = rect.height + "px";
             pannelT.style.width = rect.width + "px";
-            pannelT.style.bottom = rect.height - 125 + "px";
+            pannelT.style.bottom = rect.height - 50 + "px";
         },
         removeScrollListener() {
             window.addEventListener("resize", this.updatePannel);
         },
+        updateTime() {
+            let today = new Date();
+            this.ymd = today.toLocaleDateString();
+            this.hms = today.toLocaleTimeString();
+        }
     },
     setup() {
         let showHancom = ref(true);
@@ -549,8 +620,9 @@ export default {
         pannelR.style.height = rect.height + "px";
         pannelL.style.height = rect.height + "px";
         pannelT.style.width = rect.width + "px";
-        pannelT.style.bottom = rect.height - 125 + "px";
+        pannelT.style.bottom = rect.height - 50 + "px";
         window.addEventListener("resize", this.updatePannel);
+        setInterval(this.updateTime, 1000);
     },
     unmounted() {
         clearInterval();
@@ -754,6 +826,7 @@ export default {
     text-align: center;
 }
 #outerComputer {
+    display: flex;
     position: absolute;
     bottom: 50px;
     left: 5vw;
@@ -763,14 +836,12 @@ export default {
     height: 90vw;
     max-height: 90vh;
     min-height: 355px;
-    display: flex;
     justify-content: center;
     overflow: hidden;
     align-items: center;
     background-color: rgb(245, 245, 230);
     box-sizing: border-box;
     border: 10px solid #000;
-    transform: translateZ(100px);
 }
 #inComputer {
     position: relative;
@@ -780,7 +851,7 @@ export default {
     border: 10px solid #000;
 }
 
-.computerSet {
+.threeDimension {
     overflow: hidden;
     width: 100%;
     height: 100%;
@@ -821,11 +892,6 @@ export default {
     height: 100vh;
     background: rgb(245, 245, 230);
     transform: translateZ(100px);
-}
-#backPannel {
-    height: 100vh;
-    background: rgb(245, 245, 230);
-    transform: translateZ(-100px);
 }
 #leftPannel {
     width: 200px;
@@ -980,7 +1046,6 @@ export default {
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transform: translateZ(-100px);
 }
 .monitorPannel {
     box-sizing: border-box;
@@ -997,26 +1062,16 @@ export default {
 #monitorTopPannel {
     left: 5vw;
     height: 200px;
-    transform: rotateX(90deg) translateY(-70px) translateZ(-2px);
+    min-height: 200px;
+    bottom: 50px;
+    transform: translateZ(-100px) rotateX(90deg);
 }
 #monitorLeftPannel {
     left: 5vw;
-    transform: rotateY(90deg) translateZ(-100px);
+    transform: translateZ(-100px) translateX(-100px) rotateY(90deg);
 }
 #monitorRightPannel {
-    transform: rotateY(-90deg) translateZ(-100px);
-}
-#monitorBackPannel {
-    transform: translateZ(-100px);
-    bottom: 50px;
-    left: 5vw;
-    width: 90vw;
-    max-width: 90vh;
-    min-width: 355px;
-    height: 90vw;
-    max-height: 90vh;
-    min-height: 355px;
-    transform: translateZ(-100px);
+    transform: translateZ(-100px) translateX(100px) rotateY(90deg);
 }
 .thanksFrame {
     position: absolute;
@@ -1088,4 +1143,222 @@ export default {
     color: rgb(22, 255, 94);
     cursor: pointer;
 }
+#clock {
+    position: absolute;
+    top: 0;
+    transform-style: preserve-3d;
+    transform: translateX(-20vw) translateY(-250px) translateZ(-800px);
+    z-index: -1;
+}
+.clockPannel {
+    box-sizing: border-box;
+    position: absolute;
+    border: 3px solid rgb(22, 255, 94);
+    background: rgba(32, 32, 32, 0.4);
+}
+#clockPannel {
+    width: 500px;
+    height: 250px;
+    left: 20px;
+    transform: translateZ(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#timePannel {
+    width: 98%;
+    height: 95%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(22, 255, 94);
+    font-size: 4.5rem;
+    font-family: "retroFont";
+    text-shadow: -1px 0 #d0ffd2, 0 1px #d0ffd2, 1px 0 #d0ffd2, 0 -1px #d0ffd2;
+}
+#clockFront {
+    width: 500px;
+    height: 250px;
+    left: 20px;
+    transform: translateZ(20px);
+    background: transparent;
+}
+#clockLeft {
+    width: 40px;
+    height: 250px;
+    transform: rotateY(90deg);
+}
+#clockRight {
+    width: 40px;
+    height: 250px;
+    left: 500px;
+    transform: rotateY(90deg);
+}
+#clockTop {
+    width: 500px;
+    height: 40px;
+    left: 20px;
+    transform: rotateX(90deg) translateZ(20px);
+}
+#clockBottom {
+    width: 500px;
+    height: 40px;
+    left: 20px;
+    top: 250px;
+    transform: rotateX(90deg) translateZ(20px);
+}
+#windowTime {
+    width: fit-content;
+    height: 32px;
+    background-color: rgb(220, 220, 220);
+    border: 2px solid rgb(220, 220, 220);
+    box-shadow: 0 0 0 1px rgb(32, 32, 32);
+    display: flex;
+    align-items: center;
+    line-height: 96%;
+}
+.cabinetBack {
+    position: absolute;
+    transform-style: preserve-3d;
+    top: 0;
+    transform: translateX(-20vw) translateY(50px) translateZ(-800px);
+    z-index: -100;
+}
+
+.cabinetPannel {
+    box-sizing: border-box;
+    position: absolute;
+    border: 3px solid rgb(0, 0, 0);
+    background: linear-gradient(rgb(125, 25, 0), rgb(80, 20, 0));
+}
+#cabinetBackFront {
+    width: 3000px;
+    height: 500px;
+    left: 50px;
+    transform: translateZ(100px);
+}
+#cabinetBackBottom {
+    width: 3000px;
+    height: 100px;
+    left: 50px;
+    top: 500px;
+    transform: rotateX(90deg) translateZ(50px);
+}
+.cabinetFront {
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: translateX(-20vw) translateZ(-700px);
+    top: 400px;
+    left: 50px;
+    z-index: -1;
+}
+#cabinetFrontFront {
+    width: 3000px;
+    height: 60px;
+    transform: translateZ(300px);
+}
+#cabinetFrontLeft {
+    width: 300px;
+    height: 60px;
+    transform: translateX(-150px) translateZ(150px) rotateY(90deg);
+}
+#cabinetFrontTop {
+    width: 3000px;
+    height: 300px;
+    transform: translateY(-150px) translateZ(150px) rotateX(90deg);
+}
+#cabinetFrontBottom {
+    width: 3000px;
+    height: 300px;
+    transform: translateY(-90px) translateZ(150px) rotateX(90deg);
+    background: linear-gradient(rgb(60, 10, 0), rgb(80, 20, 0));
+}
+.cube {
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: translateZ(-700px);
+    z-index: -2;
+}
+#cube-one {
+    top: 200px;
+    left: 2000px;
+}
+#cube-two {
+    top: 200px;
+    left: 1800px;
+}
+#cube-three {
+    top: 200px;
+    left: 1400px;
+}
+#cube-four {
+    top: 0px;
+    left: 1920px;
+    z-index: -3;
+}
+.cubePannel {
+    box-sizing: border-box;
+    position: absolute;
+    border: 3px solid rgba(22, 255, 94, 0.8);
+    background: rgba(0, 0, 0, 0.5);
+    width: 200px;
+    height: 200px;
+}
+#cubeFront {
+    transform: translateZ(200px);
+}
+#cubeBack {}
+#cubeLeft {
+    transform: translateZ(100px) translateX(-100px) rotateY(-90deg);
+}
+#cubeRight {
+    transform: translateZ(100px) translateX(100px) rotateY(90deg);
+}
+#cubeTop {
+    transform: translateZ(100px) translateY(-100px) rotateX(90deg);
+}
+#cubeBottom {
+    transform: translateZ(100px) translateY(100px) rotateX(-90deg);
+}
+
+.picture {
+    position: absolute;
+    transform-style: preserve-3d;
+    transform: translateZ(-400px) translateY(100px) rotateX(30deg);
+    z-index: -2;
+    top: 100px;
+    left: 30px;
+}
+.picturePannel {
+    box-sizing: border-box;
+    position: absolute;
+    border: 3px solid rgb(0, 0, 0);
+    width: 1000px;
+    height: 300px;
+    background: burlywood;
+}
+#pictureFront {
+    transform: translateZ(50px);
+}
+#pictureBack {
+    background: burlywood;
+}
+#pictureLeft {
+    width: 50px;
+    transform: translateZ(25px) translateX(-25px) rotateY(-90deg);
+}
+#pictureRight {
+    width: 50px;
+    transform: translateZ(25px) translateX(975px) rotateY(90deg);
+}
+#pictureTop {
+    height: 50px;
+    transform: translateZ(25px) translateY(-25px) rotateX(90deg);
+}
+#pictureBottom {
+    height: 50px;
+    transform: translateZ(25px) translateY(275px) rotateX(-90deg);
+}
+
 </style>
