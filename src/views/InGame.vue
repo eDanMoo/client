@@ -23,15 +23,6 @@
         </div>
         <div class="main"></div>
         <div class="chuvaMeteoro"></div>
-        <!-- Game End Pop -->
-        <div>
-            <modal
-                v-if="this.openModal == true"
-                @sendClose="closeModalView"
-                :msg="game_over"
-                style="z-index: 1000"
-            />
-        </div>
         <!-- Music Player -->
         <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
             <div id="playerHeader" @mousedown="dragMouseDown">
@@ -215,6 +206,8 @@
                         font-size: 3.5rem;
                         margin-bottom: unset;
                         margin-top: unset;
+                        position: absolute;
+                        left: 49%;
                     "
                 >
                     {{ game_time }}
@@ -417,6 +410,15 @@
             </Transition>
             <!-- ############게임화면################# -->
             <div class="centerBox" id="centerBox">
+                <!-- Game End Pop -->
+                <div>
+                    <modal
+                        v-if="this.openModal == true"
+                        @sendClose="closeModalView"
+                        :msg="game_over"
+                        style="z-index: 1000"
+                    />
+                </div>
                 <div class="gameWindow" id="gameWindow">
                     <div id="gameBox">
                         <!-- <component
@@ -429,13 +431,14 @@
                             :is="game_mode"
                             :msg="wordUpdate"
                             :delete_board="delete_board"
+                            @scriptCheck="scriptCheck"
                         >
-                            <template v-if="game_mode === 'WordCard'">
+                            <!-- <template v-if="game_mode === 'WordCard'">
                                 <component
                                     :is="game_mode"
                                     @scriptCheck="scriptCheck"
                                 />
-                            </template>
+                            </template> -->
                         </component>
                         <button
                             class="gameSelectButton"
@@ -506,8 +509,8 @@
                     <div class="innerWindow">
                         <div class="barCover">
                             <div class="windowBar">
-                                <span>기 록</span
-                                ><button
+                                <span>기 록</span>
+                                <button
                                     class="minBtn"
                                     @click="LogVisible = !LogVisible"
                                     v-show="LogVisible"
@@ -843,7 +846,6 @@ export default {
             audio_fail: null,
             isCoop: false,
             isComp: false,
-
         };
     },
     watch: {
@@ -885,6 +887,7 @@ export default {
             });
             socket.addEventListener("error", (error) => {
                 console.log("Websocket connect error");
+                console.log(error);
                 alert("게임서버와의 연결이 종료되었습니다.");
                 location.href = "/";
                 reject(error);
@@ -1005,13 +1008,16 @@ export default {
                     spanUserId.innerHTML = userid_str + "&nbsp";
                     spanUserId.setAttribute("class", "_score_user");
                     spanScore.setAttribute("id", userid_str + "_score_val");
+                    spanScore.setAttribute("class", "score-val-class");
                     spanScore.innerText = 0;
                     scoreTab.appendChild(spanUserId);
                     scoreTab.appendChild(spanScore);
                     scoreBoard.appendChild(scoreTab);
                 }
                 if (userid_str == current_user) {
-                    0;
+                    if (event_data.game_mode != "") {
+                        this.changeGame(event_data.game_mode);
+                    }
                 } else {
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
@@ -1072,35 +1078,36 @@ export default {
                 );
                 my_score.innerText =
                     parseInt(my_score.innerText) +
-                    parseInt(event_data.increment);
+                    parseInt(event_data.increase);
 
                 this.isGameStarted = 1;
 
-                const log_board = document.getElementById("logBoard");
+                if (event_data.remWords.length > 0) {
+                    const log_board = document.getElementById("logBoard");
+                    const log_tab = document.createElement("div");
+                    const span_user_id = document.createElement("span");
+                    const span_user_input = document.createElement("span");
+                    const span_remove_word = document.createElement("span");
 
-                const log_tab = document.createElement("div");
-                const span_user_id = document.createElement("span");
-                const span_user_input = document.createElement("span");
-                const span_remove_word = document.createElement("span");
+                    log_tab.style.display = "flex";
+                    log_tab.style.justifyContent = "space-between";
+                    log_tab.style.margin = "0 2% 0 2%";
+                    log_tab.id = "log_tab";
+                    span_remove_word.style.textAlign = "right";
+                    span_remove_word.style.width = "240px";
+                    span_remove_word.style.wordBreak = "keep-all";
 
-                log_tab.style.display = "flex";
-                log_tab.style.justifyContent = "space-between";
-                log_tab.style.margin = "0 2% 0 2%";
-                log_tab.id = "log_tab";
-                span_remove_word.style.textAlign = "right";
-                span_remove_word.style.width = "220px";
-                span_remove_word.style.wordBreak = "keep-all";
+                    span_user_id.innerText = event_data.user;
+                    span_user_input.innerText = event_data.answer;
 
-                span_user_id.innerText = event_data.user;
-                span_user_input.innerText = event_data.answer;
-
-                event_data.removedWords.forEach((element) => {
-                    span_remove_word.innerHTML += element + " ";
-                });
-                log_tab.appendChild(span_user_input);
-                log_tab.appendChild(span_remove_word);
-                log_board.appendChild(log_tab);
-                log_board.scrollTop = 9999999;
+                    event_data.remWords.forEach((element) => {
+                        span_remove_word.innerHTML += element + " ";
+                    });
+                    log_tab.appendChild(span_user_input);
+                    log_tab.appendChild(span_remove_word);
+                    log_board.appendChild(log_tab);
+                    log_board.scrollTop = 9999999;
+                }
             } else if (event_data.type == "game_start") {
                 console.log(event_data.game_mode);
                 if (event_data.game_mode == "CoOpGame") {
@@ -1145,9 +1152,15 @@ export default {
                 this.delete_board = 1;
                 this.isGameStarted = 0;
                 this.game_time = null;
+
                 // todo. 여기 아이디가 다 같아서 안지워지는 문제임
-                const log_tab = document.getElementById("log_tab");
-                log_tab.parentNode.removeChild(log_tab);
+                const log_tab = document.getElementById("logBoard");
+                log_tab.textContent = "";
+                const scoreValueList =
+                    document.querySelectorAll(".score-val-class");
+                for (const item of scoreValueList) {
+                    item.innerText = 0;
+                }
 
                 const answer_text_box = document.getElementById("input_answer");
                 answer_text_box.disabled = true;
@@ -1156,7 +1169,8 @@ export default {
                 if (current_user != userid_str) {
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
-                        subFrame.style.display = "none";
+                        subFrame.src =
+                            "https://storage.cloud.google.com/koword_bucket/userBlank.png";
                     }
                 }
             } else if (event_data.type == "video_on") {
@@ -1175,7 +1189,10 @@ export default {
             }
         };
 
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        if (
+            navigator.mediaDevices &&
+            navigator.mediaDevices.getUserMedia(constraints)
+        ) {
             this.checkWebcam();
         } else {
             console.log("getUserMedia not supported on this browser");
@@ -1231,7 +1248,7 @@ export default {
         },
         /** 필요시에만 컴포넌트 import */
         async loadComponent(game_mode) {
-            this.changeGame(game_mode);
+            await this.changeGame(game_mode);
             const jsonData = JSON.stringify({
                 type: "change_game",
                 game_mode: this.game_mode_text,
@@ -1239,11 +1256,16 @@ export default {
             });
             connection.send(jsonData);
         },
-        /** 선택한 게임 모드에 따라 컴포넌트 변환  */
-        async changeGame(game_mode) {
+        /** 실제로 컴포넌트 가져오기 */
+        async getComponent(game_mode) {
+            console.log(game_mode);
             const component = await defineAsyncComponent(() =>
                 import(`../components/${game_mode}.vue`)
             );
+            return component;
+        },
+        /** 선택한 게임 모드에 따라 컴포넌트 변환  */
+        async changeGame(game_mode) {
             if (game_mode == "WordCard") {
                 this.isComp = true;
                 this.isCoop = false;
@@ -1251,9 +1273,9 @@ export default {
                 this.isComp = false;
                 this.isCoop = true;
             }
-            this.game_mode = shallowRef(component);
             this.game_mode_text = game_mode;
             this.game_selected = 1;
+            this.game_mode = shallowRef(await this.getComponent(game_mode));
         },
         /** 유저가 웹캡이 있는지 체크 */
         async checkWebcam() {
