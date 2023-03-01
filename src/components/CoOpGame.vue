@@ -10,6 +10,7 @@ import { onMounted, watch } from "vue";
 export default {
     props: {
         msg: {},
+        // delete_board: Number,
     },
 
     setup(props) {
@@ -57,7 +58,17 @@ export default {
           }
         }
       })
-        
+
+
+      // watch( () =>props.delete_board, (newValue)=> {
+      //   console.log('발동')
+      //   if (newValue == 1) {
+      //         wordSet = []
+      //         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      //         // clearInterval(drawWord);
+      //       }
+      // } )
+
 
             const COLS = 11; // size
             const ROWS = 11; // size
@@ -86,7 +97,7 @@ export default {
               
 
 
-            setInterval( () => {
+            let drawWord = setInterval( () => {
               ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
               let i;
               let wordSetKey = Object.keys(wordSet);
@@ -113,7 +124,7 @@ export default {
                   
                   // 각종 그림자
                   
-                  ctx.fillStyle = colorText
+                  ctx.fillStyle = 'black';
                   // 왼쪽 윤곽
                   ctx.clearRect(x*BLOCK_SIZE, current*BLOCK_SIZE, 0.03*BLOCK_SIZE, BLOCK_SIZE);
                   // ctx.fillRect((x+0.03)*BLOCK_SIZE, current*BLOCK_SIZE, 0.05*BLOCK_SIZE, BLOCK_SIZE);
@@ -165,6 +176,25 @@ export default {
         }
 // <----------------------------------------- 단어 목록에서 단어 삭제하기 함수
 
+// -----------------------------------------> 단어로 필요한 정보 찾기
+        function findInfoByWord(word) {
+          return wordSet[word]
+        }
+// <----------------------------------------- 단어로 필요한 정보 찾기
+
+// -----------------------------------------> 단어블록 지우기 함수
+        function removeWord(word) {
+
+          let left = wordSet[word].left;
+          let length = wordSet[word].length;
+          let current = wordSet[word].current;
+          // 화면 지우기
+          ctx.clearRect(left*BLOCK_SIZE, current *BLOCK_SIZE, length * BLOCK_SIZE, BLOCK_SIZE);
+
+        }
+// <----------------------------------------- 단어블록 지우기 함수
+
+
     },)
 
     return { } ;
@@ -174,7 +204,7 @@ export default {
 
 <style scoped>
 #board {
-    background-color: rgba(32, 32, 32, 0.7);
+    background-color: rgba(0, 0, 0, 0.7);
     
 }
 
