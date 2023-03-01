@@ -206,6 +206,8 @@
                         font-size: 3.5rem;
                         margin-bottom: unset;
                         margin-top: unset;
+                        position: absolute;
+                        left: 49%;
                     "
                 >
                     {{ game_time }}
