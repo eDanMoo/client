@@ -61,12 +61,12 @@ export default {
                         this.nullWarning = true;
                     }
 
-                    //   this.$emit(
-                    //       "scriptCheck",
-                    //       "check",
-                    //       this.msg.user,
-                    //       this.msg.increment
-                    //   ); // 정답 체크 완료 시 서버에 턴 요청
+                    this.$emit(
+                        "scriptCheck",
+                        "check",
+                        this.msg.user,
+                        this.msg.increment
+                    ); // 정답 체크 완료 시 서버에 턴 요청
                 } else if (message.type == "init") {
                     this.start(message.moves[0]);
                     this.startbondFlag = true;
