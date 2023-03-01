@@ -23,15 +23,6 @@
         </div>
         <div class="main"></div>
         <div class="chuvaMeteoro"></div>
-        <!-- Game End Pop -->
-        <div>
-            <modal
-                v-if="this.openModal == true"
-                @sendClose="closeModalView"
-                :msg="game_over"
-                style="z-index: 1000"
-            />
-        </div>
         <!-- Music Player -->
         <div id="floatWindow" ref="floatWindow" v-show="openMusicPlayer">
             <div id="playerHeader" @mousedown="dragMouseDown">
@@ -417,6 +408,15 @@
             </Transition>
             <!-- ############게임화면################# -->
             <div class="centerBox" id="centerBox">
+                <!-- Game End Pop -->
+                <div>
+                    <modal
+                        v-if="this.openModal == true"
+                        @sendClose="closeModalView"
+                        :msg="game_over"
+                        style="z-index: 1000"
+                    />
+                </div>
                 <div class="gameWindow" id="gameWindow">
                     <div id="gameBox">
                         <!-- <component
