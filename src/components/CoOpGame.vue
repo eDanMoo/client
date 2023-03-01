@@ -64,9 +64,7 @@ export default {
 
         if (newValue == 1) {
 
-            for (var key in wordSet) {
-              delete wordSet[key];
-            }
+            wordSet = {};
 
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
               // clearInterval(drawWord);
@@ -89,7 +87,7 @@ export default {
             // let blockImage = new Image();
             // blockImage.src = "https://i.imgur.com/zdluTLl.png"
 
-            const wordSet = {};
+            let wordSet = {};
             const colorSet = [
               ['#FFF548', '#3C1A5B'],
               ['#CED46A', '#07553B'],
