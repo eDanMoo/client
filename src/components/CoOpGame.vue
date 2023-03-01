@@ -2,33 +2,6 @@
   <div>
     <canvas id="board" class="game-board"></canvas>
   </div>
-
-  <!-- 일단 복붙해옴 -->
-  <!-- <div class="answerBox">
-                        <input
-                            type="text"
-                            id="input_answer"
-                            style="width: 250px; font-size: 2rem"
-                        />
-                        <button
-                            id="submit_answer"
-                            style="margin-left: 10px; font-size: 2rem"
-                        >
-                            제출
-                        </button>
-                        <button
-                            id="submit_answer2"
-                            style="margin-left: 10px; font-size: 2rem"
-                        >
-                            제출2
-                        </button>
-                        <button
-                            id="game_start"
-                            @click="init()"
-                        >
-                            게임 시작
-                        </button>
-  </div> -->
 </template>
 
 
@@ -47,9 +20,8 @@ import { onMounted, watch } from "vue";
 
       onMounted(() => {  
 
-      // 나중에 연결하면 살리기
         watch(() => props.msg, ()=> {
-          console.log(props.msg);
+
           if (props.msg.type == 'next') {  
             let status = props.msg.status
             if (status == "continue") {
@@ -59,13 +31,16 @@ import { onMounted, watch } from "vue";
               let fall = props.msg.fall
 
             storeInWordSet(word, left, length, -1)
+            // console.log('drop 전에 저장!!!!! : ', word);
+            // console.log('drop 전 word 높이!!!! : ', wordSet[word].height);
             dropWord(word, fall)
           } 
         } else if (props.msg.type == 'check') {
           
-          let removeWords = props.msg.removeWords
+          let removeWords = props.msg.remWords
+          let i = 0;
           for (i=0; i<removeWords.length; i++) {
-            removeWord(removeWords[i])
+            removeWord(removeWords[i]);
           }
           let moveInfo = props.msg.moveInfo
           for (i=0; i < moveInfo.length; i++){
@@ -73,30 +48,10 @@ import { onMounted, watch } from "vue";
             let fall = moveInfo[i][1]
             dropWord(newword, fall)
 
-          // 떨어지는 글자 사라지게 구현하기 
+
           }
         }
       })
-        
-                  //단어 입력하면 삭제시키기
-            // var inputAnswer = -1
-
-            // button.addEventListener('click', function(event) {
-            //   console.log("단어 입력 함수 동작함")
-            //   let a = input.value;
-            //   console.log("입력값 :", a)
-            //   let b = Object.keys(wordSet)
-            //   for (i=0; i < b.length; i++) {
-                
-            //     if (b[i] == a && wordSet[b[i]].height != -1) {
-            //       removeWord(a);
-            //     } 
-            //     inputAnswer = a
-            //   }
-            // }
-            // )
-        
-        //점수채우기
         
 // 초기화-----------------------------------------------------------------
             const COLS = 11;      // size
@@ -110,44 +65,89 @@ import { onMounted, watch } from "vue";
             ctx.canvas.height = ROWS * BLOCK_SIZE;
             // ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
-            const wordSet = {}
+            //이미지 집어넣기
+            let blockImage = new Image();
+            blockImage.src = "https://i.imgur.com/zdluTLl.png"
+
+            let wordSet = {}
+            const InputWord = [];
 // 초기화-----------------------------------------------------------------
+            setInterval( () => {
+              ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+              let i;
+              let wordSetKey = Object.keys(wordSet);
+              for (i=0; i < wordSetKey.length; i++) {
+                
+                let left = wordSet[wordSetKey[i]].left
+                let length = wordSet[wordSetKey[i]].length
+                let height = wordSet[wordSetKey[i]].height
+                let word = wordSetKey[i]
+                
+                let z = height;  
+                let x = 0;
+                for (x = left; x < left + length; x++) {
+                  
+                  // 본체
+                  ctx.fillStyle = "blue";
+                  ctx.fillRect(x*BLOCK_SIZE, height*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+                  // // ctx.drawImage(blockImage, x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+                  
+                  // // ctx.strokeRect((x+0.05)*BLOCK_SIZE, z*BLOCK_SIZE, 0.90*BLOCK_SIZE, 0.95*BLOCK_SIZE);              
+                  
+                  // 각종 그림자
+                  
+                  ctx.clearRect(x*BLOCK_SIZE, height*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
+                  ctx.clearRect(x*BLOCK_SIZE, height*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
+                  ctx.fillStyle = "black"
+                  ctx.fillRect(x*BLOCK_SIZE + 0.9*BLOCK_SIZE, height*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
+
+                  ctx.fillRect(x*BLOCK_SIZE, height*BLOCK_SIZE + 0.9*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
+                  // 텍스트
+                  ctx.fillStyle = "white"
+                  ctx.font = `${48/63 * BLOCK_SIZE}px serif`;
+                  ctx.fillText(word[x-left], (x+0.1)*BLOCK_SIZE, (height+1-0.2)*BLOCK_SIZE);
+                    } 
+                  }
+             }, 50) 
+
+              
 
 // -----------------------------------------> 단어 drop 함수
         function dropWord(word, fall) {
           // 단어 받기
-          console.log(wordSet)
+
           const wordBlock = findInfoByWord(word)
           
           let left = wordBlock.left;
           let length = wordBlock.length;
           let height = wordBlock.height;
 
-                // 높이 0일때, 주어졌을 때 구분하기
-
           // 단어 옮기기  
           let z = height; 
           let x = 0;
+
+          // 윤곽선 넣는다면?
+          let randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16); 
+          ctx.strokeStyle = `${randomColor}`
+          ctx.lineWidth = 5;
+          
           function render() {
             for (x = left; x < left + length; x++) {
               ctx.fillStyle = "gray";
-
-              // 이부분 삽입----------------------
-              if (word == inputAnswer) {
-                for (x = left; x < left + length; x++) {
-                ctx.clearRect(x*BLOCK_SIZE, (z-0.1)*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+              
+              // console.log(findInfoByWord(word))
+                // 이부분 삽입----------------------
+                if (findInfoByWord(word) == null) {
+                  console.log('작동하나?')
+                  return
                 }
-                removeWordInWordSet(word);
-                inputAnswer = -1;
-
-                // height 새로 저장하고, removeWord로 지우기
-                return
-              }
               // 이부분 삽입 ----------------------
 
 
               // 본체
               ctx.fillRect(x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+              // ctx.drawImage(blockImage, x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+              // ctx.strokeRect((x+0.05)*BLOCK_SIZE, z*BLOCK_SIZE, 0.90*BLOCK_SIZE, 0.95*BLOCK_SIZE);
 
               // 각종 그림자
               ctx.clearRect(x*BLOCK_SIZE, z*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
@@ -169,7 +169,7 @@ import { onMounted, watch } from "vue";
               }
             } 
 
-          z += 0.1      // 내려오는 속도
+          z += 0.05      // 내려오는 속도
           
           stop = requestAnimationFrame(render)
           
@@ -206,50 +206,29 @@ import { onMounted, watch } from "vue";
 // -----------------------------------------> 단어로 필요한 정보 찾기
         function findInfoByWord(word) {
           return wordSet[word]
-          // left = wordblock.left
-          // length = wordblock.length
-          // height = wordblock.height
         }
 // <----------------------------------------- 단어로 필요한 정보 찾기
 
 // -----------------------------------------> 단어블록 지우기 함수
         function removeWord(word) {
-          // 필요한 정보(height, left, length) 찾기
+
+          console.log('끝에서 멈춤 : ', word)
+          console.log('삭제 전 wordSet : ', wordSet)
+
+          // InputWord.splice(i, 1);
 
           let left = wordSet[word].left;
           let length = wordSet[word].length;
           let height = wordSet[word].height;
           // 화면 지우기
           ctx.clearRect(left*BLOCK_SIZE, height *BLOCK_SIZE, length * BLOCK_SIZE, BLOCK_SIZE);
-
-          // 단어 모음집에서 word 지우기
-          removeWordInWordSet(word)
+           
+          removeWordInWordSet(word);
+          console.log(word, '삭제완료')
+          console.log('삭제 후 wordSet : ', wordSet)
         }
 // <----------------------------------------- 단어블록 지우기 함수
 
-
-
-// 테스트 공간--------------------------------------
-    
-            
-            //단어 입력하면 삭제시키기
-            var inputAnswer = -1
-            // const input = document.getElementById('input_answer');
-            // const button = document.getElementById('submit_answer');
-            // button.addEventListener('click', function(event) {
-            //   console.log("단어 입력 함수 동작함")
-            //   let a = input.value;
-            //   console.log("입력값 :", a)
-            //   let b = Object.keys(wordSet)
-            //   for (i=0; i < b.length; i++) {
-                
-            //     if (b[i] == a && wordSet[b[i]].height != -1) {
-            //       removeWord(a);
-            //     } 
-            //     inputAnswer = a
-            //   }
-            // }
-            // )
 
     },)
 

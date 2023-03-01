@@ -993,7 +993,7 @@ export default {
                 span_user_id.innerText = event_data.user;
                 span_user_input.innerText = event_data.answer;
 
-                event_data.removedWords.forEach((element) => {
+                event_data.remWords.forEach((element) => {
                     span_remove_word.innerHTML += element + " ";
                 });
 
@@ -1011,9 +1011,9 @@ export default {
                 }
                 const game_start = document.getElementById("game_start");
                 const game_box = document.getElementById("game_box");
-                const sejong_img = document.getElementById("initImage");
+                // const sejong_img = document.getElementById("initImage");
                 game_start.style.display = "none";
-                sejong_img.style.display = "none";
+                // sejong_img.style.display = "none";
                 game_box.style.position = "position";
             } else if (event_data.type == "game_ing") {
                 connection.close();
