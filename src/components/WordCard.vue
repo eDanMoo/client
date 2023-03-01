@@ -80,7 +80,9 @@ export default {
             }
         },
 
-        nullWarning(message){setTimeout(() => this.nullWarning = false , 1000);}
+        nullWarning(message) {
+            setTimeout(() => (this.nullWarning = false), 1000);
+        },
     },
 
     data() {
@@ -97,7 +99,7 @@ export default {
             nullWarning: false,
         };
     },
-    
+
     methods: {
         onAfterEnter() {
             /* 시작했을 때 이어주는 용 */
@@ -156,7 +158,7 @@ export default {
         /** 화면에서 블럭 삭제 */
         delElem(command) {
             let info = Object.values(command);
- 
+
             info.forEach((element) => {
                 this.wordcard[element[0]].show = false;
             });
@@ -170,11 +172,13 @@ export default {
         },
         addElem(command) {
             let info = Object.values(command);
-            info[2].forEach((element,index) => {
+            info[2].forEach((element, index) => {
                 this.wordcard[info[0][index][0]].id = element[1];
                 this.wordcard[info[0][index][0]].value = element[2];
-                this.wordcard[info[0][index][0]].posx = mapinfo[element[1]].posX;
-                this.wordcard[info[0][index][0]].posy = mapinfo[element[1]].posY;
+                this.wordcard[info[0][index][0]].posx =
+                    mapinfo[element[1]].posX;
+                this.wordcard[info[0][index][0]].posy =
+                    mapinfo[element[1]].posY;
             });
         },
         start(command) {
@@ -211,7 +215,7 @@ export default {
         },
         metamor(command) {
             let info = Object.values(command);
-            info.forEach((element,index) => {
+            info.forEach((element, index) => {
                 switch (element[1]) {
                     case "U":
                         this.wordcard[index].Up = true;

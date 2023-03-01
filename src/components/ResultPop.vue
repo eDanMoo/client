@@ -16,7 +16,8 @@
                             :key="user.id"
                             style="font-size: 1.3rem"
                         >
-                            | {{ user[0] }}등: {{ user[1] }}, 점수: {{ user[2] }} |
+                            | {{ user[0] }}등: {{ user[1] }}, 점수:
+                            {{ user[2] }} |
                         </div>
                     </div>
 
@@ -37,7 +38,10 @@
                                     v-for="(word, index) in words[2]"
                                     :data-index="index"
                                     :key="word"
-                                    style="display: inline; word-break: keep-all"
+                                    style="
+                                        display: inline;
+                                        word-break: keep-all;
+                                    "
                                 >
                                     {{ word }}&nbsp
                                 </div>
@@ -45,7 +49,7 @@
                         </div>
                     </div>
                     <div class="closeButton padding">
-                        <div @click="closeModal" style="z-index:50;">
+                        <div @click="closeModal" style="z-index: 50">
                             <span><b>닫기</b></span>
                         </div>
                     </div>

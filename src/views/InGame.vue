@@ -1183,7 +1183,10 @@ export default {
             }
         };
 
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia(constraints)) {
+        if (
+            navigator.mediaDevices &&
+            navigator.mediaDevices.getUserMedia(constraints)
+        ) {
             this.checkWebcam();
         } else {
             console.log("getUserMedia not supported on this browser");
