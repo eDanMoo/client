@@ -507,8 +507,8 @@
                     <div class="innerWindow">
                         <div class="barCover">
                             <div class="windowBar">
-                                <span>기 록</span
-                                ><button
+                                <span>기 록</span>
+                                <button
                                     class="minBtn"
                                     @click="LogVisible = !LogVisible"
                                     v-show="LogVisible"
