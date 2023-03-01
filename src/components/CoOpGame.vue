@@ -20,7 +20,7 @@ import { onMounted, watch } from "vue";
 
       onMounted(() => {  
 
-        watch(() => props.msg, ()=> {
+        watch(() => props.msg, async ()=> {
 
           if (props.msg.type == 'next') {  
             let status = props.msg.status
@@ -28,12 +28,13 @@ import { onMounted, watch } from "vue";
               let word = props.msg.word;
               let left = props.msg.left;
               let length = props.msg.length;
-              let fall = props.msg.fall
 
-            storeInStartWord(word, left, length, -1)
-            // console.log('drop 전에 저장!!!!! : ', word);
-            // console.log('drop 전 word 높이!!!! : ', wordSet[word].height);
-            dropWord(word, fall)
+              let fall = props.msg.fall
+              let current = -1;
+              let destination = current + fall;
+
+            storeInWordSet(word, left, length, current, destination)
+
 
           } 
         } else if (props.msg.type == 'check') {
@@ -43,32 +44,20 @@ import { onMounted, watch } from "vue";
 
           for (i=0; i<remWords.length; i++) {
             let word = remWords[i]
-            let haskey = word in startWord;
-            if (haskey == true) {
-                stopWord.push(word);
-            } else {         //else일지 if일지 조심
-              removeEndWord(word);
-              delete endWord[word]
-              console.log(`${word} 끝에서 터짐`)
-
-            }
+            removeWordInWordSet(word)
           }
 
           let moveInfo = props.msg.moveInfo;
           for (i=0; i < moveInfo.length; i++ ){
 
             let word = moveInfo[i][0];
-
             let fall = moveInfo[i][1];
+            console.log(wordSet[word]);
+            let destination = wordSet[word].destination;
+            await setDestination(word, destination, fall)
+            console.log('moveInfo : ', word, fall)
+         
             
-            let left = endWord[word].left;
-            let length = endWord[word].length;
-            let height = endWord[word].length;
-            
-            console.log('moveInfo : ', word, left, length, hegiht, fall)
-
-            storeInStartWord(word, left, length, height)
-            dropWord(word, fall)
             // 이게 동시에 안되나?
           }
         }
@@ -90,138 +79,143 @@ import { onMounted, watch } from "vue";
             // let blockImage = new Image();
             // blockImage.src = "https://i.imgur.com/zdluTLl.png"
 
-            let startWord = {};
-            let endWord = {};
+            const wordSet = [];
             let stopWord = [];    // 이름 고칠 것
             const InputWord = [];   // 안쓸거면 지우기
 // 초기화-----------------------------------------------------------------
             setInterval( () => {
               ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
               let i;
-              let endWordKey = Object.keys(endWord);
-              for (i=0; i < endWordKey.length; i++) {
+              let wordSetKey = Object.keys(wordSet);
+              for (i=0; i < wordSetKey.length; i++) {
                 
-                let left = endWord[endWordKey[i]].left
-                let length = endWord[endWordKey[i]].length
-                let height = endWord[endWordKey[i]].height
-                let word = endWordKey[i]
+                let left = wordSet[wordSetKey[i]].left
+                let length = wordSet[wordSetKey[i]].length
+                let current = wordSet[wordSetKey[i]].current
+                let destination = wordSet[wordSetKey[i]].destination
+                let word = wordSetKey[i]
                 
-                let z = height;  
                 let x = 0;
                 for (x = left; x < left + length; x++) {
                   
                   // 본체
-                  ctx.fillStyle = "blue";
-                  ctx.fillRect(x*BLOCK_SIZE, height*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+                  ctx.fillStyle = "gray";
+                  ctx.fillRect(x*BLOCK_SIZE, current*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
                   // // ctx.drawImage(blockImage, x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
                   
                   // // ctx.strokeRect((x+0.05)*BLOCK_SIZE, z*BLOCK_SIZE, 0.90*BLOCK_SIZE, 0.95*BLOCK_SIZE);              
                   
                   // 각종 그림자
                   
-                  ctx.clearRect(x*BLOCK_SIZE, height*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
-                  ctx.clearRect(x*BLOCK_SIZE, height*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
+                  ctx.clearRect(x*BLOCK_SIZE, current*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
+                  ctx.clearRect(x*BLOCK_SIZE, current*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
                   ctx.fillStyle = "black"
-                  ctx.fillRect(x*BLOCK_SIZE + 0.9*BLOCK_SIZE, height*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
-
-                  ctx.fillRect(x*BLOCK_SIZE, height*BLOCK_SIZE + 0.9*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
+                  ctx.fillRect(x*BLOCK_SIZE + 0.9*BLOCK_SIZE, current*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
+                  
+                  ctx.fillRect(x*BLOCK_SIZE, current*BLOCK_SIZE + 0.9*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
                   // 텍스트
                   ctx.fillStyle = "white"
                   ctx.font = `${48/63 * BLOCK_SIZE}px serif`;
-                  ctx.fillText(word[x-left], (x+0.1)*BLOCK_SIZE, (height+1-0.2)*BLOCK_SIZE);
-                    } 
-                  }
-             }, 200) 
-
+                  ctx.fillText(word[x-left], (x+0.1)*BLOCK_SIZE, (current+1-0.2)*BLOCK_SIZE);
+                } 
+                if (current < destination) {   
+                wordSet[wordSetKey[i]].current = current + 0.1;
+                }
+              }
+            }, 5) 
+            
               
 
 // -----------------------------------------> 단어 drop 함수
-        function dropWord(word, fall) {
+        function dropWord(word) {
           // 단어 받기
-          console.log(`moveinfo에서 ${word} 드롭 시작`)
-          const wordBlock = startWord[word]
+          const wordBlock = wordSet[word]
           
           let left = wordBlock.left;
           let length = wordBlock.length;
-          let height = wordBlock.height;
+          let current = wordBlock.current;
+          let destination = wordBlock.destination;
 
           // 단어 옮기기  
-          let z = height; 
           let x = 0;
 
           // 윤곽선 넣는다면?
-          let randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16); 
-          ctx.strokeStyle = `${randomColor}`
-          ctx.lineWidth = 5;
+          // let randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16); 
+          // ctx.strokeStyle = `${randomColor}`
+          // ctx.lineWidth = 5;
           
           function render() {
             for (x = left; x < left + length; x++) {
               ctx.fillStyle = "gray";
               
-
-
-              // 이부분 삽입----------------------
-              if (stopWord.includes(word)) {
-                ctx.fillRect(x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
-                delete startWord[word];
-                console.log(`${word} 중간에 터짐`)
-                return
-              }
+              // 이부분 삽입---------------------- 
+              // if (stopWord.includes(word)) {
+              //   ctx.fillRect(x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+              //   delete startWord[word];
+              //   console.log(`${word} 중간에 터짐`)
+              //   return
+              // }
               
               // 이부분 삽입 ----------------------
+              
+              let checkWordInWordSet = word in wordSet;
+              // if (checkWordInWordSet) {
+              //   ctx.clearRect(x*BLOCK_SIZE, current *BLOCK_SIZE, length * BLOCK_SIZE, BLOCK_SIZE);
+              //   return
+              // }
 
 
               // 본체
-              ctx.fillRect(x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+              ctx.fillRect(x*BLOCK_SIZE, current*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
               // ctx.drawImage(blockImage, x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
               // ctx.strokeRect((x+0.05)*BLOCK_SIZE, z*BLOCK_SIZE, 0.90*BLOCK_SIZE, 0.95*BLOCK_SIZE);
 
               // 각종 그림자
-              ctx.clearRect(x*BLOCK_SIZE, z*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
-              ctx.clearRect(x*BLOCK_SIZE, z*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
+              ctx.clearRect(x*BLOCK_SIZE, current*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
+              ctx.clearRect(x*BLOCK_SIZE, current*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
               ctx.fillStyle = "black"
-              ctx.fillRect(x*BLOCK_SIZE + 0.9*BLOCK_SIZE, z*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
-              ctx.fillRect(x*BLOCK_SIZE, z*BLOCK_SIZE + 0.9*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
+              ctx.fillRect(x*BLOCK_SIZE + 0.9*BLOCK_SIZE, current*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
+              ctx.fillRect(x*BLOCK_SIZE, current*BLOCK_SIZE + 0.9*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
 
               // 텍스트
               ctx.fillStyle = "white"
               ctx.font = `${48/63 * BLOCK_SIZE}px serif`;
-              ctx.fillText(word[x-left], (x+0.1)*BLOCK_SIZE, (z+1-0.2)*BLOCK_SIZE);
+              ctx.fillText(word[x-left], (x+0.1)*BLOCK_SIZE, (current+1-0.2)*BLOCK_SIZE);
 
               // 내려온 흔적 지우기
-              if (z < wordBlock.height + 1) {
-                ctx.clearRect(x*BLOCK_SIZE, wordBlock.height*BLOCK_SIZE, 1*BLOCK_SIZE, (z-wordBlock.height)*BLOCK_SIZE);
+              if (current < wordBlock.current + 1) {
+                ctx.clearRect(x*BLOCK_SIZE, current*BLOCK_SIZE, 1*BLOCK_SIZE, (current-wordBlock.height)*BLOCK_SIZE);
               } else {
-                ctx.clearRect(x*BLOCK_SIZE, (z-1)*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
+                ctx.clearRect(x*BLOCK_SIZE, (current-1)*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
               }
             } 
 
-          z += 0.05      // 내려오는 속도
+            current += 0.05      // 내려오는 속도
           
           stop = requestAnimationFrame(render)
           
-          if (z > fall + height) {
+          if (current > destination) {
             cancelAnimationFrame(stop);
-
-            // height 계산하기
-            let height2 = height + fall;
-            // 옮긴 단어 저장하기
-
-            delete startWord[word]   // startWord에서 지우기
-            storeInEndWord(word, left, length, height2)
+            wordSet[word].current = current;
             } 
           }
           render()
         }
 // <----------------------------------------->단어 drop 함수
 
+        function setDestination(word, destination, fall) {
+          wordSet[word].destination = destination + fall;
+        }
+
+
 // -----------------------------------------> 단어 목록에 단어 저장하기 함수
-        function storeInWordSet(word, left, length, height) {
+        function storeInWordSet(word, left, length, current, destination) {
           let key = word
           wordSet[key] = {
             left : left,
             length : length,
-            height : height,
+            current : current,
+            destination : destination,
           }
         }
 // <----------------------------------------- 단어 목록에 단어 저장하기 함수
@@ -269,13 +263,13 @@ function storeInEndWord(word, left, length, height) {
 // <----------------------------------------- 단어로 필요한 정보 찾기
 
 // -----------------------------------------> 단어블록 지우기 함수
-        function removeEndWord(word) {
+        function removeWord(word) {
 
-          let left = endWord[word].left;
-          let length = endWord[word].length;
-          let height = endWord[word].height;
+          let left = wordSet[word].left;
+          let length = wordSet[word].length;
+          let current = wordSet[word].current;
           // 화면 지우기
-          ctx.clearRect(left*BLOCK_SIZE, height *BLOCK_SIZE, length * BLOCK_SIZE, BLOCK_SIZE);
+          ctx.clearRect(left*BLOCK_SIZE, current *BLOCK_SIZE, length * BLOCK_SIZE, BLOCK_SIZE);
 
         }
 // <----------------------------------------- 단어블록 지우기 함수
