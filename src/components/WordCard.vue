@@ -4,7 +4,7 @@
             @after-enter="onAfterEnter"
             @after-leave="onAfterLeave"
             name="wordBlock"
-            v-for="(item, index) in wordcard"
+            v-for="item in wordcard"
             :key="item.primary"
             appear
         >
@@ -29,13 +29,6 @@
             </div>
         </transition>
     </div>
-
-    <button @click="del">del</button>
-    <button @click="swit">switch</button>
-    <button @click="this.wordcard[0].show = !this.wordcard[0].show">
-        hide
-    </button>
-    <div></div>
 </template>
 
 <script>
@@ -55,9 +48,9 @@ export default {
         msg(message) {
             if (message != null) {
                 if (message.type == "check") {
-                    console.log(message);
+                    // console.log(message);
                     if (message.moves.length === 5) {
-                        console.log("판갈이 셋 되어있음");
+                        // console.log("판갈이 셋 되어있음");
                         this.newgameFlag = true;
                     }
                     if (message.moves[0].length > 0) {
@@ -81,6 +74,11 @@ export default {
                 }
             }
         },
+        delete_board(is_finish) {
+            if (is_finish) {
+                this.wordcard = [];
+            }
+        },
     },
 
     data() {
@@ -94,31 +92,24 @@ export default {
             secondFlag: false,
             startbondFlag: false,
             checkbondFlag: false,
+            
         };
     },
 
     methods: {
-        swit() {
-            console.log("변경");
-            const mode = document.getElementById("0");
-            mode.style.left = 2 + "%";
-            mode.setAttribute("id", "2");
-            console.log(mode);
-            console.log(mode.id);
-        },
         onAfterEnter() {
             /* 시작했을 때 이어주는 용 */
             if (this.startbondFlag === true) {
                 this.metamong(this.msg.table);
-                console.log("여기는 판이 새로 만들어지면 작동하는 곳입니다.");
-                console.log(this.startbondFlag);
+                // console.log("여기는 판이 새로 만들어지면 작동하는 곳입니다.");
+                // console.log(this.startbondFlag);
                 this.startbondFlag = false;
-                console.log(this.startbondFlag);
+                // console.log(this.startbondFlag);
             }
 
             /* 새판을 갈아주는 곳 */
             if (this.secondFlag === true) {
-                console.log("끝까지 왔습니다.");
+                // console.log("끝까지 왔습니다.");
                 this.secondFlag = false;
                 this.checkbondFlag = false;
                 this.clearmeta();
@@ -131,7 +122,7 @@ export default {
             }
 
             if (this.checkbondFlag === true) {
-                console.log("혹시 여기가 작동하니?");
+                // console.log("혹시 여기가 작동하니?");
                 this.metamong(this.msg.table);
                 this.checkbondFlag = false;
             }
@@ -146,16 +137,17 @@ export default {
             this.checkbondFlag = true;
 
             if (this.newgameFlag === true) {
-                console.log("한번만 실행되어야 합니다.");
+                // console.log("한번만 실행되어야 합니다.");
                 this.newgameFlag = false;
                 this.secondFlag = true;
             }
             // this.metamong(this.msg.table);
         },
+ 
 
         /* 삭제(1) -> 이동 -> 삭제(2) -> 추가 -> sorting -> class변경 */
         answerCheck(command) {
-            // this.clearmeta();
+            this.clearmeta();
             this.invisibleElem(command[0]);
             this.moveElem(command[1]);
             this.addElem(command);
@@ -173,16 +165,16 @@ export default {
         /** 삭제될 요소를 투명화 처리한다 */
         invisibleElem(command) {
             let info = Object.values(command);
-            console.log("삭제");
-            console.log(info);
+            // console.log("삭제");
+            // console.log(info);
             info.forEach((element) => {
                 this.wordcard[element[0]].show = false;
             });
         },
         moveElem(command) {
             let info = Object.values(command);
-            console.log("이동");
-            console.log(info);
+            // console.log("이동");
+            // console.log(info);
             info.forEach((element) => {
                 this.wordcard[element[0]].posy = mapinfo[element[1]].posY;
                 this.wordcard[element[0]].id = element[1];
@@ -263,13 +255,6 @@ export default {
             });
         },
         refresh() {
-            // this.wordcard.forEach((element,index) => {
-            //   console.log(index)
-            //   console.log(element.id)
-            //   element.id = index;
-            //   console.log(element.id)
-            // });
-
             this.wordcard.sort((a, b) => a.id - b.id);
         },
     },
@@ -292,7 +277,8 @@ export default {
     box-sizing: border-box;
     width: 8.1818%;
     height: 8.1818%;
-    background: rgba(32, 32, 32, 0.7);
+    /* background: rgba(32, 32, 32, 0.7); */
+    background: transparent;
     position: absolute;
     transition: all 0.1s;
     /* transition-delay: 0.5s; */
@@ -302,6 +288,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    /* border 초기화 */
 }
 /* up down */
 @keyframes blinkU {
@@ -319,8 +307,8 @@ export default {
 .bondU {
     background: transparent;
     height: 8.64%;
-    /* margin-top: -0.6%; */
-    margin-top: -1.6%;
+    margin-top: -0.4%;
+    /* margin-top: -1.6%; */
     animation: blinkU 0.5s alternate infinite;
     border-bottom-right-radius: 50%;
     border-bottom-left-radius: 50%;
@@ -340,7 +328,7 @@ export default {
 .bondD {
     background: transparent;
     height: 8.64%;
-    margin-top: 1.6%;
+    margin-top: 0.45%;
     animation: blinkD 0.5s alternate infinite;
     border-top-right-radius: 50%;
     border-top-left-radius: 50%;
