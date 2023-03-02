@@ -20,10 +20,10 @@ body::-webkit-scrollbar{
 
 @font-face {
   font-family: "retroFont";
-  src: url("./font/digital.woff2");
+  src: url("/assets/font/digital.woff2");
 }
 
 @font-face {
   font-family: "DungGeunMo";
-  src: url("./font/DungGeunMo.woff2");
+  src: url("/assets/font/DungGeunMo.woff2");
 }
