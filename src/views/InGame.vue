@@ -1205,7 +1205,7 @@ export default {
             const x = event.clientX;
             const y = event.clientY;
             this.drawLaser(x, y);
-            const audio = new Audio("../src/assets/soundEffect/click.mp3");
+            const audio = new Audio("/assets/soundEffect/click.mp3");
             audio.play();
         },
         drawLaser(x, y) {
@@ -1675,7 +1675,7 @@ export default {
 <style scoped>
 @font-face {
     font-family: "Dunggeunmo";
-    src: url("../src/assets/font/DungGeunMo.woff2");
+    src: url("/assets/font/DungGeunMo.woff2");
 }
 
 button {
@@ -1960,7 +1960,7 @@ button {
 /*############################### Music Player */
 @font-face {
     font-family: "retroFont";
-    src: url("../src/assets/font/digital.woff2");
+    src: url("/assets/font/digital.woff2");
 }
 @keyframes scrollText {
     from {

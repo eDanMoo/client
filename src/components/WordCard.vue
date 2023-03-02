@@ -245,19 +245,21 @@ export default {
             this.wordcard.sort((a, b) => a.id - b.id);
         },
         Warning() {
-            document.querySelector("#backGrd").animate([
-    // from keyframe
-    {
-        backgroundColor: 'rgba(240, 7, 7, 0.7)',
-    },
-    {
-        backgroundColor: 'rgba(240, 7, 7, 0.1)',
-    },
-    {
-        backgroundColor: 'rgba(240, 7, 7, 0.7)',
-    }
-], {duration: 400, iterations:2,});
-
+            document.querySelector("#backGrd").animate(
+                [
+                    // from keyframe
+                    {
+                        backgroundColor: "rgba(240, 7, 7, 0.7)",
+                    },
+                    {
+                        backgroundColor: "rgba(240, 7, 7, 0.1)",
+                    },
+                    {
+                        backgroundColor: "rgba(240, 7, 7, 0.7)",
+                    },
+                ],
+                { duration: 400, iterations: 2 }
+            );
         },
     },
 };

@@ -362,7 +362,7 @@
                                     >
                                 </div>
                                 <div id="windowTime">
-                                    {{ this.ymd }} <br/>
+                                    {{ this.ymd }} <br />
                                     {{ this.hms }}
                                 </div>
                             </div>
@@ -462,14 +462,32 @@
             <div class="clockPannel" id="clockBottom"></div>
         </div>
         <div class="cabinetBack">
-            <div class="cabinetPannel cabinetBackPannel" id="cabinetBackFront"></div>
-            <div class="cabinetPannel cabinetBackPannel" id="cabinetBackBottom"></div>
+            <div
+                class="cabinetPannel cabinetBackPannel"
+                id="cabinetBackFront"
+            ></div>
+            <div
+                class="cabinetPannel cabinetBackPannel"
+                id="cabinetBackBottom"
+            ></div>
         </div>
         <div class="cabinetFront">
-            <div class="cabinetPannel cabinetFrontPannel" id="cabinetFrontFront"></div>
-            <div class="cabinetPannel cabinetFrontPannel" id="cabinetFrontLeft"></div>
-            <div class="cabinetPannel cabinetFrontPannel" id="cabinetFrontTop"></div>
-            <div class="cabinetPannel cabinetFrontPannel" id="cabinetFrontBottom"></div>
+            <div
+                class="cabinetPannel cabinetFrontPannel"
+                id="cabinetFrontFront"
+            ></div>
+            <div
+                class="cabinetPannel cabinetFrontPannel"
+                id="cabinetFrontLeft"
+            ></div>
+            <div
+                class="cabinetPannel cabinetFrontPannel"
+                id="cabinetFrontTop"
+            ></div>
+            <div
+                class="cabinetPannel cabinetFrontPannel"
+                id="cabinetFrontBottom"
+            ></div>
         </div>
         <div class="cube" id="cube-one">
             <div class="cubePannel" id="cubeFront"></div>
@@ -604,7 +622,7 @@ export default {
             let today = new Date();
             this.ymd = today.toLocaleDateString();
             this.hms = today.toLocaleTimeString();
-        }
+        },
     },
     setup() {
         let showHancom = ref(true);
@@ -637,7 +655,7 @@ export default {
 <style scoped>
 @font-face {
     font-family: "DungGeunMo";
-    src: url(../assets/font/DungGeunMo.woff2);
+    src: url(/assets/font/DungGeunMo.woff2);
 }
 .windowsWindow {
     width: 100%;
@@ -1311,7 +1329,8 @@ export default {
 #cubeFront {
     transform: translateZ(200px);
 }
-#cubeBack {}
+#cubeBack {
+}
 #cubeLeft {
     transform: translateZ(100px) translateX(-100px) rotateY(-90deg);
 }
@@ -1363,5 +1382,4 @@ export default {
     height: 50px;
     transform: translateZ(25px) translateY(275px) rotateX(-90deg);
 }
-
 </style>

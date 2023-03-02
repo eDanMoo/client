@@ -103,7 +103,7 @@ export default {
     methods: {
         closeLogin() {
             const click_sound = new Audio(
-                "../src/assets/soundEffect/basic_click.mp3"
+                "/assets/soundEffect/basic_click.mp3"
             );
             click_sound.volume = 0.6;
             click_sound.play();
