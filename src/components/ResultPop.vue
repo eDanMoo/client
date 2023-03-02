@@ -168,13 +168,13 @@ export default {
 
 .ranking {
     border-bottom: 2px solid;
-    flex-grow: 20px;
+    flex-grow: 1;
     overflow: auto;
 }
 
 .answerLog {
-    flex-grow: 1;
-    height: 300px;
+    flex-grow: 2;
+    min-height: 300px;
 }
 
 .wordList {

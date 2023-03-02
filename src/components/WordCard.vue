@@ -13,12 +13,12 @@
                 class="ball"
                 :id="item.id"
                 :class="{
-                    bondU: item.Up,
-                    bondD: item.Down,
-                    bondL: item.Left,
-                    bondR: item.Right,
-                    bondUD: item.Updown,
-                    bondRL: item.Rleft,
+                bondU: item.Up,
+                bondD: item.Down,
+                bondL: item.Left,
+                bondR: item.Right,
+                bondUD: item.Updown,
+                bondRL: item.Rleft,
                 }"
                 :style="{
                     top: item.posy + '%',
@@ -29,7 +29,6 @@
             </div>
         </transition>
     </div>
-    <div v-show="nullWarning" id="nullWarning">관련 단어가 없습니다.</div>
 </template>
 
 <script>
@@ -57,8 +56,7 @@ export default {
                     if (message.moves[0].length > 0) {
                         this.answerCheck(message.moves);
                     } else {
-                        console.log("단어가 없는데");
-                        // this.nullWarning = true;
+                        // console.log("단어가 없는데");
                         this.Warning();
                     }
 
@@ -80,10 +78,6 @@ export default {
                 this.wordcard = [];
             }
         },
-
-        nullWarning(message) {
-            setTimeout(() => (this.nullWarning = false), 1000);
-        },
     },
 
     data() {
@@ -97,7 +91,6 @@ export default {
             secondFlag: false,
             startbondFlag: false,
             checkbondFlag: false,
-            nullWarning: false,
         };
     },
 
@@ -172,15 +165,43 @@ export default {
             });
         },
         addElem(command) {
-            let info = Object.values(command);
-            info[2].forEach((element, index) => {
-                this.wordcard[info[0][index][0]].id = element[1];
-                this.wordcard[info[0][index][0]].value = element[2];
-                this.wordcard[info[0][index][0]].posx =
-                    mapinfo[element[1]].posX;
-                this.wordcard[info[0][index][0]].posy =
-                    mapinfo[element[1]].posY;
-            });
+            try {
+                let info = Object.values(command);
+                info[2].forEach((element, index) => {
+                    this.wordcard[info[0][index][0]].id = element[1];
+                    this.wordcard[info[0][index][0]].value = element[2];
+                    this.wordcard[info[0][index][0]].posx =
+                        mapinfo[element[1]].posX;
+                    this.wordcard[info[0][index][0]].posy =
+                        mapinfo[element[1]].posY;
+                });
+            }
+            catch (err) {
+                alert('추가 기능 에러');
+                console.log('삭제리스트 길이:' + info[0].length + ',추가리스트 길이:' + info[2].length);
+                console.log(err);
+            }
+
+        },
+        newtable(command) {
+            try {
+                let info = Object.values(command);
+
+                info[4].forEach((element, index) => {
+                    this.wordcard[info[3][index][0]].id = element[1];
+                    this.wordcard[info[3][index][0]].value = element[2];
+                    this.wordcard[info[3][index][0]].posx =
+                        mapinfo[element[1]].posX;
+                    this.wordcard[info[3][index][0]].posy =
+                        mapinfo[element[1]].posY;
+                });
+            }
+            catch {
+                alert('테이블 교체 기능 에러');
+                console.log('삭제리스트 길이:' + info[3].length + ',추가리스트 길이:' + info[4].length);
+                console.log(err);
+            }
+
         },
         start(command) {
             let info = Object.values(command);
@@ -200,18 +221,6 @@ export default {
                     show: true,
                 });
                 this.global++;
-            });
-        },
-        newtable(command) {
-            let info = Object.values(command);
-
-            info[4].forEach((element, index) => {
-                this.wordcard[info[3][index][0]].id = element[1];
-                this.wordcard[info[3][index][0]].value = element[2];
-                this.wordcard[info[3][index][0]].posx =
-                    mapinfo[element[1]].posX;
-                this.wordcard[info[3][index][0]].posy =
-                    mapinfo[element[1]].posY;
             });
         },
         metamor(command) {
@@ -275,20 +284,6 @@ export default {
     background: rgba(0, 0, 0, 0.7);
 }
 
-#nullWarning {
-    position: absolute;
-    z-index: 999;
-    width: 40%;
-    height: 5%;
-    left: 30%;
-    top: 45%;
-    background-color: rgba(146, 215, 218, 0.7);
-    border-radius: 20px;
-    border: 2px black;
-    font-size: 1.5rem;
-    text-align: center;
-}
-
 .ball {
     box-sizing: border-box;
     width: 8.1818%;
@@ -305,6 +300,7 @@ export default {
 
     /* border 초기화 */
 }
+
 /* up down */
 @keyframes blinkU {
     0% {
@@ -312,12 +308,14 @@ export default {
         border-top: 3px solid transparent;
         color: rgb(0, 195, 255);
     }
+
     100% {
         border: 3px solid rgb(160, 10, 125);
         border-top: 3px solid transparent;
         color: rgb(0, 220, 255);
     }
 }
+
 .bondU {
     background: transparent;
     height: 8.64%;
@@ -326,18 +324,21 @@ export default {
     border-bottom-right-radius: 50%;
     border-bottom-left-radius: 50%;
 }
+
 @keyframes blinkD {
     0% {
         border: 3px solid rgb(150, 0, 115);
         border-bottom: 3px solid transparent;
         color: rgb(0, 195, 255);
     }
+
     100% {
         border: 3px solid rgb(160, 10, 125);
         border-bottom: 3px solid transparent;
         color: rgb(0, 220, 255);
     }
 }
+
 .bondD {
     background: transparent;
     height: 8.64%;
@@ -346,6 +347,7 @@ export default {
     border-top-right-radius: 50%;
     border-top-left-radius: 50%;
 }
+
 @keyframes blinkUD {
     0% {
         border: 3px solid rgb(150, 0, 115);
@@ -353,6 +355,7 @@ export default {
         border-bottom: 3px solid transparent;
         color: rgb(0, 195, 255);
     }
+
     100% {
         border: 3px solid rgb(160, 10, 125);
         border-top: 3px solid transparent;
@@ -360,6 +363,7 @@ export default {
         color: rgb(0, 220, 255);
     }
 }
+
 .bondUD {
     background: transparent;
     height: 11.5%;
@@ -374,12 +378,14 @@ export default {
         border-left: 3px solid transparent;
         color: rgb(255, 210, 0);
     }
+
     100% {
         border: 3px solid rgb(80, 80, 170);
         border-left: 3px solid transparent;
         color: rgb(255, 215, 70);
     }
 }
+
 .bondL {
     background: transparent;
     width: 8.64%;
@@ -388,18 +394,21 @@ export default {
     border-bottom-right-radius: 50%;
     animation: blinkL 0.5s alternate infinite;
 }
+
 @keyframes blinkR {
     0% {
         border: 3px solid rgb(80, 80, 140);
         border-right: 3px solid transparent;
         color: rgb(255, 210, 0);
     }
+
     100% {
         border: 3px solid rgb(80, 80, 170);
         border-right: 3px solid transparent;
         color: rgb(255, 215, 70);
     }
 }
+
 .bondR {
     background: transparent;
     width: 8.64%;
@@ -417,6 +426,7 @@ export default {
         border-right: 3px solid transparent;
         color: rgb(255, 210, 0);
     }
+
     100% {
         border: 3px solid rgb(80, 80, 170);
         border-left: 3px solid transparent;
@@ -424,6 +434,7 @@ export default {
         color: rgb(255, 215, 70);
     }
 }
+
 .bondRL {
     background: transparent;
     width: 11.6%;
@@ -477,6 +488,7 @@ export default {
 .wordBlock-leave-from {
     opacity: 1;
 }
+
 .wordBlock-leave-active {
     animation: bounce-in 2s;
     z-index: 100;

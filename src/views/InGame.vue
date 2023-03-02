@@ -1073,6 +1073,11 @@ export default {
                 console.log(event_data);
                 this.wordUpdate = event_data;
 
+                /* 제출 답 표시 기능 */
+                // if(event_data.remWords.length > 0){
+                //     DisplayString(event_data.answer);
+                // };
+
                 const my_score = document.getElementById(
                     event_data.user + "_score_val"
                 );
@@ -1668,6 +1673,10 @@ export default {
             });
             connection.send(jsonData);
         },
+        /** 제출답 표시 */
+        // DisplayString(info){
+
+        // },
     },
 };
 </script>
