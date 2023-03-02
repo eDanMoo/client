@@ -5,7 +5,7 @@
                 >단어게임 접속</span
             >
             <img
-                src="https://storage.cloud.google.com/koword_bucket/btn_close.png"
+                src="https://storage.googleapis.com/koword_bucket/btn_close.png"
                 style="
                     width: 30px;
                     height: 30px;
@@ -186,7 +186,7 @@ export default {
         const room_code = ref("");
         const user_id = ref("");
         const audio_enter = new Audio(
-            "https://storage.cloud.google.com/koword_bucket/enterRoom.wav"
+            "https://storage.googleapis.com/koword_bucket/enterRoom.wav"
         );
         audio_enter.volume = 0.6;
         const joinPage = () => {
