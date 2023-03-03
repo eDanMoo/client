@@ -6,7 +6,7 @@ RUN yarn build
 
 # production stage
 FROM nginx:1.18 as production-stage
-COPY ./data/nginx/app.conf /etc/nginx/conf.d/default.conf
+COPY ./app.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 8080

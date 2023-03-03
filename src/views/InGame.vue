@@ -878,7 +878,7 @@ export default {
             current_user = url_segs[2] + "#" + uniqCode;
 
             const socket = new WebSocket(
-                ws_scheme + "webdev-test.site/ws/" + room_name
+                ws_scheme + "chkdnstest.shop/ws/" + room_name
                 // "ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
