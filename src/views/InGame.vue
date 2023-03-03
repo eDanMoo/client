@@ -1085,7 +1085,7 @@ export default {
                     parseInt(my_score.innerText) +
                     parseInt(event_data.increase);
 
-                this.isGameStarted = 1;
+                //this.isGameStarted = 1;
 
                 if (event_data.remWords.length > 0) {
                     const log_board = document.getElementById("logBoard");
