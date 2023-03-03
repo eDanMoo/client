@@ -1079,6 +1079,7 @@ export default {
                 const game_box = document.getElementById("game_box");
                 console.log(game_box);
                 game_start.style.display = "none";
+                this.isGameStarted = 1;
             } else if (event_data.type == "game_ing") {
                 connection.close();
                 alert("이미 진행중인 게임입니다.");
