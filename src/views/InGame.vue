@@ -1,5 +1,9 @@
 <template>
-    <div id="inGameContainer space stars1">
+    <audio
+        src="/assets/soundEffect/audio_timetick.mp3"
+        id="time_ticking"
+    ></audio>
+    <div class="space stars1" id="inGameContainer">
         <div class="starField" id="starField">
             <div class="layer"></div>
             <div class="layer"></div>
@@ -185,7 +189,7 @@
         <nav style="display: flex; justify-content: space-between">
             <div style="display: flex; align-items: center">
                 <img
-                    src="https://storage.googleapis.com/koword_bucket/exit_Icon.svg"
+                    src="/assets/image/icon/icon_exit.svg"
                     alt=""
                     style="
                         width: 40px;
@@ -283,21 +287,21 @@
                 >
                     <img
                         v-show="isPlaying"
-                        src="https://storage.googleapis.com/koword_bucket/playerIcon.png"
+                        src="/assets/image/icon/icon_musicPlayer.png"
                         alt="cdP"
                         id="playerIcon"
                         @click="toggleMusicBox()"
                     />
                     <img
                         v-show="!isPlaying"
-                        src="https://storage.googleapis.com/koword_bucket/playerIcon.png"
+                        src="/assets/image/icon/icon_musicPlayer.png"
                         alt="cdP"
                         id="playerIconStop"
                         @click="toggleMusicBox()"
                     />
                 </div>
                 <img
-                    src="https://storage.googleapis.com/koword_bucket/questionIcon.png"
+                    src="/assets/image/icon/icon_questionMark.png"
                     alt=""
                     style="
                         width: 30px;
@@ -316,7 +320,7 @@
                 <div class="popupBar">
                     <p style="margin-left: 10px">설명</p>
                     <img
-                        src="https://storage.googleapis.com/koword_bucket/btn_close.png"
+                        src="/assets/image/button/btn_close.png"
                         style="
                             width: 22px;
                             height: 22px;
@@ -391,7 +395,7 @@
                                 ></canvas>
                                 <div v-show="!isStreaming">
                                     <img
-                                        src="https://storage.googleapis.com/koword_bucket/userBlank.png"
+                                        src="/assets/image/game/user_blank.png"
                                         alt="Camera Off"
                                         style="width: 300px; height: 240px"
                                     />
@@ -625,56 +629,26 @@
 </template>
 
 <script>
-// import { onMounted, ref } from "vue";
-// import VueSocketIO from "vue-socket.io";
-//import WordCard from "../components/WordCard.vue";
 import modal from "../components/ResultPop.vue";
 import { defineAsyncComponent, shallowRef } from "vue";
-// let url_segs = window.location.pathname.split("/");
+
 let url_segs = "";
-// var room_name = url_segs[1];
 let room_name = "";
-// var uniqCode = this.getRandomInt(10000, 100000);
 let uniqCode = 0;
-// let current_user = url_segs[2] + "#" + uniqCode;
 let current_user = "";
 let isStreaming = 1;
-// var intervalVid = this.setInterval(this.sendImage, 15);
 let intervalVid = "";
-
 let ws_scheme = "";
-
-// let connection = new WebSocket(ws_scheme + location.host + "/ws/" + room_name);
 let connection = "";
-// let messages = document.getElementById("messages");
 let messages = "";
-
 const w = 300,
     h = 240;
-// navigator.mediaDevices.getUserMedia =
-//     navigator.mediaDevices.getUserMedia ||
-//     navigator.mediaDevices.webkitGetUserMedia ||
-//     navigator.mediaDevices.mozGetUserMedia;
-
 const constraints = { audio: false, video: true };
-// const video = document.getElementById("videoInput");
 let video = "";
-// video.width = w;
-// video.height = h;
-
-// navigator.getUserMedia(constraints, this.successCallback, this.errorCallback);
-// var canvas = document.getElementById("videoOutput");
 let canvas = "";
-// canvas.width = w;
-// canvas.height = h;
-// var ctx = canvas.getContext("2d");
-// 주석추가33
 let ctx = "";
-
 let cur_timer = 0;
-
 let first_turn = "";
-
 let process_image = "";
 
 export default {
@@ -700,7 +674,7 @@ export default {
             delete_board: 0,
             isStreaming: 1,
             openModal: false,
-            openMusicPlayer: 0,
+            openMusicPlayer: true,
             game_mode: "WordCard",
             game_mode_text: "",
             musicSources: [
@@ -840,10 +814,6 @@ export default {
             showHowTo: 0,
             isGameStarted: 0,
             game_selected: 0,
-            audio_start: null,
-            audio_home: null,
-            audio_page: null,
-            audio_fail: null,
             isCoop: false,
             isComp: false,
         };
@@ -871,7 +841,6 @@ export default {
             }
 
             url_segs = window.location.pathname.split("/");
-
             room_name = url_segs[1];
             this.enterCode = room_name;
             uniqCode = this.getRandomInt(10000, 100000);
@@ -888,13 +857,13 @@ export default {
             socket.addEventListener("error", (error) => {
                 console.log("Websocket connect error");
                 console.log(error);
-                alert("게임서버와의 연결이 종료되었습니다.");
+                alert("게임 서버와의 연결이 종료되었습니다.");
                 location.href = "/";
                 reject(error);
             });
             socket.addEventListener("close", (event) => {
                 console.log("WebSocket connection closed:", event);
-                alert("게임서버와의 연결이 종료되었습니다.");
+                alert("게임 서버와의 연결이 종료되었습니다.");
                 location.href = "/";
             });
         });
@@ -902,15 +871,12 @@ export default {
         messages = document.getElementById("messages");
 
         video = document.getElementById("videoInput");
-
         video.width = w;
         video.height = h;
 
         canvas = document.getElementById("videoOutput");
-
         canvas.width = w;
         canvas.height = h;
-
         ctx = canvas.getContext("2d");
 
         const info_obj = {
@@ -920,26 +886,8 @@ export default {
         };
         connection.send(JSON.stringify(info_obj));
         // audio import
-        const audio_message = new Audio(
-            "https://storage.googleapis.com/koword_bucket/message.mp3"
-        );
-        this.audio_start = new Audio(
-            "https://storage.googleapis.com/koword_bucket/gameStart.mp3"
-        );
-        this.audio_home = new Audio(
-            "https://storage.googleapis.com/koword_bucket/close.wav"
-        );
-        this.audio_page = new Audio(
-            "https://storage.googleapis.com/koword_bucket/page.mp3"
-        );
-        this.audio_fail = new Audio(
-            "https://storage.googleapis.com/koword_bucket/fail.mp3"
-        );
+        const audio_message = new Audio("/assets/soundEffect/message.mp3");
         audio_message.volume = 0.7;
-        this.audio_home.volume = 0.6;
-        this.audio_start.volume = 0.6;
-        this.audio_page.volume = 0.3;
-        this.audio_fail.volume = 0.6;
         connection.onmessage = (event) => {
             // Get message back from websocket and display
             const message = document.createElement("div");
@@ -1031,7 +979,7 @@ export default {
                             userid_str +
                             '_frame" style="width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 1.5rem">' +
                             userid_str +
-                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="https://storage.googleapis.com/koword_bucket/userBlank.png" id="' +
+                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="/assets/image/game/user_blank.png" id="' +
                             userid_str +
                             '" style="width: 95%;"/></div></div>';
                         leftBox.insertAdjacentHTML("beforeend", newFrame);
@@ -1042,11 +990,15 @@ export default {
             } else if (event_data.type == "send_user_turn") {
                 console.log("now turn " + userid_str);
                 const btn = document.getElementById("input_answer");
+                const audio = document.getElementById("time_ticking");
                 if (userid_str != current_user) {
                     btn.disabled = true;
+                    audio.play();
                     this.time = 12;
                 } else {
                     this.time = 12;
+                    audio.stop();
+                    audio.currentTime = 0;
                     btn.disabled = false;
                 }
             } else if (event_data.type == "delete_frame") {
@@ -1140,6 +1092,7 @@ export default {
                 const answer_text_box = document.getElementById("input_answer");
                 if (userid_str == current_user) {
                     // 해당 턴이 내 턴이면 타이머 반영
+
                     answer_text_box.disabled = false;
                     answer_text_box.focus();
                     this.time = event_data.remain_time;
@@ -1174,8 +1127,7 @@ export default {
                 if (current_user != userid_str) {
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
-                        subFrame.src =
-                            "https://storage.googleapis.com/koword_bucket/userBlank.png";
+                        subFrame.src = "/assets/image/game/user_blank.png";
                     }
                 }
             } else if (event_data.type == "video_on") {
@@ -1456,7 +1408,9 @@ export default {
         },
         boardInit() {
             this.GameStart();
-            this.audio_start.play();
+            const audio_start = new Audio("/assets/soundEffect/gameStart.mp3");
+            audio_start.volume = 0.6;
+            audio_start.play();
             this.isGameStarted = 1;
             this.delete_board = 0;
 
@@ -1499,16 +1453,12 @@ export default {
             });
             connection.send(jsonData);
         },
-        // musicPlayer Methods
-        /** Play Music */
         musicPlay() {
             this.$refs.playAudio.play();
         },
-        /** Pause Music */
         musicPause() {
             this.$refs.playAudio.pause();
         },
-        /** Play Music for button */
         playMusic() {
             this.isPlaying = 1;
             document.getElementById("radioPlayBtn").style.backgroundColor =
@@ -1517,14 +1467,6 @@ export default {
                 "rgba(22, 255, 94, 0)";
             this.musicPlay();
         },
-        /** Play Music for button */
-        toggleMusic() {
-            if (this.isPlaying) {
-                this.pauseMusic();
-            } else {
-                this.playMusic();
-            }
-        },
         pauseMusic() {
             this.isPlaying = 0;
             document.getElementById("radioPlayBtn").style.backgroundColor =
@@ -1532,6 +1474,13 @@ export default {
             document.getElementById("radioPauseBtn").style.backgroundColor =
                 "rgb(22, 255, 94)";
             this.musicPause();
+        },
+        toggleMusic() {
+            if (this.isPlaying) {
+                this.pauseMusic();
+            } else {
+                this.playMusic();
+            }
         },
         reloadMusic() {
             this.$refs.playAudio.src = this.musicSources[this.musicIndex].src;
@@ -1608,22 +1557,42 @@ export default {
             document.onmousemove = null;
         },
         toggleMusicBox() {
-            this.openMusicPlayer = (this.openMusicPlayer + 1) % 2;
-            this.$refs.floatWindow.style.top = "5%";
-            this.$refs.floatWindow.style.right = "150px";
+            if (this.openMusicPlayer) {
+                const audio_tick = new Audio(
+                    "/assets/soundEffect/audio_tick.mp3"
+                );
+                audio_tick.play();
+            } else {
+                const audio_oohwing = new Audio(
+                    "/assets/soundEffect/audio_oohwing.mp3"
+                );
+                audio_oohwing.volume = 0.3;
+                audio_oohwing.play();
+                this.$refs.floatWindow.style.top = "5%";
+                this.$refs.floatWindow.style.right = "150px";
+            }
+            this.openMusicPlayer = !this.openMusicPlayer;
         },
         closePlayer() {
-            this.openMusicPlayer = 0;
+            const audio_tick = new Audio("/assets/soundEffect/audio_tick.mp3");
+            audio_tick.play();
+            this.openMusicPlayer = false;
         },
         toggleHowTo() {
-            this.showHowTo = (this.showHowTo + 1) % 2;
+            this.showHowTo = !this.showHowTo;
         },
         closeHowTo() {
-            this.showHowTo = 0;
+            this.showHowTo = false;
         },
         backHome() {
-            this.audio_home.play();
-            this.$router.push("/");
+            const audio_home = new Audio(
+                "/assets/soundEffect/audio_goodbye.mp3"
+            );
+            audio_home.volume = 0.6;
+            audio_home.play();
+            setTimeout(() => {
+                this.$router.push("/");
+            }, 1500);
         },
         // Game End Pop
         closeModalView(data) {
@@ -1632,12 +1601,18 @@ export default {
         modalOpen() {
             this.openModal = true;
         },
+        /** 오른쪽 정보창 토글 */
         toggleRight() {
-            this.audio_page.play();
+            const audio_page = new Audio("/assets/soundEffect/page.mp3");
+            audio_page.volume = 0.3;
+            audio_page.play();
             this.isOpenRight = !this.isOpenRight;
         },
+        /** 왼쪽 비디오 참가 여부 토글 */
         toggleLeft() {
-            this.audio_page.play();
+            const audio_page = new Audio("/assets/soundEffect/page.mp3");
+            audio_page.volume = 0.3;
+            audio_page.play();
             this.isOpenLeft = !this.isOpenLeft;
             this.blockVideo(this.isOpenLeft);
         },
@@ -1686,7 +1661,155 @@ export default {
     font-family: "Dunggeunmo";
     src: url("/assets/font/DungGeunMo.woff2");
 }
+@font-face {
+    font-family: "retroFont";
+    src: url("/assets/font/digital.woff2");
+}
+@keyframes scrollText {
+    from {
+        transform: translateX(0px);
+        -moz-transform: translateX(0px);
+        -webkit-transform: translateX(0px);
+        -o-transform: translateX(0px);
+        -ms-transform: translateX(0px);
+    }
+    to {
+        transform: translateX(-697px);
+        -moz-transform: translateX(-697px);
+        -webkit-transform: translateX(-697px);
+        -o-transform: translateX(-697px);
+        -ms-transform: translateX(-697px);
+    }
+}
+@keyframes startPulse {
+    0% {
+        border-left: 160px solid rgb(22, 255, 94);
+    }
+    50% {
+        border-left: 160px solid rgb(255, 82, 43);
+    }
+    100% {
+        border-left: 160px solid rgb(22, 255, 94);
+    }
+}
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+@keyframes bgPulse {
+    0% {
+        background-color: rgb(22, 255, 94);
+    }
+    50% {
+        background-color: rgb(110, 255, 170);
+    }
+    100% {
+        background-color: rgb(22, 255, 94);
+    }
+}
+@keyframes borderPulse {
+    0% {
+        border-color: rgb(22, 255, 94);
+    }
+    50% {
+        border-color: rgb(110, 255, 170);
+    }
+    100% {
+        border-color: rgb(22, 255, 94);
+    }
+}
+@keyframes zoom {
+    0% {
+        transform: scale(1) rotate(0deg) translateZ(0px);
+    }
+    50% {
+        transform: scale(2) rotate(360deg) translateZ(600px);
+    }
+    100% {
+        transform: scale(1) rotate(720deg) translateZ(1200px);
+    }
+}
+@keyframes sf-fly-by-1 {
+    from {
+        transform: translateZ(200px) rotate(0deg);
+        opacity: 0.5;
+    }
+    to {
+        transform: translateZ(400px) rotate(360deg);
+        opacity: 0.5;
+    }
+}
+@keyframes sf-fly-by-2 {
+    from {
+        transform: translateZ(200px) rotate(90deg);
+        opacity: 0.5;
+    }
+    to {
+        transform: translateZ(400px) rotate(450deg);
+        opacity: 0.5;
+    }
+}
+@keyframes sf-fly-by-3 {
+    from {
+        transform: translateZ(-800px) rotate(0deg);
+        opacity: 0.5;
+    }
+    to {
+        transform: translateZ(-600px) rotate(360deg);
+        opacity: 0.5;
+    }
+}
+@keyframes meteor {
+    0% {
+        opacity: 1;
+        margin-top: -300px;
+        margin-right: -300px;
+    }
+    12% {
+        opacity: 0;
+    }
+    15% {
+        margin-top: 300px;
+        margin-left: -600px;
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
 
+@keyframes missile {
+    0% {
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        transform: scale(0.1) translateY(-200);
+    }
+}
+@keyframes selected {
+    0% {
+        border: 5px solid rgb(22, 255, 94);
+    }
+    20% {
+        border: 10px solid rgb(255, 255, 80);
+    }
+    40% {
+        border: 15px solid rgb(100, 255, 255);
+    }
+    60% {
+        border: 20px solid rgb(255, 255, 255);
+    }
+    80% {
+        border: 25px solid rgb(255, 255, 80);
+    }
+    100% {
+        border: 30px solid rgb(22, 255, 94);
+    }
+}
 button {
     font-family: "Dunggeunmo";
 }
@@ -1828,17 +1951,7 @@ button {
     font-weight: bold;
     cursor: pointer;
 }
-@keyframes startPulse {
-    0% {
-        border-left: 160px solid rgb(22, 255, 94);
-    }
-    50% {
-        border-left: 160px solid rgb(255, 82, 43);
-    }
-    100% {
-        border-left: 160px solid rgb(22, 255, 94);
-    }
-}
+
 
 #game_start {
     box-sizing: border-box;
@@ -1967,26 +2080,7 @@ button {
     background-color: transparent;
 }
 /*############################### Music Player */
-@font-face {
-    font-family: "retroFont";
-    src: url("/assets/font/digital.woff2");
-}
-@keyframes scrollText {
-    from {
-        transform: translateX(0px);
-        -moz-transform: translateX(0px);
-        -webkit-transform: translateX(0px);
-        -o-transform: translateX(0px);
-        -ms-transform: translateX(0px);
-    }
-    to {
-        transform: translateX(-697px);
-        -moz-transform: translateX(-697px);
-        -webkit-transform: translateX(-697px);
-        -o-transform: translateX(-697px);
-        -ms-transform: translateX(-697px);
-    }
-}
+
 
 #floatWindow {
     position: absolute;
@@ -2131,14 +2225,7 @@ button {
     background: rgb(255, 120, 0); /* 슬라이더 핸들 색상 */
     cursor: pointer; /* 슬라이더 핸들에 마우스를 갖다대면 포인터로 변경 */
 }
-@keyframes rotation {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
+
 #playerIcon {
     width: 50px;
     height: 50px;
@@ -2255,17 +2342,6 @@ span {
     background: transparent;
 }
 
-@keyframes bgPulse {
-    0% {
-        background-color: rgb(22, 255, 94);
-    }
-    50% {
-        background-color: rgb(110, 255, 170);
-    }
-    100% {
-        background-color: rgb(22, 255, 94);
-    }
-}
 .answerLine {
     width: 25%;
     height: 5%;
@@ -2274,17 +2350,7 @@ span {
     animation: bgPulse 7s ease infinite;
     box-shadow: 0 0 10px 0 rgb(22, 255, 94);
 }
-@keyframes borderPulse {
-    0% {
-        border-color: rgb(22, 255, 94);
-    }
-    50% {
-        border-color: rgb(110, 255, 170);
-    }
-    100% {
-        border-color: rgb(22, 255, 94);
-    }
-}
+
 .innerAnswer {
     box-sizing: border-box;
     width: 50%;
@@ -2448,18 +2514,6 @@ span {
     animation: zoom 100s alternate infinite;
 }
 
-@keyframes zoom {
-    0% {
-        transform: scale(1) rotate(0deg) translateZ(0px);
-    }
-    50% {
-        transform: scale(2) rotate(360deg) translateZ(600px);
-    }
-    100% {
-        transform: scale(1) rotate(720deg) translateZ(1200px);
-    }
-}
-
 .videoStreaming {
     height: fit-content;
     margin-top: 11px;
@@ -2472,36 +2526,7 @@ span {
     left: 0;
     z-index: -1;
 }
-@keyframes sf-fly-by-1 {
-    from {
-        transform: translateZ(200px) rotate(0deg);
-        opacity: 0.5;
-    }
-    to {
-        transform: translateZ(400px) rotate(360deg);
-        opacity: 0.5;
-    }
-}
-@keyframes sf-fly-by-2 {
-    from {
-        transform: translateZ(200px) rotate(90deg);
-        opacity: 0.5;
-    }
-    to {
-        transform: translateZ(400px) rotate(450deg);
-        opacity: 0.5;
-    }
-}
-@keyframes sf-fly-by-3 {
-    from {
-        transform: translateZ(-800px) rotate(0deg);
-        opacity: 0.5;
-    }
-    to {
-        transform: translateZ(-600px) rotate(360deg);
-        opacity: 0.5;
-    }
-}
+
 .starField {
     position: fixed;
     top: 0;
@@ -2872,54 +2897,6 @@ span {
     margin-top: -2px;
     background: rgba(255, 255, 255, 0.7);
     box-shadow: 0 0 15px 3px #fff;
-}
-
-@keyframes meteor {
-    0% {
-        opacity: 1;
-        margin-top: -300px;
-        margin-right: -300px;
-    }
-    12% {
-        opacity: 0;
-    }
-    15% {
-        margin-top: 300px;
-        margin-left: -600px;
-        opacity: 0;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes missile {
-    0% {
-        transform: scale(1) translateY(0);
-    }
-    100% {
-        transform: scale(0.1) translateY(-200);
-    }
-}
-@keyframes selected {
-    0% {
-        border: 5px solid rgb(22, 255, 94);
-    }
-    20% {
-        border: 10px solid rgb(255, 255, 80);
-    }
-    40% {
-        border: 15px solid rgb(100, 255, 255);
-    }
-    60% {
-        border: 20px solid rgb(255, 255, 255);
-    }
-    80% {
-        border: 25px solid rgb(255, 255, 80);
-    }
-    100% {
-        border: 30px solid rgb(22, 255, 94);
-    }
 }
 .gameSelectButton {
     position: absolute;

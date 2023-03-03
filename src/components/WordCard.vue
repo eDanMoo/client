@@ -101,9 +101,14 @@ export default {
             secondFlag: false,
             startbondFlag: false,
             checkbondFlag: false,
+            nullWarning: false,
+            audio_fail: null,
         };
     },
-
+    mounted() {
+        this.audio_fail = new Audio("/assets/soundEffect/audio_fail.wav");
+        this.audio_fail.volume = 0.6;
+    },
     methods: {
         onAfterEnter() {
             /* 시작했을 때 이어주는 용 */
@@ -264,6 +269,7 @@ export default {
             this.wordcard.sort((a, b) => a.id - b.id);
         },
         Warning() {
+            this.audio_fail.play();
             document.querySelector("#backGrd").animate(
                 [
                     // from keyframe
@@ -516,13 +522,12 @@ export default {
         color: rgb(22, 255, 94);
     }
 
-    70% {
-        /* transform: translateX(30px) translateY(30px) scale(2); */
+    80% {
         transform: scale(2);
     }
 
     100% {
-        transform: scale(0.2) translateX(1000px) translateY(-1000px);
+        transform: scale(0.2);
         border: none;
         background-color: transparent;
         color: rgb(255, 30, 30);
