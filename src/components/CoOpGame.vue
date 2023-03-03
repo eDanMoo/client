@@ -45,12 +45,12 @@ export default {
                     } else if (props.msg.type == "check") {
                         let remWords = props.msg.remWords;
                         let i = 0;
-
+                        // 목록에서 단어 삭제
                         for (i = 0; i < remWords.length; i++) {
                             let word = remWords[i];
                             removeWordInWordSet(word);
                         }
-
+                        // 남은 단어 옮기기
                         let moveInfo = props.msg.moveInfo;
                         for (i = 0; i < moveInfo.length; i++) {
                             let word = moveInfo[i][0];
@@ -65,6 +65,7 @@ export default {
             );
 
             watch(
+                // 게임 끝나고 화면 지우기
                 () => props.delete_board,
                 (newValue) => {
                     if (newValue == 1) {
@@ -92,18 +93,8 @@ export default {
             ctx.canvas.height = ROWS * BLOCK_SIZE;
             // ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
-            //이미지 집어넣기
-            // let blockImage = new Image();
-            // blockImage.src = "https://i.imgur.com/zdluTLl.png"
-
             let wordSet = {};
             const colorSet = [
-                // ['#FFF548', '#3C1A5B'],
-                // ['#CED46A', '#07553B'],
-                // ['#FFDFDE', '#6A7BA2'],
-                // ['#ADEFD1', '#00203F'],
-                // ['#97BC62', '#2C5F2D'],
-                // ['#9CC3D5', '#0063B2'],
 
                 ["#38FF12"],
                 ["#FF00E3"],
@@ -125,11 +116,10 @@ export default {
                     let destination = wordSet[wordSetKey[i]].destination;
                     let word = wordSetKey[i];
                     let colorBackground = wordSet[wordSetKey[i]].color;
-                    // let colorText = wordSet[wordSetKey[i]].color[1];
 
                     let x = 0;
                     for (x = left; x < left + length; x++) {
-                        // 본체
+
                         ctx.fillStyle = colorBackground;
                         ctx.fillRect(
                             x * BLOCK_SIZE,
@@ -137,49 +127,36 @@ export default {
                             1 * BLOCK_SIZE,
                             1 * BLOCK_SIZE
                         );
-                        // // ctx.drawImage(blockImage, x*BLOCK_SIZE, z*BLOCK_SIZE, 1*BLOCK_SIZE, 1*BLOCK_SIZE);
-
-                        // // ctx.strokeRect((x+0.05)*BLOCK_SIZE, z*BLOCK_SIZE, 0.90*BLOCK_SIZE, 0.95*BLOCK_SIZE);
-
-                        // 각종 그림자
 
                         ctx.fillStyle = "black";
-                        // 왼쪽 윤곽
+                        // 왼쪽 여백
                         ctx.clearRect(
                             x * BLOCK_SIZE,
                             current * BLOCK_SIZE,
                             0.03 * BLOCK_SIZE,
                             BLOCK_SIZE
                         );
-                        // ctx.fillRect((x+0.03)*BLOCK_SIZE, current*BLOCK_SIZE, 0.05*BLOCK_SIZE, BLOCK_SIZE);
-                        // // 위쪽 윤곽
+                        // 위쪽 여백
                         ctx.clearRect(
                             x * BLOCK_SIZE,
                             current * BLOCK_SIZE,
                             BLOCK_SIZE,
                             0.03 * BLOCK_SIZE
                         );
-                        // ctx.fillRect(x*BLOCK_SIZE, (current+0.03)*BLOCK_SIZE, BLOCK_SIZE,0.05*BLOCK_SIZE);
-                        // // 오른쪽 윤곽
+                        // 오른쪽 여백
                         ctx.clearRect(
                             (x + 0.97) * BLOCK_SIZE,
                             current * BLOCK_SIZE,
                             0.03 * BLOCK_SIZE,
                             BLOCK_SIZE
                         );
-                        // ctx.fillRect((x+0.92)*BLOCK_SIZE, current*BLOCK_SIZE, 0.05*BLOCK_SIZE, BLOCK_SIZE);
-                        // // 아래쪽 윤곽
+                        // 아래쪽 여백
                         ctx.clearRect(
                             x * BLOCK_SIZE,
                             (current + 0.97) * BLOCK_SIZE,
                             BLOCK_SIZE,
                             0.03 * BLOCK_SIZE
                         );
-                        // ctx.fillRect(x*BLOCK_SIZE, (current+0.92)*BLOCK_SIZE, BLOCK_SIZE, 0.05*BLOCK_SIZE);
-                        // ctx.fillStyle = "black"
-                        // ctx.fillRect(x*BLOCK_SIZE + 0.9*BLOCK_SIZE, current*BLOCK_SIZE, 0.05*BLOCK_SIZE, 0.9*BLOCK_SIZE);
-
-                        // ctx.fillRect(x*BLOCK_SIZE, current*BLOCK_SIZE + 0.9*BLOCK_SIZE, 0.9*BLOCK_SIZE, 0.05*BLOCK_SIZE);
                         // 텍스트
                         ctx.font = `${(48 / 63) * BLOCK_SIZE}px DungGeunMo`;
                         ctx.fillText(
@@ -223,27 +200,6 @@ export default {
                 delete wordSet[word];
             }
             // <----------------------------------------- 단어 목록에서 단어 삭제하기 함수
-
-            // -----------------------------------------> 단어로 필요한 정보 찾기
-            function findInfoByWord(word) {
-                return wordSet[word];
-            }
-            // <----------------------------------------- 단어로 필요한 정보 찾기
-
-            // -----------------------------------------> 단어블록 지우기 함수
-            function removeWord(word) {
-                let left = wordSet[word].left;
-                let length = wordSet[word].length;
-                let current = wordSet[word].current;
-                // 화면 지우기
-                ctx.clearRect(
-                    left * BLOCK_SIZE,
-                    current * BLOCK_SIZE,
-                    length * BLOCK_SIZE,
-                    BLOCK_SIZE
-                );
-            }
-            // <----------------------------------------- 단어블록 지우기 함수
         });
 
         return {};
