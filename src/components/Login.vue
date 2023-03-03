@@ -5,7 +5,7 @@
                 >단어게임 접속</span
             >
             <img
-                src="https://storage.googleapis.com/koword_bucket/btn_close.png"
+                src="/assets/image/button/btn_close.png"
                 style="
                     width: 30px;
                     height: 30px;
@@ -54,8 +54,8 @@
                 />
 
                 <br />
-                <button @click="createPage" id="create-button">만들기</button>
-                <button @click="joinPage" id="join-buttom">입장</button>
+                <button @click="createPage" id="create-button" @mouseover="buttonHovered">만들기</button>
+                <button @click="joinPage" id="join-buttom" @mouseover="buttonHovered">입장</button>
             </div>
         </div>
     </div>
@@ -150,6 +150,9 @@ export default {
             document.onmouseup = null;
             document.onmousemove = null;
         },
+        buttonHovered() {
+            new Audio("/assets/soundEffect/audio_water.mp3").play();
+        },
     },
     setup() {
         let showLogin = ref(true);
@@ -182,12 +185,10 @@ export default {
         });
 
         const router = useRouter();
-
         const room_code = ref("");
         const user_id = ref("");
-        const audio_enter = new Audio(
-            "https://storage.googleapis.com/koword_bucket/enterRoom.wav"
-        );
+        const audio_enter = new Audio("/assets/soundEffect/audio_enter.mp3");
+        const audio_ding = new Audio("/assets/soundEffect/ding.wav");
         audio_enter.volume = 0.6;
         const joinPage = () => {
             const roomID = document.getElementById("input-room-id");
@@ -196,38 +197,40 @@ export default {
             if (userID.value == "" || roomID.value == "") {
                 modal2.style.display = "flex";
                 document.getElementById("close-modal-2").focus();
+                audio_ding.play();
+            } else {
+                audio_enter.play();
+                router.push({
+                    name: "inGame",
+                    params: {
+                        room_code: `${room_code.value}`,
+                        user_id: `${user_id.value}`,
+                    },
+                });
             }
-            audio_enter.play();
-            router.push({
-                name: "inGame",
-                params: {
-                    room_code: `${room_code.value}`,
-                    user_id: `${user_id.value}`,
-                },
-            });
         };
-
         const createPage = () => {
+            const roomID = document.getElementById("input-room-id");
             const userID = document.getElementById("input-user-id");
             const modal2 = document.getElementById("modal-wrapper-2");
-            const roomID = document.getElementById("input-room-id");
-
             if (userID.value == "") {
                 modal2.style.display = "flex";
                 document.getElementById("close-modal-2").focus();
+                audio_ding.play();
+            } else {
+                if (!roomID.value == "") {
+                    return joinPage();
+                }
+                const new_room_code = generateRandomCode(6);
+                audio_enter.play();
+                router.push({
+                    name: "inGame",
+                    params: {
+                        room_code: `${new_room_code}`,
+                        user_id: `${user_id.value}`,
+                    },
+                });
             }
-            if (!roomID.value == "") {
-                return joinPage();
-            }
-            const new_room_code = generateRandomCode(6);
-            audio_enter.play();
-            router.push({
-                name: "inGame",
-                params: {
-                    room_code: `${new_room_code}`,
-                    user_id: `${user_id.value}`,
-                },
-            });
         };
 
         function generateRandomCode(n) {
@@ -255,6 +258,21 @@ export default {
 </script>
 
 <style scoped>
+@keyframes alien {
+    0% {
+        background-image: url("/assets/image/game/alien_normal.svg");
+    }
+    49.9% {
+        background-image: url("/assets/image/game/alien_normal.svg");
+    }
+    50.0% {
+        background-image: url("/assets/image/game/alien_raise.svg");
+    }
+    100% {
+        background-image: url("/assets/image/game/alien_raise.svg");
+    }
+}
+
 #login-wrapper {
     position: absolute;
     box-sizing: border-box;
@@ -270,20 +288,7 @@ export default {
     justify-content: center;
     align-items: center;
 }
-@keyframes alien {
-    0% {
-        background-image: url("https://storage.googleapis.com/koword_bucket/alien_normal.svg");
-    }
-    49.9% {
-        background-image: url("https://storage.googleapis.com/koword_bucket/alien_normal.svg");
-    }
-    50.0% {
-        background-image: url("https://storage.googleapis.com/koword_bucket/alien_raise.svg");
-    }
-    100% {
-        background-image: url("https://storage.googleapis.com/koword_bucket/alien_raise.svg");
-    }
-}
+
 #alien {
     position: absolute;
     top: 15%;

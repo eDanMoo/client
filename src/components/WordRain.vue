@@ -4,7 +4,7 @@
             <div id="hancom-title" @mousedown="dragHancom">
                 <span style="margin-left: 10px">정글타자연습</span>
                 <img
-                    src="https://storage.googleapis.com/koword_bucket/btn_close.png"
+                    src="/assets/image/button/btn_close.png"
                     style="
                         width: 30px;
                         height: 30px;

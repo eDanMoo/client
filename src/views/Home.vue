@@ -24,7 +24,7 @@
                                 >
                                     <span>경고</span>
                                     <img
-                                        src="https://storage.googleapis.com/koword_bucket/btn_close.png"
+                                        src="/assets/image/button/btn_close.png"
                                         alt=""
                                         style="width: 24px; cursor: pointer"
                                         @click="closeAlert()"
@@ -80,7 +80,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.googleapis.com/koword_bucket/icon_updates.png"
+                                            src="/assets/image/icon/icon_updates.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -105,7 +105,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.googleapis.com/koword_bucket/icon_programs.png"
+                                            src="/assets/image/icon/icon_programs.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -123,7 +123,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.googleapis.com/koword_bucket/icon_favorites.png"
+                                            src="/assets/image/icon/icon_favorites.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -141,7 +141,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.googleapis.com/koword_bucket/icon_documents.png"
+                                            src="/assets/image/icon/icon_documents.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -159,7 +159,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.googleapis.com/koword_bucket/icon_settings.png"
+                                            src="/assets/image/icon/icon_settings.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -177,7 +177,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.googleapis.com/koword_bucket/icon_find.png"
+                                            src="/assets/image/icon/icon_find.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -195,7 +195,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.googleapis.com/koword_bucket/icon_help.png"
+                                            src="/assets/image/icon/icon_help.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -213,7 +213,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.googleapis.com/koword_bucket/icon_run.png"
+                                            src="/assets/image/icon/icon_run.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -238,7 +238,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.googleapis.com/koword_bucket/icon_logOff.png"
+                                            src="/assets/image/icon/icon_logOff.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -256,7 +256,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.googleapis.com/koword_bucket/icon_shutdown.png"
+                                            src="/assets/image/icon/icon_shutdown.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -280,7 +280,7 @@
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('https://storage.googleapis.com/koword_bucket/icon_explorer.png');
+                                                    background-image: url('/assets/image/icon/icon_explorer.png');
                                                 "
                                             ></div>
                                         </div>
@@ -298,7 +298,7 @@
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('https://storage.googleapis.com/koword_bucket/icon_hancom.png');
+                                                    background-image: url('/assets/image/icon/icon_hancom.png');
                                                 "
                                             ></div>
                                         </div>
@@ -315,7 +315,7 @@
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('https://storage.googleapis.com/koword_bucket/icon_wordgame.png');
+                                                    background-image: url('/assets/image/icon/icon_wordgame.png');
                                                 "
                                             ></div>
                                         </div>
@@ -330,7 +330,7 @@
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('https://storage.googleapis.com/koword_bucket/icon_laundry.png');
+                                                    background-image: url('/assets/image/icon/icon_laundry.png');
                                                 "
                                             ></div>
                                         </div>
@@ -338,6 +338,22 @@
                                             Laundry<br />
                                             Jungle
                                         </div>
+                                    </div>
+                                    <div
+                                        class="iconElem"
+                                        id="iconLaundry"
+                                        @click="openCodewarts()"
+                                    >
+                                        <div class="iconWrapper">
+                                            <div
+                                                class="iconImage"
+                                                style="
+                                                    background-image: url('/assets/image/icon/icon_codewarts.png');
+                                                    height: 52px;
+                                                "
+                                            ></div>
+                                        </div>
+                                        <div class="iconTitle">CODEWARTS</div>
                                     </div>
                                 </div>
                                 <WordRain ref="wordRain" />
@@ -354,7 +370,7 @@
                                             margin-left: 7px;
                                             margin-right: 4px;
                                         "
-                                        src="https://storage.googleapis.com/koword_bucket/icon_windows.png"
+                                        src="/assets/image/icon/icon_windows.png"
                                         alt=""
                                     />
                                     <span style="margin-right: 10px">
@@ -546,6 +562,8 @@ export default {
             isPowerOn: true,
             hms: "",
             ymd: "",
+            bebeep: null,
+            
         };
     },
     components: {
@@ -554,41 +572,58 @@ export default {
     },
     methods: {
         reload() {
-            this.$router.go(this.$router.currentRoute);
+            new Audio("/assets/soundEffect/audio_clickAndBeep.mp3").play();
+            setTimeout(() => {
+                this.$router.go(this.$router.currentRoute);
+            }, 600);
         },
         openHancom() {
+            new Audio("/assets/soundEffect/audio_open.wav").play();
             this.$refs.wordRain.openHancom();
         },
         openLogin() {
+            new Audio("/assets/soundEffect/audio_open.wav").play();
             this.$refs.Login.openLogin();
         },
         closeMenuBar() {
             this.isOpenMenuBar = false;
         },
         toggleMenuBar() {
+            new Audio("/assets/soundEffect/audio_menu.wav").play();
             this.isOpenMenuBar = !this.isOpenMenuBar;
         },
         closeAlert() {
+            new Audio("/assets/soundEffect/basic_click.mp3").play();
             this.isAccessError = false;
         },
         openAlert() {
+            new Audio("/assets/soundEffect/audio_error.wav").play();
             this.isAccessError = true;
         },
         shutDownAll() {
-            const audio = new Audio(
-                "https://storage.googleapis.com/koword_bucket/shutdown.wav"
-            );
+            const audio = new Audio("/assets/soundEffect/shutdown.wav");
             audio.volume = 0.6;
             audio.play();
             this.isShutdown = true;
             setTimeout(this.powerOff(), 3000);
         },
-
         openNaver() {
-            window.location.href = "https://www.naver.com";
+            this.bebeep.play();
+            setTimeout(() => {
+                window.location.href = "https://www.naver.com";
+            }, 500);
         },
         openLaundry() {
-            window.location.href = "http://laundry-jungle.com/";
+            this.bebeep.play();
+            setTimeout(() => {
+                window.location.href = "http://laundry-jungle.com/";
+            }, 500);
+        },
+        openCodewarts() {
+            new Audio("/assets/soundEffect/audio_codewarts.mp3").play();
+            setTimeout(() => {
+                window.location.href = "https://codewarts.store/";
+            }, 4200);
         },
         powerOff() {
             this.isShutdown = false;
@@ -599,6 +634,7 @@ export default {
             if (this.isPowerOn) {
                 this.shutDownAll();
             } else {
+                new Audio("/assets/soundEffect/audio_startup.wav").play();
                 this.isPowerOn = true;
             }
         },
@@ -615,6 +651,7 @@ export default {
             pannelT.style.width = rect.width + "px";
             pannelT.style.bottom = rect.height - 50 + "px";
         },
+
         removeScrollListener() {
             window.addEventListener("resize", this.updatePannel);
         },
@@ -634,6 +671,8 @@ export default {
         var pannelL = document.getElementById("monitorLeftPannel");
         var pannelT = document.getElementById("monitorTopPannel");
         document.body.style.background = "rgb(10, 45, 10)";
+        this.bebeep = new Audio("/assets/soundEffect/audio_bebeep.mp3");
+        this.bebeep.volume = 0.6;
         var rect = document
             .getElementById("outerComputer")
             .getBoundingClientRect();
