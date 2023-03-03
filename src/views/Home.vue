@@ -1,4 +1,11 @@
 <template>
+    <audio
+        src="/assets/soundEffect/audio_work.mp3"
+        loop
+        muted
+        volume="0.5"
+        id="audio_work"
+    ></audio>
     <div class="threeDimension">
         <div class="monitor">
             <div class="outerComputer" id="outerComputer">
@@ -429,28 +436,35 @@
                         <span>
                             DEVELOP<br />
                             <a href="https://github.com/eDanMoo"
+                                class="highlightLink"
                                 >@TEAM eDanMoo<br
                             /></a>
                             <br />
                             MEMBER<br />
                             <a href="https://github.com/Jungeun04"
+                                class="highlightLink"
                                 >PARK JUNGEUN<br
                             /></a>
                             <a href="https://github.com/sj0917"
+                                class="highlightLink"
                                 >LEE SANGJUN<br
                             /></a>
                             <a href="https://github.com/Heruing"
+                                class="highlightLink"
                                 >LEE HYUNHONG<br
                             /></a>
                             <a href="https://github.com/hierrr"
+                                class="highlightLink"
                                 >SON CHANGHAN<br
                             /></a>
                             <a href="https://github.com/hunkicho"
+                                class="highlightLink"
                                 >CHO HUNKI<br
                             /></a>
                             <br />
                             Special Thanks To<br />
                             <a href="https://jungle.krafton.com/"
+                                class="highlightLink"
                                 >KRAFTON Jungle</a
                             >
                         </span>
@@ -563,12 +577,21 @@ export default {
             hms: "",
             ymd: "",
             bebeep: null,
-            
         };
     },
     components: {
         Login,
         WordRain,
+    },
+    watch: {
+        isPowerOn: function () {
+            const audio_work = document.getElementById("audio_work");
+            if (this.isPowerOn) {
+                audio_work.play();
+            } else {
+                audio_work.pause();
+            };
+        },
     },
     methods: {
         reload() {
@@ -604,8 +627,12 @@ export default {
             const audio = new Audio("/assets/soundEffect/shutdown.wav");
             audio.volume = 0.6;
             audio.play();
-            this.isShutdown = true;
-            setTimeout(this.powerOff(), 3000);
+            setTimeout(() => {
+                this.isShutdown = true;
+            }, 1800);
+            setTimeout(() => {
+                this.powerOff();
+            }, 3000);
         },
         openNaver() {
             this.bebeep.play();
@@ -634,15 +661,26 @@ export default {
             if (this.isPowerOn) {
                 this.shutDownAll();
             } else {
-                new Audio("/assets/soundEffect/audio_startup.wav").play();
-                this.isPowerOn = true;
+                const audio_bootup = new Audio(
+                    "/assets/soundEffect/audio_bootup.mp3"
+                );
+                const audio_startup = new Audio(
+                    "/assets/soundEffect/audio_startup.wav"
+                );
+                audio_bootup.volume = 0.6;
+                audio_startup.volume = 0.6;
+                audio_bootup.play();
+                setTimeout(() => {
+                    this.isPowerOn = true;
+                    audio_startup.play();
+                }, 5000);
             }
         },
         updatePannel() {
-            var pannelR = document.getElementById("monitorRightPannel");
-            var pannelL = document.getElementById("monitorLeftPannel");
-            var pannelT = document.getElementById("monitorTopPannel");
-            var rect = document
+            let pannelR = document.getElementById("monitorRightPannel");
+            let pannelL = document.getElementById("monitorLeftPannel");
+            let pannelT = document.getElementById("monitorTopPannel");
+            let rect = document
                 .getElementById("outerComputer")
                 .getBoundingClientRect();
             pannelR.style.left = rect.right - 200 + "px";
@@ -667,13 +705,16 @@ export default {
         return { showHancom, showLogin };
     },
     mounted() {
-        var pannelR = document.getElementById("monitorRightPannel");
-        var pannelL = document.getElementById("monitorLeftPannel");
-        var pannelT = document.getElementById("monitorTopPannel");
+        const work = document.getElementById("audio_work");
+        work.volume = 1;
+        work.play();
+        let pannelR = document.getElementById("monitorRightPannel");
+        let pannelL = document.getElementById("monitorLeftPannel");
+        let pannelT = document.getElementById("monitorTopPannel");
         document.body.style.background = "rgb(10, 45, 10)";
         this.bebeep = new Audio("/assets/soundEffect/audio_bebeep.mp3");
         this.bebeep.volume = 0.6;
-        var rect = document
+        let rect = document
             .getElementById("outerComputer")
             .getBoundingClientRect();
         pannelR.style.left = rect.right - 200 + "px";
@@ -1207,7 +1248,7 @@ export default {
     position: absolute;
     top: 0;
     transform-style: preserve-3d;
-    transform: translateX(-20vw) translateY(-250px) translateZ(-800px);
+    transform: translateX(-20vw) translateY(-300px) translateZ(-800px);
     z-index: -1;
 }
 .clockPannel {
@@ -1420,5 +1461,8 @@ export default {
 #pictureBottom {
     height: 50px;
     transform: translateZ(25px) translateY(275px) rotateX(-90deg);
+}
+.highlightLink:hover {
+    text-shadow: 3px 5px 10px rgb(117, 255, 161);
 }
 </style>

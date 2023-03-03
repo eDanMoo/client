@@ -151,7 +151,9 @@ export default {
             document.onmousemove = null;
         },
         buttonHovered() {
-            new Audio("/assets/soundEffect/audio_water.mp3").play();
+            const water = new Audio("/assets/soundEffect/audio_water.mp3")
+            water.volume = 0.3;
+            water.play();
         },
     },
     setup() {

@@ -1,5 +1,9 @@
 <template>
-    <div id="inGameContainer space stars1">
+    <audio
+        src="/assets/soundEffect/audio_timetick.mp3"
+        id="time_ticking"
+    ></audio>
+    <div class="space stars1" id="inGameContainer">
         <div class="starField" id="starField">
             <div class="layer"></div>
             <div class="layer"></div>
@@ -316,7 +320,7 @@
                 <div class="popupBar">
                     <p style="margin-left: 10px">설명</p>
                     <img
-                        src="/assets/image/icon/btn_close.png"
+                        src="/assets/image/button/btn_close.png"
                         style="
                             width: 22px;
                             height: 22px;
@@ -670,7 +674,7 @@ export default {
             delete_board: 0,
             isStreaming: 1,
             openModal: false,
-            openMusicPlayer: 0,
+            openMusicPlayer: true,
             game_mode: "WordCard",
             game_mode_text: "",
             musicSources: [
@@ -810,9 +814,6 @@ export default {
             showHowTo: 0,
             isGameStarted: 0,
             game_selected: 0,
-            audio_start: null,
-            audio_home: null,
-            audio_page: null,
             isCoop: false,
             isComp: false,
         };
@@ -853,18 +854,18 @@ export default {
                 console.log("socket connect");
                 resolve(socket);
             });
-            // socket.addEventListener("error", (error) => {
-            //     console.log("Websocket connect error");
-            //     console.log(error);
-            //     alert("게임서버와의 연결이 종료되었습니다.");
-            //     location.href = "/";
-            //     reject(error);
-            // });
-            // socket.addEventListener("close", (event) => {
-            //     console.log("WebSocket connection closed:", event);
-            //     alert("게임서버와의 연결이 종료되었습니다.");
-            //     location.href = "/";
-            // });
+            socket.addEventListener("error", (error) => {
+                console.log("Websocket connect error");
+                console.log(error);
+                alert("게임 서버와의 연결이 종료되었습니다.");
+                location.href = "/";
+                reject(error);
+            });
+            socket.addEventListener("close", (event) => {
+                console.log("WebSocket connection closed:", event);
+                alert("게임 서버와의 연결이 종료되었습니다.");
+                location.href = "/";
+            });
         });
 
         messages = document.getElementById("messages");
@@ -886,13 +887,7 @@ export default {
         connection.send(JSON.stringify(info_obj));
         // audio import
         const audio_message = new Audio("/assets/soundEffect/message.mp3");
-        this.audio_start = new Audio("/assets/soundEffect/gameStart.mp3");
-        this.audio_home = new Audio("/assets/soundEffect/close.wav");
-        this.audio_page = new Audio("/assets/soundEffect/page.mp3");
         audio_message.volume = 0.7;
-        this.audio_home.volume = 0.6;
-        this.audio_start.volume = 0.6;
-        this.audio_page.volume = 0.3;
         connection.onmessage = (event) => {
             // Get message back from websocket and display
             const message = document.createElement("div");
@@ -995,11 +990,15 @@ export default {
             } else if (event_data.type == "send_user_turn") {
                 console.log("now turn " + userid_str);
                 const btn = document.getElementById("input_answer");
+                const audio = document.getElementById("time_ticking");
                 if (userid_str != current_user) {
                     btn.disabled = true;
+                    audio.play();
                     this.time = 12;
                 } else {
                     this.time = 12;
+                    audio.stop();
+                    audio.currentTime = 0;
                     btn.disabled = false;
                 }
             } else if (event_data.type == "delete_frame") {
@@ -1088,6 +1087,7 @@ export default {
                 const answer_text_box = document.getElementById("input_answer");
                 if (userid_str == current_user) {
                     // 해당 턴이 내 턴이면 타이머 반영
+
                     answer_text_box.disabled = false;
                     answer_text_box.focus();
                     this.time = event_data.remain_time;
@@ -1403,7 +1403,9 @@ export default {
         },
         boardInit() {
             this.GameStart();
-            this.audio_start.play();
+            const audio_start = new Audio("/assets/soundEffect/gameStart.mp3");
+            audio_start.volume = 0.6;
+            audio_start.play();
             this.isGameStarted = 1;
             this.delete_board = 0;
 
@@ -1550,22 +1552,42 @@ export default {
             document.onmousemove = null;
         },
         toggleMusicBox() {
-            this.openMusicPlayer = (this.openMusicPlayer + 1) % 2;
-            this.$refs.floatWindow.style.top = "5%";
-            this.$refs.floatWindow.style.right = "150px";
+            if (this.openMusicPlayer) {
+                const audio_tick = new Audio(
+                    "/assets/soundEffect/audio_tick.mp3"
+                );
+                audio_tick.play();
+            } else {
+                const audio_oohwing = new Audio(
+                    "/assets/soundEffect/audio_oohwing.mp3"
+                );
+                audio_oohwing.volume = 0.3;
+                audio_oohwing.play();
+                this.$refs.floatWindow.style.top = "5%";
+                this.$refs.floatWindow.style.right = "150px";
+            }
+            this.openMusicPlayer = !this.openMusicPlayer;
         },
         closePlayer() {
-            this.openMusicPlayer = 0;
+            const audio_tick = new Audio("/assets/soundEffect/audio_tick.mp3");
+            audio_tick.play();
+            this.openMusicPlayer = false;
         },
         toggleHowTo() {
-            this.showHowTo = (this.showHowTo + 1) % 2;
+            this.showHowTo = !this.showHowTo;
         },
         closeHowTo() {
-            this.showHowTo = 0;
+            this.showHowTo = false;
         },
         backHome() {
-            this.audio_home.play();
-            this.$router.push("/");
+            const audio_home = new Audio(
+                "/assets/soundEffect/audio_goodbye.mp3"
+            );
+            audio_home.volume = 0.6;
+            audio_home.play();
+            setTimeout(() => {
+                this.$router.push("/");
+            }, 1500);
         },
         // Game End Pop
         closeModalView(data) {
@@ -1576,12 +1598,16 @@ export default {
         },
         /** 오른쪽 정보창 토글 */
         toggleRight() {
-            this.audio_page.play();
+            const audio_page = new Audio("/assets/soundEffect/page.mp3");
+            audio_page.volume = 0.3;
+            audio_page.play();
             this.isOpenRight = !this.isOpenRight;
         },
         /** 왼쪽 비디오 참가 여부 토글 */
         toggleLeft() {
-            this.audio_page.play();
+            const audio_page = new Audio("/assets/soundEffect/page.mp3");
+            audio_page.volume = 0.3;
+            audio_page.play();
             this.isOpenLeft = !this.isOpenLeft;
             this.blockVideo(this.isOpenLeft);
         },
