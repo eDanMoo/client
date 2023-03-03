@@ -47,7 +47,8 @@ export default {
     watch: {
         msg(message) {
             if (message != null) {
-                if (message.type == "check") {
+                try{
+                    if (message.type == "check") {
                     // console.log(message);
                     if (message.moves.length === 5) {
                         // console.log("판갈이 셋 되어있음");
@@ -71,6 +72,15 @@ export default {
                     this.startbondFlag = true;
                     this.$emit("scriptCheck", "init"); // table 생성 완료 시 서버에 턴 요청
                 }
+
+                }
+                catch(err){
+                    alert('테이블 정보 오류');
+                    console.log(err);
+                    console.log(message);
+
+                }
+
             }
         },
         delete_board(is_finish) {
@@ -165,8 +175,8 @@ export default {
             });
         },
         addElem(command) {
+            let info = Object.values(command);
             try {
-                let info = Object.values(command);
                 info[2].forEach((element, index) => {
                     this.wordcard[info[0][index][0]].id = element[1];
                     this.wordcard[info[0][index][0]].value = element[2];
@@ -178,14 +188,14 @@ export default {
             }
             catch (err) {
                 alert('추가 기능 에러');
-                console.log('삭제리스트 길이:' + info[0].length + ',추가리스트 길이:' + info[2].length);
                 console.log(err);
+                console.log(command);
             }
 
         },
         newtable(command) {
+            let info = Object.values(command);
             try {
-                let info = Object.values(command);
 
                 info[4].forEach((element, index) => {
                     this.wordcard[info[3][index][0]].id = element[1];
@@ -198,8 +208,8 @@ export default {
             }
             catch {
                 alert('테이블 교체 기능 에러');
-                console.log('삭제리스트 길이:' + info[3].length + ',추가리스트 길이:' + info[4].length);
                 console.log(err);
+                console.log(command);
             }
 
         },

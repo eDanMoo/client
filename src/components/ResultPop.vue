@@ -7,47 +7,51 @@
 
             <div class="modal__window align_center" id="scorePop">
                 <div class="modal_cover">
-                    <div class="ranking padding scrollbar">
+                    <div class="ranking padding">
                         <span><b>순위</b></span
                         ><br />
+                        <div class="rankingList scrollbar">
                         <div
                             v-for="(user, index) in users"
                             :data-index="index"
                             :key="user.id"
                             style="font-size: 1.3rem"
                         >
-                            | {{ user[0] }}등: {{ user[1] }}, 점수:
-                            {{ user[2] }} |
+                            | {{ String(user[0]).padStart(2, "&nbsp") }}등: {{ String(user[1].split('#')[0]).padEnd(10, "&nbsp") }} 
+                            &nbsp 점수: {{ String(user[2]).padEnd(4, "&nbsp") }} 
+                            <span v-if="user.length == 4"> &nbsp&nbsp 기여도: {{ String(user[3]).padStart(3, "&nbsp") }} &#124;</span>
+                            <span v-else> |</span>
                         </div>
                     </div>
+                    </div>
 
-                    <div class="answerLog padding">
-                        <span><b>연관단어</b></span>
-                        <div class="wordList scrollbar">
-                            <div
-                                v-for="(words, index) in answerLog"
-                                :data-index="index"
-                                :key="answerLog[0]"
-                                style="border: 2px solid; margin-bottom: 1rem"
-                            >
-                                <div>
-                                    <span>{{ words[0] }}번 제출: </span
-                                    ><span>{{ words[1] }}</span>
-                                </div>
+                        <div class="answerLog padding">
+                            <span><b>연관단어</b></span>
+                            <div class="logList scrollbar">
                                 <div
-                                    v-for="(word, index) in words[2]"
+                                    v-for="(words, index) in answerLog"
                                     :data-index="index"
-                                    :key="word"
-                                    style="
-                                        display: inline;
-                                        word-break: keep-all;
-                                    "
+                                    :key="answerLog[0]"
+                                    style="border: 2px solid; margin-bottom: 1rem"
                                 >
-                                    {{ word }}&nbsp
+                                    <div>
+                                        <span>{{ words[0] }}번 제출: </span
+                                        ><span>{{ words[1] }}</span>
+                                    </div>
+                                    <div
+                                        v-for="(word, index) in words[2]"
+                                        :data-index="index"
+                                        :key="word"
+                                        style="
+                                            display: inline;
+                                            word-break: keep-all;
+                                        "
+                                    >
+                                        {{ word }}&nbsp
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     <div class="closeButton padding">
                         <div @click="closeModal" style="z-index: 50">
                             <span><b>닫기</b></span>
@@ -169,15 +173,22 @@ export default {
 .ranking {
     border-bottom: 2px solid;
     flex-grow: 1;
+    max-height: 27%;
+}
+
+.rankingList {
+    display: flex;
+    flex-direction: column;
     overflow: auto;
+    height: 70%;
 }
 
 .answerLog {
     flex-grow: 2;
-    min-height: 300px;
+    max-height: 55%;
 }
 
-.wordList {
+.logList {
     display: flex;
     flex-direction: column;
     overflow: auto;
@@ -186,7 +197,7 @@ export default {
 
 .closeButton {
     border-top: 2px solid;
-    flex-grow: 20px;
+    min-height: 5%;
     text-align: center;
 }
 
