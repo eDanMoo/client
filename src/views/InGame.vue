@@ -472,6 +472,7 @@
                             @click="boardInit()"
                             v-show="!isGameStarted && game_selected"
                         ></button>
+                        <h1 style="color: white">{{ ready_time }}</h1>
                     </div>
                 </div>
             </div>
@@ -666,6 +667,7 @@ export default {
             enterCode: "",
             time: 100,
             game_time: null,
+            ready_time: null,
             ScoreVisible: true,
             LogVisible: true,
             ChatVisible: true,
@@ -1021,6 +1023,7 @@ export default {
                 first_turn = event_data.users[0];
                 this.isGameStarted = 1;
                 this.delete_board = 0;
+                this.ready_time = null;
             } else if (event_data.type == "check") {
                 console.log(event_data);
                 this.wordUpdate = event_data;
@@ -1110,8 +1113,8 @@ export default {
                 this.delete_board = 1;
                 this.isGameStarted = 0;
                 this.game_time = null;
+                this.ready_time = null;
 
-                // todo. 여기 아이디가 다 같아서 안지워지는 문제임
                 const log_tab = document.getElementById("logBoard");
                 log_tab.textContent = "";
                 const scoreValueList =
@@ -1143,6 +1146,10 @@ export default {
                 if (current_user != userid_str) {
                     this.changeGame(event_data.game_mode);
                 }
+            } else if (event_data.type == "ready_time") {
+                this.ready_time = event_data.ready_time;
+            } else if (event_data.type == "survival_time") {
+                this.game_time = event_data.survival_time;
             }
         };
 
