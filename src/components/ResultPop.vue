@@ -7,7 +7,7 @@
 
             <div class="modal__window align_center" id="scorePop">
                 <div class="modal_cover">
-                    <div class="ranking padding">
+                    <div class="ranking padding scrollbar">
                         <span><b>순위</b></span
                         ><br />
                         <div
@@ -168,12 +168,13 @@ export default {
 
 .ranking {
     border-bottom: 2px solid;
-    flex-grow: 20px;
+    flex-grow: 1;
+    overflow: auto;
 }
 
 .answerLog {
-    flex-grow: 1;
-    height: 300px;
+    flex-grow: 2;
+    min-height: 300px;
 }
 
 .wordList {

@@ -185,7 +185,7 @@
         <nav style="display: flex; justify-content: space-between">
             <div style="display: flex; align-items: center">
                 <img
-                    src="https://storage.cloud.google.com/koword_bucket/exit_Icon.svg"
+                    src="https://storage.googleapis.com/koword_bucket/exit_Icon.svg"
                     alt=""
                     style="
                         width: 40px;
@@ -283,21 +283,21 @@
                 >
                     <img
                         v-show="isPlaying"
-                        src="https://storage.cloud.google.com/koword_bucket/playerIcon.png"
+                        src="https://storage.googleapis.com/koword_bucket/playerIcon.png"
                         alt="cdP"
                         id="playerIcon"
                         @click="toggleMusicBox()"
                     />
                     <img
                         v-show="!isPlaying"
-                        src="https://storage.cloud.google.com/koword_bucket/playerIcon.png"
+                        src="https://storage.googleapis.com/koword_bucket/playerIcon.png"
                         alt="cdP"
                         id="playerIconStop"
                         @click="toggleMusicBox()"
                     />
                 </div>
                 <img
-                    src="https://storage.cloud.google.com/koword_bucket/questionIcon.png"
+                    src="https://storage.googleapis.com/koword_bucket/questionIcon.png"
                     alt=""
                     style="
                         width: 30px;
@@ -316,7 +316,7 @@
                 <div class="popupBar">
                     <p style="margin-left: 10px">설명</p>
                     <img
-                        src="https://storage.cloud.google.com/koword_bucket/btn_close.png"
+                        src="https://storage.googleapis.com/koword_bucket/btn_close.png"
                         style="
                             width: 22px;
                             height: 22px;
@@ -391,7 +391,7 @@
                                 ></canvas>
                                 <div v-show="!isStreaming">
                                     <img
-                                        src="https://storage.cloud.google.com/koword_bucket/userBlank.png"
+                                        src="https://storage.googleapis.com/koword_bucket/userBlank.png"
                                         alt="Camera Off"
                                         style="width: 300px; height: 240px"
                                     />
@@ -878,7 +878,7 @@ export default {
             current_user = url_segs[2] + "#" + uniqCode;
 
             const socket = new WebSocket(
-                ws_scheme + "webdev-test.site/ws/" + room_name
+                ws_scheme + "chkdnstest.shop/ws/" + room_name
                 // "ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
@@ -921,19 +921,19 @@ export default {
         connection.send(JSON.stringify(info_obj));
         // audio import
         const audio_message = new Audio(
-            "https://storage.cloud.google.com/koword_bucket/message.mp3"
+            "https://storage.googleapis.com/koword_bucket/message.mp3"
         );
         this.audio_start = new Audio(
-            "https://storage.cloud.google.com/koword_bucket/gameStart.mp3"
+            "https://storage.googleapis.com/koword_bucket/gameStart.mp3"
         );
         this.audio_home = new Audio(
-            "https://storage.cloud.google.com/koword_bucket/close.wav"
+            "https://storage.googleapis.com/koword_bucket/close.wav"
         );
         this.audio_page = new Audio(
-            "https://storage.cloud.google.com/koword_bucket/page.mp3"
+            "https://storage.googleapis.com/koword_bucket/page.mp3"
         );
         this.audio_fail = new Audio(
-            "https://storage.cloud.google.com/koword_bucket/fail.mp3"
+            "https://storage.googleapis.com/koword_bucket/fail.mp3"
         );
         audio_message.volume = 0.7;
         this.audio_home.volume = 0.6;
@@ -1031,7 +1031,7 @@ export default {
                             userid_str +
                             '_frame" style="width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 1.5rem">' +
                             userid_str +
-                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="https://storage.cloud.google.com/koword_bucket/userBlank.png" id="' +
+                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="https://storage.googleapis.com/koword_bucket/userBlank.png" id="' +
                             userid_str +
                             '" style="width: 95%;"/></div></div>';
                         leftBox.insertAdjacentHTML("beforeend", newFrame);
@@ -1073,6 +1073,11 @@ export default {
                 console.log(event_data);
                 this.wordUpdate = event_data;
 
+                /* 제출 답 표시 기능 */
+                // if(event_data.remWords.length > 0){
+                //     DisplayString(event_data.answer);
+                // };
+
                 const my_score = document.getElementById(
                     event_data.user + "_score_val"
                 );
@@ -1080,7 +1085,7 @@ export default {
                     parseInt(my_score.innerText) +
                     parseInt(event_data.increase);
 
-                this.isGameStarted = 1;
+                //this.isGameStarted = 1;
 
                 if (event_data.remWords.length > 0) {
                     const log_board = document.getElementById("logBoard");
@@ -1170,7 +1175,7 @@ export default {
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
                         subFrame.src =
-                            "https://storage.cloud.google.com/koword_bucket/userBlank.png";
+                            "https://storage.googleapis.com/koword_bucket/userBlank.png";
                     }
                 }
             } else if (event_data.type == "video_on") {
@@ -1668,6 +1673,10 @@ export default {
             });
             connection.send(jsonData);
         },
+        /** 제출답 표시 */
+        // DisplayString(info){
+
+        // },
     },
 };
 </script>

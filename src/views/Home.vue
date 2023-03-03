@@ -24,7 +24,7 @@
                                 >
                                     <span>경고</span>
                                     <img
-                                        src="https://storage.cloud.google.com/koword_bucket/btn_close.png"
+                                        src="https://storage.googleapis.com/koword_bucket/btn_close.png"
                                         alt=""
                                         style="width: 24px; cursor: pointer"
                                         @click="closeAlert()"
@@ -80,7 +80,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.cloud.google.com/koword_bucket/icon_updates.png"
+                                            src="https://storage.googleapis.com/koword_bucket/icon_updates.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -105,7 +105,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.cloud.google.com/koword_bucket/icon_programs.png"
+                                            src="https://storage.googleapis.com/koword_bucket/icon_programs.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -123,7 +123,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.cloud.google.com/koword_bucket/icon_favorites.png"
+                                            src="https://storage.googleapis.com/koword_bucket/icon_favorites.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -141,7 +141,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.cloud.google.com/koword_bucket/icon_documents.png"
+                                            src="https://storage.googleapis.com/koword_bucket/icon_documents.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -159,7 +159,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.cloud.google.com/koword_bucket/icon_settings.png"
+                                            src="https://storage.googleapis.com/koword_bucket/icon_settings.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -177,7 +177,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.cloud.google.com/koword_bucket/icon_find.png"
+                                            src="https://storage.googleapis.com/koword_bucket/icon_find.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -195,7 +195,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.cloud.google.com/koword_bucket/icon_help.png"
+                                            src="https://storage.googleapis.com/koword_bucket/icon_help.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -213,7 +213,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.cloud.google.com/koword_bucket/icon_run.png"
+                                            src="https://storage.googleapis.com/koword_bucket/icon_run.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -238,7 +238,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.cloud.google.com/koword_bucket/icon_logOff.png"
+                                            src="https://storage.googleapis.com/koword_bucket/icon_logOff.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -256,7 +256,7 @@
                                                 margin-left: 7px;
                                                 margin-right: 4px;
                                             "
-                                            src="https://storage.cloud.google.com/koword_bucket/icon_shutdown.png"
+                                            src="https://storage.googleapis.com/koword_bucket/icon_shutdown.png"
                                             alt=""
                                         />
                                         <span style="margin-right: 10px"
@@ -280,7 +280,7 @@
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('https://storage.cloud.google.com/koword_bucket/icon_explorer.png');
+                                                    background-image: url('https://storage.googleapis.com/koword_bucket/icon_explorer.png');
                                                 "
                                             ></div>
                                         </div>
@@ -298,7 +298,7 @@
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('https://storage.cloud.google.com/koword_bucket/icon_hancom.png');
+                                                    background-image: url('https://storage.googleapis.com/koword_bucket/icon_hancom.png');
                                                 "
                                             ></div>
                                         </div>
@@ -315,7 +315,7 @@
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('https://storage.cloud.google.com/koword_bucket/icon_wordgame.png');
+                                                    background-image: url('https://storage.googleapis.com/koword_bucket/icon_wordgame.png');
                                                 "
                                             ></div>
                                         </div>
@@ -330,7 +330,7 @@
                                             <div
                                                 class="iconImage"
                                                 style="
-                                                    background-image: url('https://storage.cloud.google.com/koword_bucket/icon_laundry.png');
+                                                    background-image: url('https://storage.googleapis.com/koword_bucket/icon_laundry.png');
                                                 "
                                             ></div>
                                         </div>
@@ -354,7 +354,7 @@
                                             margin-left: 7px;
                                             margin-right: 4px;
                                         "
-                                        src="https://storage.cloud.google.com/koword_bucket/icon_windows.png"
+                                        src="https://storage.googleapis.com/koword_bucket/icon_windows.png"
                                         alt=""
                                     />
                                     <span style="margin-right: 10px">
@@ -576,7 +576,7 @@ export default {
         },
         shutDownAll() {
             const audio = new Audio(
-                "https://storage.cloud.google.com/koword_bucket/shutdown.wav"
+                "https://storage.googleapis.com/koword_bucket/shutdown.wav"
             );
             audio.volume = 0.6;
             audio.play();
