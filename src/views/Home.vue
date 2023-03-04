@@ -2,7 +2,6 @@
     <audio
         src="/assets/soundEffect/audio_work.mp3"
         loop
-        muted
         volume="0.5"
         id="audio_work"
     ></audio>
@@ -590,7 +589,7 @@ export default {
                 audio_work.play();
             } else {
                 audio_work.pause();
-            };
+            }
         },
     },
     methods: {
@@ -698,6 +697,11 @@ export default {
             this.ymd = today.toLocaleDateString();
             this.hms = today.toLocaleTimeString();
         },
+        workSound() {
+            const work = document.getElementById("audio_work");
+            work.volume = 1;
+            work.play();
+        },
     },
     setup() {
         let showHancom = ref(true);
@@ -705,13 +709,10 @@ export default {
         return { showHancom, showLogin };
     },
     mounted() {
-        const work = document.getElementById("audio_work");
-        work.volume = 1;
-        work.play();
+        document.body.style.background = "rgb(10, 45, 10)";
         let pannelR = document.getElementById("monitorRightPannel");
         let pannelL = document.getElementById("monitorLeftPannel");
         let pannelT = document.getElementById("monitorTopPannel");
-        document.body.style.background = "rgb(10, 45, 10)";
         this.bebeep = new Audio("/assets/soundEffect/audio_bebeep.mp3");
         this.bebeep.volume = 0.6;
         let rect = document
@@ -724,6 +725,7 @@ export default {
         pannelT.style.bottom = rect.height - 50 + "px";
         window.addEventListener("resize", this.updatePannel);
         setInterval(this.updateTime, 1000);
+        this.workSound();
     },
     unmounted() {
         clearInterval();
@@ -1127,6 +1129,9 @@ export default {
     );
     border: 1px solid #000;
     box-shadow: 0px 0px 1px 1px #000;
+}
+.powerButton:hover {
+    box-shadow: 0px 0px 10px 5px #969696;
 }
 .powerButton-power {
     bottom: 25%;

@@ -52,10 +52,8 @@
                     :maxlength="6"
                     @keypress.enter="createPage"
                 />
-
                 <br />
-                <button @click="createPage" id="create-button" @mouseover="buttonHovered">만들기</button>
-                <button @click="joinPage" id="join-buttom" @mouseover="buttonHovered">입장</button>
+                <button @click="createPage" id="join-buttom" @mouseover="buttonHovered">입장</button>
             </div>
         </div>
     </div>
@@ -193,10 +191,11 @@ export default {
         const audio_ding = new Audio("/assets/soundEffect/ding.wav");
         audio_enter.volume = 0.6;
         const joinPage = () => {
-            const roomID = document.getElementById("input-room-id");
+            // const roomID = document.getElementById("input-room-id");
             const userID = document.getElementById("input-user-id");
             const modal2 = document.getElementById("modal-wrapper-2");
-            if (userID.value == "" || roomID.value == "") {
+            // if (userID.value == "" || roomID.value == "") {
+            if (userID.value == "") {
                 modal2.style.display = "flex";
                 document.getElementById("close-modal-2").focus();
                 audio_ding.play();
@@ -274,7 +273,14 @@ export default {
         background-image: url("/assets/image/game/alien_raise.svg");
     }
 }
-
+@keyframes alien_bar {
+    0% {
+        box-shadow: 0 5px rgb(22, 255, 94);
+    }
+    100% {
+        box-shadow: 0 5px rgb(255, 94, 0);
+    }
+}
 #login-wrapper {
     position: absolute;
     box-sizing: border-box;
@@ -299,6 +305,9 @@ export default {
     height: 12%;
     background-size: cover;
     animation: alien 1s linear infinite;
+}
+#alien:hover {
+    animation: alien 1s linear infinite, alien_bar 1s alternate infinite;
 }
 #loginbox {
     width: 95%;
@@ -357,24 +366,6 @@ export default {
     outline: none !important;
     border-color: rgb(22, 255, 94);
     box-shadow: 0 0 10px 5px rgb(22, 255, 94);
-}
-
-#create-button {
-    width: 25%;
-    max-width: 160px;
-    min-width: 88px;
-    height: 50px;
-    border: 2px solid rgb(22, 255, 94);
-    background-color: transparent;
-    color: rgb(22, 255, 94);
-    margin-right: 5px;
-    margin-top: 10px;
-    font-family: "DungGeunMo";
-    font-size: x-large;
-}
-#create-button:hover {
-    background-color: rgb(22, 255, 94);
-    color: #000;
 }
 #join-buttom {
     width: 25%;

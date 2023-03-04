@@ -25,14 +25,13 @@ export default {
                             let left = props.msg.left;
                             let length = props.msg.length;
 
-                            let fall = props.msg.fall;
-                            let current = -1;
+                            let fall = props.msg.fall * 63;
+                            let current = -63;
                             let destination = current + fall;
                             let color =
                                 colorSet[
                                     Math.floor(Math.random() * colorSet.length)
                                 ];
-
                             storeInWordSet(
                                 word,
                                 left,
@@ -77,14 +76,14 @@ export default {
                             ctx.canvas.width,
                             ctx.canvas.height
                         );
-                        // clearInterval(drawWord);
+                        clearInterval(drawWord);
                     }
                 }
             );
 
             const COLS = 11; // size
             const ROWS = 11; // size
-            const BLOCK_SIZE = 63; // 700/11로 하니까 줄생김..
+            const BLOCK_SIZE = 63;
 
             const canvas = document.getElementById("board");
             const ctx = canvas.getContext("2d");
@@ -129,188 +128,29 @@ export default {
                     let word = wordSetKey[i];
                     let colorBackground = wordSet[wordSetKey[i]].color;
 
-                    let x = 0;
-                    for (x = left; x < left + length; x++) {
-
-                    //1안===========================================================
-
-                        // ctx.fillStyle = colorBackground;
-                        // ctx.fillRect(
-                        //     x * BLOCK_SIZE,
-                        //     current * BLOCK_SIZE,
-                        //     1 * BLOCK_SIZE,
-                        //     1 * BLOCK_SIZE
-                        // );
-                        
-                        // ctx.fillStyle = "black";
-                        // // 위쪽 여백
-                        // ctx.clearRect(
-                        //     x * BLOCK_SIZE,
-                        //     current * BLOCK_SIZE,
-                        //     BLOCK_SIZE,
-                        //     0.03 * BLOCK_SIZE
-                        // );
-                        // // 아래쪽 여백
-                        // ctx.clearRect(
-                        //     x * BLOCK_SIZE,
-                        //     (current + 0.97) * BLOCK_SIZE,
-                        //     BLOCK_SIZE,
-                        //     0.03 * BLOCK_SIZE
-                        // );
-                        // if (x == left ) {
-                        // // 0.03 스킵
-                        //     // 왼쪽 여백
-                        //     ctx.clearRect(
-                        //         x * BLOCK_SIZE,
-                        //         current * BLOCK_SIZE,
-                        //         0.03 * BLOCK_SIZE,
-                        //         BLOCK_SIZE
-                        //         );
-                        // } else if (x == left + length){
-                        //     // 오른쪽 여백
-                        //     ctx.clearRect(
-                        //         (x + 0.97) * BLOCK_SIZE,
-                        //         current * BLOCK_SIZE,
-                        //         0.03 * BLOCK_SIZE,
-                        //         BLOCK_SIZE
-                        //         );
-                        //     }
-
-                        //2안===========================================================
-
-                        ctx.fillStyle = colorBackground;
-
-                        if (x == left ) {
-                        // 0.03 스킵
-                            ctx.strokeStyle = "black";
-                            ctx.beginPath();
-                            ctx.roundRect(x * BLOCK_SIZE, current * BLOCK_SIZE, 1 * BLOCK_SIZE,
-                            1 * BLOCK_SIZE, [20, 0, 0, 20]);
-                            // ctx.stroke();
-                            ctx.fill();
-                            // 왼쪽 여백
-                            ctx.clearRect(
-                                x * BLOCK_SIZE,
-                                current * BLOCK_SIZE,
-                                0.03 * BLOCK_SIZE,
-                                BLOCK_SIZE
-                                );
-                        } else if (x == left + length - 1){
-                            ctx.strokeStyle = colorBackground;
-                            ctx.beginPath();
-                            ctx.roundRect(x * BLOCK_SIZE, current * BLOCK_SIZE, 1 * BLOCK_SIZE,
-                            1 * BLOCK_SIZE, [0, 20, 20, 0]);
-                            // ctx.stroke();
-                            ctx.fill();
-
-                            // 오른쪽 여백
-                            ctx.clearRect(
-                                (x + 0.97) * BLOCK_SIZE,
-                                current * BLOCK_SIZE,
-                                0.03 * BLOCK_SIZE,
-                                BLOCK_SIZE
-                                );
-                        } else {
-                            ctx.fillRect(
-                                x * BLOCK_SIZE,
-                                current * BLOCK_SIZE,
-                                1 * BLOCK_SIZE,
-                                1 * BLOCK_SIZE
-                                );    
-                        } 
-                        
-                        // 위쪽 여백
-                        ctx.clearRect(
-                            x * BLOCK_SIZE,
-                            current * BLOCK_SIZE,
-                            BLOCK_SIZE,
-                            0.03 * BLOCK_SIZE
-                        );
-                        // 아래쪽 여백
-                        ctx.clearRect(
-                            x * BLOCK_SIZE,
-                            (current + 0.97) * BLOCK_SIZE,
-                            BLOCK_SIZE,
-                            0.03 * BLOCK_SIZE
-                        );
-
-                        //3안===========================================================
-
-                        // ctx.fillStyle = colorBackground;
-
-                        // if (x == left ) {
-                        // // 0.03 스킵
-                        //     ctx.strokeStyle = "black";
-                        //     ctx.beginPath();
-                        //     ctx.roundRect(x * BLOCK_SIZE, current * BLOCK_SIZE, 1 * BLOCK_SIZE,
-                        //     1 * BLOCK_SIZE, [20, 0, 0, 20]);
-                        //     // ctx.stroke();
-                        //     ctx.fill();
-
-                        // } else if (x == left + length - 1){
-                        //     ctx.strokeStyle = colorBackground;
-                        //     ctx.beginPath();
-                        //     ctx.roundRect(x * BLOCK_SIZE, current * BLOCK_SIZE, 1 * BLOCK_SIZE,
-                        //     1 * BLOCK_SIZE, [0, 20, 20, 0]);
-                        //     // ctx.stroke();
-                        //     ctx.fill();
-
-                        // } else {
-                        //     ctx.fillRect(
-                        //         x * BLOCK_SIZE,
-                        //         current * BLOCK_SIZE,
-                        //         1 * BLOCK_SIZE,
-                        //         1 * BLOCK_SIZE
-                        //         );    
-                        // } 
-                        
-                        // // 위쪽 여백
-                        // ctx.clearRect(
-                        //     x * BLOCK_SIZE,
-                        //     current * BLOCK_SIZE,
-                        //     BLOCK_SIZE,
-                        //     0.03 * BLOCK_SIZE
-                        // );
-                        // // 아래쪽 여백
-                        // ctx.clearRect(
-                        //     x * BLOCK_SIZE,
-                        //     (current + 0.97) * BLOCK_SIZE,
-                        //     BLOCK_SIZE,
-                        //     0.03 * BLOCK_SIZE
-                        // );
-
-                        // // 왼쪽 여백
-                        // ctx.clearRect(
-                        //     x * BLOCK_SIZE,
-                        //     current * BLOCK_SIZE,
-                        //     0.03 * BLOCK_SIZE,
-                        //     BLOCK_SIZE
-                        // );
-                        // // 오른쪽 여백
-                        // ctx.clearRect(
-                        //     (x + 0.97) * BLOCK_SIZE,
-                        //     current * BLOCK_SIZE,
-                        //     0.03 * BLOCK_SIZE,
-                        //     BLOCK_SIZE
-                        // );
-
-                        // 텍스트
-                        ctx.fillStyle = "black";
-                        ctx.font = `${(48 / 63) * BLOCK_SIZE}px DungGeunMo`;
-                        ctx.fillText(
-                            word[x - left],
-                            (x + 0.12) * BLOCK_SIZE,
-                            (current + 1 - 0.29) * BLOCK_SIZE
-                        );
-                    }
+                    ctx.fillStyle = colorBackground;
+                    ctx.strokeStyle = "#FFFFFF";
+                    ctx.fillRect(
+                        left * BLOCK_SIZE + 3,
+                        current + 5,
+                        length * BLOCK_SIZE - 3,
+                        1 * BLOCK_SIZE - 6
+                    );
+                    ctx.fillStyle = "black";
+                    ctx.font = `${(48 / 63) * BLOCK_SIZE}px DungGeunMo`;
+                    ctx.fillText(
+                        word,
+                        left * BLOCK_SIZE + (BLOCK_SIZE / 9) * length,
+                        current + BLOCK_SIZE * 0.7
+                    );
                     if (current < destination) {
-                        wordSet[wordSetKey[i]].current = current + 0.1;
+                        wordSet[wordSetKey[i]].current = current + 7;
                     }
                 }
-            }, 5);
+            }, 30);
 
             function setDestination(word, destination, fall) {
-                wordSet[word].destination = destination + fall;
+                wordSet[word].destination = destination + fall * 63;
             }
 
             // -----------------------------------------> 단어 목록에 단어 저장하기 함수
