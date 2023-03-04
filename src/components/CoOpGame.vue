@@ -95,25 +95,25 @@ export default {
             let wordSet = {};
             const colorSet = [
                 //원래
-                ["#FFF100"],    //노랑(Yellow Rose)
-                ["#FFBF00"],    //주황(Fluorescent Orange)
-                ["#00F5FB"],    //청록(Aqua)
-                ["#38FF12"],    //연두(Neon Green)
-                ["#FF00E3"],    //자두(Fuchsia)
-                ["#006FFF"],    //파랑(Brandeis Blue)
-                ["#9600FF"],    //보라(Electric Violet)
-                
+                ["#FFF100"], //노랑(Yellow Rose)
+                ["#FFBF00"], //주황(Fluorescent Orange)
+                ["#00F5FB"], //청록(Aqua)
+                ["#38FF12"], //연두(Neon Green)
+                ["#FF00E3"], //자두(Fuchsia)
+                ["#006FFF"], //파랑(Brandeis Blue)
+                ["#9600FF"], //보라(Electric Violet)
+
                 //추가
-                ["#FF0000"],    //빨강(Red)
-                ["#FF77FD"],    //약간진한분홍(Fuchsia Pink)
-                ["#FFA9FD"],    //분홍(Rich Brilliant Lavender)
-                ["#F7FFFC"],    //하늘(Waterspout)
-                ["#F7FFFC"],    //하양(Mint Cream)
-                ["#F5F8A3"],    //깔라만시(Calamansi)
-                ["#00A7FA"],    //약간파랑(Vivid Cerulean)
-                ["#2D9A4D"],    //초록(Sea Green)
-                ["#FFFA8D"],    //파스텔 노랑(Pastel Yellow)
-                ["#8001DD"],    //짙은 보라(French Violet)
+                ["#FF0000"], //빨강(Red)
+                ["#FF77FD"], //약간진한분홍(Fuchsia Pink)
+                ["#FFA9FD"], //분홍(Rich Brilliant Lavender)
+                ["#F7FFFC"], //하늘(Waterspout)
+                ["#F7FFFC"], //하양(Mint Cream)
+                ["#F5F8A3"], //깔라만시(Calamansi)
+                ["#00A7FA"], //약간파랑(Vivid Cerulean)
+                ["#2D9A4D"], //초록(Sea Green)
+                ["#FFFA8D"], //파스텔 노랑(Pastel Yellow)
+                ["#8001DD"], //짙은 보라(French Violet)
             ];
 
             let drawWord = setInterval(() => {

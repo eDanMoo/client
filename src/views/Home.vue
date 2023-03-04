@@ -434,35 +434,42 @@
                     <div class="innerThanks" id="thanksContent">
                         <span>
                             DEVELOP<br />
-                            <a href="https://github.com/eDanMoo"
+                            <a
+                                href="https://github.com/eDanMoo"
                                 class="highlightLink"
                                 >@TEAM eDanMoo<br
                             /></a>
                             <br />
                             MEMBER<br />
-                            <a href="https://github.com/Jungeun04"
+                            <a
+                                href="https://github.com/Jungeun04"
                                 class="highlightLink"
                                 >PARK JUNGEUN<br
                             /></a>
-                            <a href="https://github.com/sj0917"
+                            <a
+                                href="https://github.com/sj0917"
                                 class="highlightLink"
                                 >LEE SANGJUN<br
                             /></a>
-                            <a href="https://github.com/Heruing"
+                            <a
+                                href="https://github.com/Heruing"
                                 class="highlightLink"
                                 >LEE HYUNHONG<br
                             /></a>
-                            <a href="https://github.com/hierrr"
+                            <a
+                                href="https://github.com/hierrr"
                                 class="highlightLink"
                                 >SON CHANGHAN<br
                             /></a>
-                            <a href="https://github.com/hunkicho"
+                            <a
+                                href="https://github.com/hunkicho"
                                 class="highlightLink"
                                 >CHO HUNKI<br
                             /></a>
                             <br />
                             Special Thanks To<br />
-                            <a href="https://jungle.krafton.com/"
+                            <a
+                                href="https://jungle.krafton.com/"
                                 class="highlightLink"
                                 >KRAFTON Jungle</a
                             >

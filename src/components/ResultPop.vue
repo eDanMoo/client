@@ -11,47 +11,58 @@
                         <span><b>순위</b></span
                         ><br />
                         <div class="rankingList scrollbar">
-                        <div
-                            v-for="(user, index) in users"
-                            :data-index="index"
-                            :key="user.id"
-                            style="font-size: 1.3rem"
-                        >
-                            | {{ String(user[0]).padStart(2, "&nbsp") }}등: {{ String(user[1].split('#')[0]).padEnd(10, "&nbsp") }} 
-                            &nbsp 점수: {{ String(user[2]).padEnd(4, "&nbsp") }} 
-                            <span v-if="user.length == 4"> &nbsp&nbsp 기여도: {{ String(user[3]).padStart(3, "&nbsp") }} &#124;</span>
-                            <span v-else> |</span>
+                            <div
+                                v-for="(user, index) in users"
+                                :data-index="index"
+                                :key="user.id"
+                                style="font-size: 1.3rem"
+                            >
+                                | {{ String(user[0]).padStart(2, "&nbsp") }}등:
+                                {{
+                                    String(user[1].split("#")[0]).padEnd(
+                                        10,
+                                        "&nbsp"
+                                    )
+                                }}
+                                &nbsp 점수:
+                                {{ String(user[2]).padEnd(4, "&nbsp") }}
+                                <span v-if="user.length == 4">
+                                    &nbsp&nbsp 기여도:
+                                    {{ String(user[3]).padStart(3, "&nbsp") }}
+                                    &#124;</span
+                                >
+                                <span v-else> |</span>
+                            </div>
                         </div>
                     </div>
-                    </div>
 
-                        <div class="answerLog padding">
-                            <span><b>연관단어</b></span>
-                            <div class="logList scrollbar">
+                    <div class="answerLog padding">
+                        <span><b>연관단어</b></span>
+                        <div class="logList scrollbar">
+                            <div
+                                v-for="(words, index) in answerLog"
+                                :data-index="index"
+                                :key="answerLog[0]"
+                                style="border: 2px solid; margin-bottom: 1rem"
+                            >
+                                <div>
+                                    <span>{{ words[0] }}번 제출: </span
+                                    ><span>{{ words[1] }}</span>
+                                </div>
                                 <div
-                                    v-for="(words, index) in answerLog"
+                                    v-for="(word, index) in words[2]"
                                     :data-index="index"
-                                    :key="answerLog[0]"
-                                    style="border: 2px solid; margin-bottom: 1rem"
+                                    :key="word"
+                                    style="
+                                        display: inline;
+                                        word-break: keep-all;
+                                    "
                                 >
-                                    <div>
-                                        <span>{{ words[0] }}번 제출: </span
-                                        ><span>{{ words[1] }}</span>
-                                    </div>
-                                    <div
-                                        v-for="(word, index) in words[2]"
-                                        :data-index="index"
-                                        :key="word"
-                                        style="
-                                            display: inline;
-                                            word-break: keep-all;
-                                        "
-                                    >
-                                        {{ word }}&nbsp
-                                    </div>
+                                    {{ word }}&nbsp
                                 </div>
                             </div>
                         </div>
+                    </div>
                     <div class="closeButton padding">
                         <div @click="closeModal" style="z-index: 50">
                             <span><b>닫기</b></span>

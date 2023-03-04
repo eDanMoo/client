@@ -13,12 +13,12 @@
                 class="ball"
                 :id="item.id"
                 :class="{
-                bondU: item.Up,
-                bondD: item.Down,
-                bondL: item.Left,
-                bondR: item.Right,
-                bondUD: item.Updown,
-                bondRL: item.Rleft,
+                    bondU: item.Up,
+                    bondD: item.Down,
+                    bondL: item.Left,
+                    bondR: item.Right,
+                    bondUD: item.Updown,
+                    bondRL: item.Rleft,
                 }"
                 :style="{
                     top: item.posy + '%',
@@ -47,40 +47,36 @@ export default {
     watch: {
         msg(message) {
             if (message != null) {
-                try{
+                try {
                     if (message.type == "check") {
-                    // console.log(message);
-                    if (message.moves.length === 5) {
-                        // console.log("판갈이 셋 되어있음");
-                        this.newgameFlag = true;
-                    }
-                    if (message.moves[0].length > 0) {
-                        this.answerCheck(message.moves);
-                    } else {
-                        // console.log("단어가 없는데");
-                        this.Warning();
-                    }
+                        // console.log(message);
+                        if (message.moves.length === 5) {
+                            // console.log("판갈이 셋 되어있음");
+                            this.newgameFlag = true;
+                        }
+                        if (message.moves[0].length > 0) {
+                            this.answerCheck(message.moves);
+                        } else {
+                            // console.log("단어가 없는데");
+                            this.Warning();
+                        }
 
-                    this.$emit(
-                        "scriptCheck",
-                        "check",
-                        this.msg.user,
-                        this.msg.increase
-                    ); // 정답 체크 완료 시 서버에 턴 요청
-                } else if (message.type == "init") {
-                    this.start(message.moves[0]);
-                    this.startbondFlag = true;
-                    this.$emit("scriptCheck", "init"); // table 생성 완료 시 서버에 턴 요청
-                }
-
-                }
-                catch(err){
-                    alert('테이블 정보 오류');
+                        this.$emit(
+                            "scriptCheck",
+                            "check",
+                            this.msg.user,
+                            this.msg.increase
+                        ); // 정답 체크 완료 시 서버에 턴 요청
+                    } else if (message.type == "init") {
+                        this.start(message.moves[0]);
+                        this.startbondFlag = true;
+                        this.$emit("scriptCheck", "init"); // table 생성 완료 시 서버에 턴 요청
+                    }
+                } catch (err) {
+                    alert("테이블 정보 오류");
                     console.log(err);
                     console.log(message);
-
                 }
-
             }
         },
         delete_board(is_finish) {
@@ -190,18 +186,15 @@ export default {
                     this.wordcard[info[0][index][0]].posy =
                         mapinfo[element[1]].posY;
                 });
-            }
-            catch (err) {
-                alert('추가 기능 에러');
+            } catch (err) {
+                alert("추가 기능 에러");
                 console.log(err);
                 console.log(command);
             }
-
         },
         newtable(command) {
             let info = Object.values(command);
             try {
-
                 info[4].forEach((element, index) => {
                     this.wordcard[info[3][index][0]].id = element[1];
                     this.wordcard[info[3][index][0]].value = element[2];
@@ -210,13 +203,11 @@ export default {
                     this.wordcard[info[3][index][0]].posy =
                         mapinfo[element[1]].posY;
                 });
-            }
-            catch {
-                alert('테이블 교체 기능 에러');
+            } catch {
+                alert("테이블 교체 기능 에러");
                 console.log(err);
                 console.log(command);
             }
-
         },
         start(command) {
             let info = Object.values(command);

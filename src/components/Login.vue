@@ -53,7 +53,13 @@
                     @keypress.enter="createPage"
                 />
                 <br />
-                <button @click="createPage" id="join-buttom" @mouseover="buttonHovered">입장</button>
+                <button
+                    @click="createPage"
+                    id="join-buttom"
+                    @mouseover="buttonHovered"
+                >
+                    입장
+                </button>
             </div>
         </div>
     </div>
@@ -149,7 +155,7 @@ export default {
             document.onmousemove = null;
         },
         buttonHovered() {
-            const water = new Audio("/assets/soundEffect/audio_water.mp3")
+            const water = new Audio("/assets/soundEffect/audio_water.mp3");
             water.volume = 0.3;
             water.play();
         },

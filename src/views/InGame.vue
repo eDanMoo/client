@@ -1960,7 +1960,6 @@ button {
     cursor: pointer;
 }
 
-
 #game_start {
     box-sizing: border-box;
     font-size: 2rem;
@@ -2088,7 +2087,6 @@ button {
     background-color: transparent;
 }
 /*############################### Music Player */
-
 
 #floatWindow {
     position: absolute;
