@@ -604,9 +604,9 @@
         <div class="answerArea">
             <div class="answerLine"></div>
             <div class="innerAnswer">
-                <div id="answerAnchor" >
+                <div>
                     <div class="progressBar">
-                        <div id="timerbar" class="innerbar" style="display: flex;"></div>
+                        <div id="timerbar" class="innerbar"></div>
                     </div>
                 </div>
                 <div class="answerBox">
@@ -856,8 +856,8 @@ export default {
             current_user = url_segs[2] + "#" + uniqCode;
 
             const socket = new WebSocket(
-                // ws_scheme + "chkdnstest.shop/ws/" + room_name
-                "ws://127.0.0.1:8888/ws/" + room_name
+                ws_scheme + "chkdnstest.shop/ws/" + room_name
+                // "ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
@@ -1951,7 +1951,6 @@ button {
     display: flex;
     justify-content: center;
     border-radius: 3px;
-    position: relative;
 }
 
 .chatBox {
@@ -2008,6 +2007,7 @@ button {
     font-weight: bold;
     cursor: pointer;
 }
+
 
 #game_start {
     box-sizing: border-box;
@@ -2136,6 +2136,7 @@ button {
     background-color: transparent;
 }
 /*############################### Music Player */
+
 
 #floatWindow {
     position: absolute;
