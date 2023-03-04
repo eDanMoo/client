@@ -62,10 +62,11 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
-                    <div class="closeButton padding">
+                    <div class="closeButton">
                         <div @click="closeModal" style="z-index: 50">
-                            <span><b>닫기</b></span>
+                            <b>닫기</b>
                         </div>
                     </div>
                 </div>
@@ -178,38 +179,43 @@ export default {
     border-width: 2px 4px 2px 4px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    position: relative;
+    /* justify-content: space-between; */
 }
 
 .ranking {
     border-bottom: 2px solid;
-    flex-grow: 1;
-    max-height: 27%;
+    max-height: 25%;
 }
 
 .rankingList {
     display: flex;
     flex-direction: column;
-    overflow: auto;
-    height: 70%;
+    overflow-y: auto;
+    max-height: 80%;
 }
 
 .answerLog {
-    flex-grow: 2;
-    max-height: 55%;
+    max-height: 80%;
+    overflow: hidden;
 }
 
 .logList {
     display: flex;
     flex-direction: column;
     overflow: auto;
-    height: 90%;
+    max-height: 85%;
 }
 
 .closeButton {
     border-top: 2px solid;
-    min-height: 5%;
-    text-align: center;
+    width: 100%;
+    height: 7%;
+    display: flex;
+    justify-content : center;
+    align-items: center;
+    position: absolute;
+    bottom: 0px;
 }
 
 .scrollbar::-webkit-scrollbar {
