@@ -604,9 +604,9 @@
         <div class="answerArea">
             <div class="answerLine"></div>
             <div class="innerAnswer">
-                <div>
+                <div id="answerAnchor" >
                     <div class="progressBar">
-                        <div id="timerbar" class="innerbar"></div>
+                        <div id="timerbar" class="innerbar" style="display: flex;"></div>
                     </div>
                 </div>
                 <div class="answerBox">
@@ -824,6 +824,13 @@ export default {
         time() {
             this.updateProgressbar();
         },
+        wordUpdate(msg) {
+            if(msg.type == "check")
+            {
+                console.log(msg.answer);
+                this.answerPop(msg.answer);
+            }
+        }
     },
     created() {},
     unmounted() {
@@ -849,8 +856,8 @@ export default {
             current_user = url_segs[2] + "#" + uniqCode;
 
             const socket = new WebSocket(
-                ws_scheme + "chkdnstest.shop/ws/" + room_name
-                // "ws://127.0.0.1:8888/ws/" + room_name
+                // ws_scheme + "chkdnstest.shop/ws/" + room_name
+                "ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
@@ -1202,6 +1209,47 @@ export default {
             setTimeout(function () {
                 laser.remove();
             }, 990);
+        },
+        answerPop(msg) {
+            const background = document.getElementById("body");
+            const answerPop = document.createElement("div");
+            const newText = document.createTextNode(String(msg));
+
+            answerPop.appendChild(newText);
+            answerPop.setAttribute("id", "answerpopUp");
+            // answerPop.setAttribute("class","answerpopUp");
+            answerPop.style.width = "fit-content";
+            answerPop.style.height = "fit-content";
+            answerPop.style.background = "rgb(200,200,255)";
+            answerPop.style.borderRadius = "1rem";
+            answerPop.style.zIndex = "-1";
+            answerPop.style.position = "absolute";
+            answerPop.style.left = 100 + "vw";
+            answerPop.style.bottom = 7 + "vh";
+            answerPop.style.fontSize = 2 + "rem";
+            answerPop.style.opacity = 1;
+            answerPop.style.whiteSpace = "nowrap";
+            // answerPop.style.alignItems = "cneter";
+            // answerPop.style.justifyItems ="center";
+            // answerPop.style.textAlign = "center";
+            answerPop.animate(
+                [
+                    { opacity: 1 },
+                    { transform: "translateX(-110vw)"},
+                    // { transform: "scale(1) translateY(0)", opacity: 1 },
+                    // { transform: "scale(1) translateY(0)", opacity: 0.2 },
+                    // { transform: "scale(0) translateY(-100px)", opacity: 0.3 },
+                ],
+                {
+                    duration: 5000,
+                    iteration: 1,
+                    easing: "linear",
+                }
+            );
+            background.appendChild(answerPop);
+            setTimeout(function () {
+                answerPop.remove();
+            }, 5500);
         },
         colored() {
             document.body.style.backgroundColor = "rgb(0, 0, 0)";
@@ -1903,6 +1951,7 @@ button {
     display: flex;
     justify-content: center;
     border-radius: 3px;
+    position: relative;
 }
 
 .chatBox {
