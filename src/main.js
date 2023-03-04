@@ -18,7 +18,7 @@ Sentry.init({
   integrations: [
     new BrowserTracing({
       routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-      tracePropagationTargets: ["koword.com", /^\//],
+      tracePropagationTargets: ["localhost", "koword.com", /^\//],
     }),
   ],
   // Set tracesSampleRate to 1.0 to capture 100%
