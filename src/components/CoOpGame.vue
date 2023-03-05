@@ -76,7 +76,6 @@ export default {
                             ctx.canvas.width,
                             ctx.canvas.height
                         );
-                        clearInterval(drawWord);
                     }
                 }
             );

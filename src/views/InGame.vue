@@ -472,7 +472,9 @@
                             @click="boardInit()"
                             v-show="!isGameStarted && game_selected"
                         ></button>
-                        <h1 style="color: white">{{ ready_time }}</h1>
+                        <div id="ready_time" v-show="ready_time">
+                            {{ ready_time }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -825,12 +827,11 @@ export default {
             this.updateProgressbar();
         },
         wordUpdate(msg) {
-            if(msg.type == "check")
-            {
+            if (msg.type == "check") {
                 console.log(msg.answer);
                 this.answerPop(msg.answer);
             }
-        }
+        },
     },
     created() {},
     unmounted() {
@@ -1156,6 +1157,85 @@ export default {
                 }
             } else if (event_data.type == "ready_time") {
                 this.ready_time = event_data.ready_time;
+                let ready_time = document.getElementById("ready_time");
+                switch (event_data.ready_time) {
+                    case 3:
+                        ready_time.animate(
+                            [
+                                {
+                                    transform: "scale(5)",
+                                    color: "rgb(255, 80, 0)",
+                                },
+                                {
+                                    transform: "scale(1)",
+                                    color: "rgb(160, 120, 10)",
+                                },
+                            ],
+                            {
+                                duration: 1000,
+                                iteration: 1,
+                                easing: "linear",
+                            }
+                        );
+                        break;
+                    case 2:
+                        ready_time.animate(
+                            [
+                                {
+                                    transform: "scale(5)",
+                                    color: "rgb(160, 120, 10)",
+                                },
+                                {
+                                    transform: "scale(1)",
+                                    color: "rgb(90, 190, 40)",
+                                },
+                            ],
+                            {
+                                duration: 1000,
+                                iteration: 1,
+                                easing: "linear",
+                            }
+                        );
+                        break;
+                    case 1:
+                        ready_time.animate(
+                            [
+                                {
+                                    transform: "scale(5)",
+                                    color: "rgb(90, 190, 40)",
+                                },
+                                {
+                                    transform: "scale(1)",
+                                    color: "rgb(22, 255, 94)",
+                                },
+                            ],
+                            {
+                                duration: 1000,
+                                iteration: 1,
+                                easing: "linear",
+                            }
+                        );
+                        break;
+                    case 0:
+                        ready_time.animate(
+                            [
+                                {
+                                    transform: "scale(5)",
+                                    color: "rgb(22, 255, 94)",
+                                },
+                                {
+                                    transform: "scale(1)",
+                                    color: "rgba(255, 255, 255, 0)",
+                                },
+                            ],
+                            {
+                                duration: 1000,
+                                iteration: 1,
+                                easing: "linear",
+                            }
+                        );
+                        break;
+                }
             } else if (event_data.type == "survival_time") {
                 this.game_time = event_data.survival_time;
             }
@@ -1235,7 +1315,7 @@ export default {
             answerPop.animate(
                 [
                     { opacity: 1 },
-                    { transform: "translateX(-110vw)"},
+                    { transform: "translateX(-110vw)" },
                     // { transform: "scale(1) translateY(0)", opacity: 1 },
                     // { transform: "scale(1) translateY(0)", opacity: 0.2 },
                     // { transform: "scale(0) translateY(-100px)", opacity: 0.3 },
@@ -2008,7 +2088,6 @@ button {
     cursor: pointer;
 }
 
-
 #game_start {
     box-sizing: border-box;
     font-size: 2rem;
@@ -2136,7 +2215,6 @@ button {
     background-color: transparent;
 }
 /*############################### Music Player */
-
 
 #floatWindow {
     position: absolute;
@@ -2975,5 +3053,11 @@ span {
 }
 #btnCoop {
     left: 55%;
+}
+#ready_time {
+    position: fixed;
+    top: 35%;
+    left: 50%;
+    font-size: 8rem;
 }
 </style>
