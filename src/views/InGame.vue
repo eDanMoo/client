@@ -828,8 +828,8 @@ export default {
         },
         wordUpdate(msg) {
             if (msg.type == "check") {
-                console.log(msg.answer);
-                this.answerPop(msg.answer);
+                console.log(msg);
+                this.answerPop(String(msg.user).split('#')[0],msg.answer);
             }
         },
     },
@@ -1285,25 +1285,37 @@ export default {
                 laser.remove();
             }, 990);
         },
-        answerPop(msg) {
+        answerPop(user,msg) {
             const background = document.getElementById("body");
             const answerPop = document.createElement("div");
-            const newText = document.createTextNode(String(msg));
+            const ruby = document.createElement("ruby");
+            const rt = document.createElement("rt");
+            const newTextOne = document.createTextNode(user);
+            const newTextTwo = document.createTextNode(String(msg));
+            answerPop.appendChild(ruby);
+            ruby.appendChild(newTextTwo);
+            ruby.appendChild(rt);
+            rt.appendChild(newTextOne);
+            
 
-            answerPop.appendChild(newText);
             answerPop.setAttribute("id", "answerpopUp");
             // answerPop.setAttribute("class","answerpopUp");
             answerPop.style.width = "fit-content";
             answerPop.style.height = "fit-content";
-            answerPop.style.background = "rgb(200,200,255)";
+            answerPop.style.background = "transparent";
+            answerPop.style.border = "orange solid" ;
+            answerPop.style.color ="rgb(22, 255, 94)";
             answerPop.style.borderRadius = "1rem";
             answerPop.style.zIndex = "-1";
             answerPop.style.position = "absolute";
             answerPop.style.left = 100 + "vw";
             answerPop.style.bottom = 7 + "vh";
             answerPop.style.fontSize = 2 + "rem";
+            rt.style.fontSize = 1.5 + "rem";
             answerPop.style.opacity = 1;
             answerPop.style.whiteSpace = "nowrap";
+            answerPop.style.paddingRight = 5 + 'px';
+            answerPop.style.paddingLeft = 5 + 'px';
             // answerPop.style.alignItems = "cneter";
             // answerPop.style.justifyItems ="center";
             // answerPop.style.textAlign = "center";

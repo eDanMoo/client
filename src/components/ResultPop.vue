@@ -29,9 +29,9 @@
                                 <span v-if="user.length == 4">
                                     &nbsp&nbsp 기여도:
                                     {{ String(user[3]).padStart(3, "&nbsp") }}
-                                    &#124;</span
+                                    &nbsp; &#124;</span
                                 >
-                                <span v-else> |</span>
+                                <span v-else>&nbsp; |</span>
                             </div>
                         </div>
                     </div>
