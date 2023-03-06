@@ -186,7 +186,15 @@
             </div>
         </div>
         <!-- Nav Bar -->
-        <nav style="display: flex; justify-content: space-between; position: fixed; width: 100vw; z-index: 100;">
+        <nav
+            style="
+                display: flex;
+                justify-content: space-between;
+                position: fixed;
+                width: 100vw;
+                z-index: 100;
+            "
+        >
             <div style="display: flex; align-items: center">
                 <img
                     src="/assets/image/icon/icon_exit.svg"
@@ -825,7 +833,7 @@ export default {
         },
         wordUpdate(msg) {
             if (msg.type == "check") {
-                this.answerPop(msg.user,msg.answer,msg.color);
+                this.answerPop(msg.user, msg.answer, msg.color);
             }
         },
     },
@@ -1300,10 +1308,9 @@ export default {
                 laser.remove();
             }, 990);
         },
-        answerPop(User,Answer,Color) {
-
+        answerPop(User, Answer, Color) {
             Color ??= "#ffffff";
-            const user = String(User).split('#')[0];
+            const user = String(User).split("#")[0];
             const answer = String(Answer);
             const color = String(Color);
             const background = document.getElementById("body");
@@ -1316,12 +1323,12 @@ export default {
             ruby.appendChild(newTextTwo);
             ruby.appendChild(rt);
             rt.appendChild(newTextOne);
-            
+
             answerPop.setAttribute("id", "answerpopUp");
             answerPop.style.width = "fit-content";
             answerPop.style.height = "fit-content";
             answerPop.style.background = "rgba(0,0,0,0.7)";
-            answerPop.style.border = `${color} solid` ;
+            answerPop.style.border = `${color} solid`;
             answerPop.style.color = color; //"#ffffff";
             answerPop.style.borderRadius = "1rem";
             answerPop.style.zIndex = "-1";
@@ -1332,13 +1339,10 @@ export default {
             rt.style.fontSize = 1.5 + "rem";
             answerPop.style.opacity = 1;
             answerPop.style.whiteSpace = "nowrap";
-            answerPop.style.paddingRight = 5 + 'px';
-            answerPop.style.paddingLeft = 5 + 'px';
+            answerPop.style.paddingRight = 5 + "px";
+            answerPop.style.paddingLeft = 5 + "px";
             answerPop.animate(
-                [
-                    { opacity: 1 },
-                    { transform: "translateX(-110vw)" },
-                ],
+                [{ opacity: 1 }, { transform: "translateX(-110vw)" }],
                 {
                     duration: 5000,
                     iteration: 1,
@@ -2170,7 +2174,7 @@ button {
     width: fit-content;
     height: fit-content;
     scale: 1;
-    margin-bottom: 5%
+    margin-bottom: 5%;
 }
 #gameBox {
     width: 100%;

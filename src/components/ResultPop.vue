@@ -62,7 +62,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="closeButton">
                         <div @click="closeModal" style="z-index: 50">
@@ -212,7 +211,7 @@ export default {
     width: 100%;
     height: 7%;
     display: flex;
-    justify-content : center;
+    justify-content: center;
     align-items: center;
     position: absolute;
     bottom: 0px;

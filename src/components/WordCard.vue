@@ -300,7 +300,7 @@ export default {
     transition: all 0.1s;
     z-index: 5;
     font-size: 200%;
-    color: rgba(63, 62, 62,0.5);
+    color: rgba(63, 62, 62, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
