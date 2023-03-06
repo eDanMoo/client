@@ -20,26 +20,26 @@
         <div id="loginbox">
             <div id="entrance">
                 <input
-                    id="input-room-id"
+                    id="input_room_id"
                     type="text"
                     v-model="room_code"
                     placeholder="입장코드 입력(영문, 숫자)"
+                    :maxlength="6"
                     oninput="javascript: 
                     if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
-
                         this.value = ''; 
                         const modal = document.getElementById('modal-wrapper');
                         modal.style.display = 'flex'; 
-
-                        document.getElementById('close-modal').focus();
+                        document.getElementById('close_modal').focus();
                                                 } "
-                    :maxlength="6"
                 />
                 <input
-                    id="input-user-id"
+                    id="input_user_id"
                     type="text"
                     v-model="user_id"
                     placeholder="닉네임 입력(영문, 숫자)"
+                    :maxlength="6"
+                    @keypress.enter="createPage"
                     oninput="javascript: 
                     if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
 
@@ -47,10 +47,8 @@
                         const modal = document.getElementById('modal-wrapper');
                         modal.style.display = 'flex'; 
 
-                        document.getElementById('close-modal').focus();
+                        document.getElementById('close_modal').focus();
                                                 } "
-                    :maxlength="6"
-                    @keypress.enter="createPage"
                 />
                 <br />
                 <button
@@ -68,21 +66,21 @@
             <div class="modal-title" id="modal-title">경고</div>
             <div class="modal-content" id="modal-content">
                 <div>영문과 숫자만 입력 가능합니다!</div>
-                <div class="close-modal">
-                    <button class="modal-close-button" id="close-modal">
+                <div class="close_modal">
+                    <button class="modal-close-button" id="close_modal">
                         확 인
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal-wrapper" id="modal-wrapper-2">
-        <div class="modal" id="modal-2">
+    <div class="modal-wrapper" id="modal-wrapper2">
+        <div class="modal" id="modal_2">
             <div class="modal-title" id="modal-title-2">경고</div>
             <div class="modal-content" id="modal-content-2">
                 <div>입력값을 적어주세요</div>
-                <div class="close-modal">
-                    <button class="modal-close-button" id="close-modal-2">
+                <div class="close_modal">
+                    <button class="modal-close-button" id="close_modal_2">
                         확 인
                     </button>
                 </div>
@@ -96,12 +94,19 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
+    props: {
+        room_name: {
+            type: String,
+            required: false,
+        },
+    },
     data() {
         return {
             logPos1: 0,
             logPos2: 0,
             logPos3: 0,
             logPos4: 0,
+            room_code: ""
         };
     },
     methods: {
@@ -163,10 +168,10 @@ export default {
     setup() {
         let showLogin = ref(true);
         onMounted(() => {
-            const closeModal = document.getElementById("close-modal");
-            const closeModal2 = document.getElementById("close-modal-2");
+            const closeModal = document.getElementById("close_modal");
+            const closeModal2 = document.getElementById("close_modal_2");
             const modal = document.getElementById("modal-wrapper");
-            const modal2 = document.getElementById("modal-wrapper-2");
+            const modal2 = document.getElementById("modal-wrapper2");
             closeModal.onclick = () => {
                 modal.style.display = "none";
             };
@@ -189,57 +194,58 @@ export default {
                 }
             });
         });
-
         const router = useRouter();
-        const room_code = ref("");
         const user_id = ref("");
         const audio_enter = new Audio("/assets/soundEffect/audio_enter.mp3");
         const audio_ding = new Audio("/assets/soundEffect/ding.wav");
         audio_enter.volume = 0.6;
         const joinPage = () => {
-            // const roomID = document.getElementById("input-room-id");
-            const userID = document.getElementById("input-user-id");
-            const modal2 = document.getElementById("modal-wrapper-2");
+            const roomID = document.getElementById("input_room_id");
+            const userID = document.getElementById("input_user_id");
+            const modal2 = document.getElementById("modal-wrapper2");
             // if (userID.value == "" || roomID.value == "") {
             if (userID.value == "") {
                 modal2.style.display = "flex";
-                document.getElementById("close-modal-2").focus();
+                document.getElementById("close_modal_2").focus();
                 audio_ding.play();
             } else {
                 audio_enter.play();
                 router.push({
                     name: "inGame",
                     params: {
-                        room_code: `${room_code.value}`,
+                        room_code: roomID.value,
+                    },
+                    query: {
                         user_id: `${user_id.value}`,
                     },
                 });
             }
         };
         const createPage = () => {
-            const roomID = document.getElementById("input-room-id");
-            const userID = document.getElementById("input-user-id");
-            const modal2 = document.getElementById("modal-wrapper-2");
+            const roomID = document.getElementById("input_room_id");
+            const userID = document.getElementById("input_user_id");
+            const modal2 = document.getElementById("modal-wrapper2");
             if (userID.value == "") {
                 modal2.style.display = "flex";
-                document.getElementById("close-modal-2").focus();
+                document.getElementById("close_modal_2").focus();
                 audio_ding.play();
             } else {
-                if (!roomID.value == "") {
-                    return joinPage();
+                if (roomID.value == "") {
+                    const new_room_code = generateRandomCode(6);
+                    audio_enter.play();
+                    router.push({
+                        name: "inGame",
+                        params: {
+                            room_code: `${new_room_code}`,
+                        },
+                        query: {
+                            user_id: `${user_id.value}`,
+                        },
+                    });
                 }
-                const new_room_code = generateRandomCode(6);
-                audio_enter.play();
-                router.push({
-                    name: "inGame",
-                    params: {
-                        room_code: `${new_room_code}`,
-                        user_id: `${user_id.value}`,
-                    },
-                });
+                return joinPage();
             }
         };
-
         function generateRandomCode(n) {
             const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
             let randomcode = "";
@@ -251,15 +257,20 @@ export default {
             }
             return randomcode;
         }
-
         return {
-            room_code,
             user_id,
             joinPage,
             createPage,
             showLogin,
             generateRandomCode,
         };
+    },
+    mounted() {
+        if (this.$route.query.room_code) {
+            const input_room_id = document.getElementById("input_room_id");
+            input_room_id.value = this.$route.query.room_code;
+            this.room_code = this.$route.query.room_code;
+        }
     },
 };
 </script>
@@ -333,7 +344,7 @@ export default {
     width: 100%;
     /* height: 50%; */
 }
-#input-room-id {
+#input_room_id {
     margin: 5px;
     width: 40%;
     min-width: 30px;
@@ -345,15 +356,15 @@ export default {
     border: 3px solid rgb(22, 255, 94);
     color: rgb(22, 255, 94);
 }
-#input-room-id::placeholder {
+#input_room_id::placeholder {
     color: rgb(11, 121, 46);
 }
-#input-room-id:focus {
+#input_room_id:focus {
     outline: none !important;
     border-color: rgb(22, 255, 94);
     box-shadow: 0 0 10px 5px rgb(22, 255, 94);
 }
-#input-user-id {
+#input_user_id {
     margin: 5px;
     width: 40%;
     min-width: 30px;
@@ -365,10 +376,10 @@ export default {
     border: 3px solid rgb(22, 255, 94);
     color: rgb(22, 255, 94);
 }
-#input-user-id::placeholder {
+#input_user_id::placeholder {
     color: rgb(11, 121, 46);
 }
-#input-user-id:focus {
+#input_user_id:focus {
     outline: none !important;
     border-color: rgb(22, 255, 94);
     box-shadow: 0 0 10px 5px rgb(22, 255, 94);
@@ -433,7 +444,7 @@ export default {
     padding: 10px;
     font-size: large;
 }
-.close-modal {
+.close_modal {
     align-items: center;
     flex-basis: 20%;
     display: flex;

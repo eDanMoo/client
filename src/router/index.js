@@ -6,15 +6,24 @@ const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            // path: "/ws/1",
-            path: "/:room_code/:user_id",
-            name: "inGame",
-            component: inGame,
-        },
-        {
             path: "/",
             name: "home",
             component: Home,
+        },
+        {
+            path: "/:room_code",
+            name: "inGame",
+            component: inGame,
+            beforeEnter: (to, from, next) => {
+                if (from.name === "home" && to.params.room_code) {
+                    next();
+                } else {
+                    next({
+                        name: "home",
+                        query: { room_code: to.params.room_code },
+                    });
+                }
+            },
         },
     ],
 });

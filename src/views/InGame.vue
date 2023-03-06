@@ -660,9 +660,21 @@ let first_turn = "";
 let process_image = "";
 
 export default {
-    name: "cam_comp",
+    name: "inGame",
     components: {
         modal,
+    },
+    beforeEnter: (to, from, next) => {
+        // Check if the user is authorized to access the game route
+        if (from.name === "home" && this.$route.params.room_code) {
+            next();
+        } else {
+            // Redirect the user to the input page
+            next({
+                name: "home",
+                query: { room_code: this.$route.params.room_code },
+            });
+        }
     },
     data() {
         return {
@@ -842,6 +854,7 @@ export default {
         connection.close();
     },
     async mounted() {
+        const user_id = this.$route.query.user_id;
         let centerBox = document.getElementById("centerBox");
         let rectLen = Math.min(
             Math.max(380, Math.min(window.innerWidth, 1000)),
@@ -874,7 +887,7 @@ export default {
             room_name = url_segs[1];
             this.enterCode = room_name;
             uniqCode = this.getRandomInt(10000, 100000);
-            current_user = url_segs[2] + "#" + uniqCode;
+            current_user = user_id + "#" + uniqCode;
 
             const socket = new WebSocket(
                 ws_scheme + "koword.link/ws/" + room_name
