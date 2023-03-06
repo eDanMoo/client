@@ -982,7 +982,6 @@ export default {
                         subFrame.setAttribute("src", event_data.video);
                     } else {
                         connection.send(JSON.stringify(info_obj));
-                        console.log("New video is created");
                         const leftBox = document.getElementById("leftBox");
                         const newFrame =
                             '<div id="' +
@@ -998,7 +997,6 @@ export default {
                     }
                 }
             } else if (event_data.type == "send_user_turn") {
-                console.log("now turn " + userid_str);
                 const btn = document.getElementById("input_answer");
                 const audio = document.getElementById("time_ticking");
                 if (userid_str != current_user) {
@@ -1033,7 +1031,6 @@ export default {
                 this.delete_board = 0;
                 this.ready_time = null;
             } else if (event_data.type == "check") {
-                console.log(event_data);
                 this.wordUpdate = event_data;
 
                 /* 제출 답 표시 기능 */
@@ -1077,7 +1074,6 @@ export default {
                     log_board.scrollTop = 9999999;
                 }
             } else if (event_data.type == "game_start") {
-                console.log(event_data.game_mode);
                 if (event_data.game_mode == "CoOpGame") {
                     const answer_text_box =
                         document.getElementById("input_answer");
@@ -1097,7 +1093,6 @@ export default {
                     first_turn == current_user &&
                     event_data.remain_time == "60"
                 ) {
-                    console.log("전체타이머 받았으니 턴 요청");
                     this.send_user_turn();
                 }
             } else if (event_data.type == "turn_timer") {
@@ -1351,7 +1346,6 @@ export default {
         },
         /** 실제로 컴포넌트 가져오기 */
         async getComponent(game_mode) {
-            console.log(game_mode);
             const component = await defineAsyncComponent(() =>
                 import(`../components/${game_mode}.vue`)
             );
@@ -1446,9 +1440,7 @@ export default {
             connection.send(jsonData);
         },
         toggleVideoCamera() {
-            console.log(isStreaming);
             if (!isStreaming) {
-                console.log("카메라 활성화");
                 isStreaming = 1;
                 this.isStreaming = 1;
                 this.toggle_text = "카메라 비활성화";
@@ -1456,7 +1448,6 @@ export default {
                 this.processImage();
                 this.videoOn();
             } else {
-                console.log("카메라 비활성화");
                 isStreaming = 0;
                 this.isStreaming = 0;
                 this.toggle_text = "카메라 활성화";
