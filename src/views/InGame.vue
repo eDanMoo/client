@@ -825,8 +825,7 @@ export default {
         },
         wordUpdate(msg) {
             if (msg.type == "check") {
-                console.log(msg);
-                this.answerPop(String(msg.user).split('#')[0],msg.answer);
+                this.answerPop(msg.user,msg.answer,msg.color);
             }
         },
     },
@@ -870,25 +869,25 @@ export default {
             current_user = url_segs[2] + "#" + uniqCode;
 
             const socket = new WebSocket(
-                ws_scheme + "chkdnstest.shop/ws/" + room_name
+                ws_scheme + "koword.link/ws/" + room_name
                 // "ws://127.0.0.1:8888/ws/" + room_name
             );
             socket.addEventListener("open", () => {
                 console.log("socket connect");
                 resolve(socket);
             });
-            // socket.addEventListener("error", (error) => {
-            //     console.log("Websocket connect error");
-            //     console.log(error);
-            //     alert("게임 서버와의 연결이 종료되었습니다.");
-            //     location.href = "/";
-            //     reject(error);
-            // });
-            // socket.addEventListener("close", (event) => {
-            //     console.log("WebSocket connection closed:", event);
-            //     alert("게임 서버와의 연결이 종료되었습니다.");
-            //     location.href = "/";
-            // });
+            socket.addEventListener("error", (error) => {
+                console.log("Websocket connect error");
+                console.log(error);
+                alert("게임 서버와의 연결이 종료되었습니다.");
+                location.href = "/";
+                reject(error);
+            });
+            socket.addEventListener("close", (event) => {
+                console.log("WebSocket connection closed:", event);
+                alert("게임 서버와의 연결이 종료되었습니다.");
+                location.href = "/";
+            });
         });
 
         messages = document.getElementById("messages");
@@ -1301,47 +1300,44 @@ export default {
                 laser.remove();
             }, 990);
         },
-        answerPop(user,msg) {
+        answerPop(User,Answer,Color) {
+
+            Color ??= "#ffffff";
+            const user = String(User).split('#')[0];
+            const answer = String(Answer);
+            const color = String(Color);
             const background = document.getElementById("body");
             const answerPop = document.createElement("div");
             const ruby = document.createElement("ruby");
             const rt = document.createElement("rt");
             const newTextOne = document.createTextNode(user);
-            const newTextTwo = document.createTextNode(String(msg));
+            const newTextTwo = document.createTextNode(answer);
             answerPop.appendChild(ruby);
             ruby.appendChild(newTextTwo);
             ruby.appendChild(rt);
             rt.appendChild(newTextOne);
             
-
             answerPop.setAttribute("id", "answerpopUp");
-            // answerPop.setAttribute("class","answerpopUp");
             answerPop.style.width = "fit-content";
             answerPop.style.height = "fit-content";
-            answerPop.style.background = "transparent";
-            answerPop.style.border = "orange solid" ;
-            answerPop.style.color ="rgb(22, 255, 94)";
+            answerPop.style.background = "rgba(0,0,0,0.7)";
+            answerPop.style.border = `${color} solid` ;
+            answerPop.style.color = color; //"#ffffff";
             answerPop.style.borderRadius = "1rem";
             answerPop.style.zIndex = "-1";
             answerPop.style.position = "absolute";
             answerPop.style.left = 100 + "vw";
-            answerPop.style.bottom = 7 + "vh";
-            answerPop.style.fontSize = 2 + "rem";
+            answerPop.style.bottom = 60 + "px";
+            answerPop.style.fontSize = 3 + "rem";
             rt.style.fontSize = 1.5 + "rem";
             answerPop.style.opacity = 1;
             answerPop.style.whiteSpace = "nowrap";
             answerPop.style.paddingRight = 5 + 'px';
             answerPop.style.paddingLeft = 5 + 'px';
-            // answerPop.style.alignItems = "cneter";
-            // answerPop.style.justifyItems ="center";
-            // answerPop.style.textAlign = "center";
             answerPop.animate(
                 [
                     { opacity: 1 },
                     { transform: "translateX(-110vw)" },
-                    // { transform: "scale(1) translateY(0)", opacity: 1 },
-                    // { transform: "scale(1) translateY(0)", opacity: 0.2 },
-                    // { transform: "scale(0) translateY(-100px)", opacity: 0.3 },
                 ],
                 {
                     duration: 5000,
