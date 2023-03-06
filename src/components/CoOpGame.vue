@@ -187,6 +187,8 @@ export default {
 <style scoped>
 #board {
     background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    margin: 5px;
 }
 
 @font-face {

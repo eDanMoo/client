@@ -285,9 +285,9 @@ export default {
 .ballbox {
     width: 700px;
     height: 700px;
+    border-radius: 10px;
     position: relative;
     overflow: hidden;
-    background: rgba(240, 7, 7, 0.7);
     background: rgba(0, 0, 0, 0.7);
 }
 

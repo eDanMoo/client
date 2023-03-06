@@ -186,7 +186,7 @@
             </div>
         </div>
         <!-- Nav Bar -->
-        <nav style="display: flex; justify-content: space-between; position: fixed; width: 100%; z-index: 100;">
+        <nav style="display: flex; justify-content: space-between; position: fixed; width: 100vw; z-index: 100;">
             <div style="display: flex; align-items: center">
                 <img
                     src="/assets/image/icon/icon_exit.svg"
@@ -838,20 +838,18 @@ export default {
         let centerBox = document.getElementById("centerBox");
         let rectLen = Math.min(
             Math.max(380, Math.min(window.innerWidth, 1000)),
-            Math.max(380, Math.min(window.innerHeight, 1000))
+            Math.max(380, Math.min(window.innerHeight - 180, 1000))
         );
         let scale = rectLen / 820;
         centerBox.style.scale = scale;
-        centerBox.style.top = 80 + 30 * scale + "px";
         window.addEventListener("resize", () => {
             let centerBox = document.getElementById("centerBox");
             let rectLen = Math.min(
                 Math.max(380, Math.min(window.innerWidth, 1000)),
-                Math.max(380, Math.min(window.innerHeight, 1000))
+                Math.max(380, Math.min(window.innerHeight - 180, 1000))
             );
             let scale = rectLen / 820;
             centerBox.style.scale = scale;
-            centerBox.style.top = 80 + 30 * scale + "px";
         });
         document.addEventListener("click", (event) => {
             this.clickEvent(event);
@@ -1976,9 +1974,9 @@ button {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     overflow-x: hidden;
-    position: absolute;
-    left: 0;
+    position: relative;
 }
 
 .video-container {
@@ -2175,13 +2173,12 @@ button {
 #centerBox {
     width: fit-content;
     height: fit-content;
-    flex-direction: column;
-    position: absolute;
     scale: 1;
+    margin-bottom: 5%
 }
 #gameBox {
-    width: 700px;
-    height: 700px;
+    width: 100%;
+    height: 100%;
     border: 3px solid rgb(22, 255, 94);
     border-radius: 10px;
     position: relative;
@@ -2218,6 +2215,7 @@ button {
     border-radius: 10px;
     animation: borderPulse 7s infinite;
     margin: 50px;
+    padding: 5px;
     box-shadow: 0 0 30px 5px rgb(22, 255, 94);
 }
 .chatRow {
