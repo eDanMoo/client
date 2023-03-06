@@ -186,7 +186,7 @@
             </div>
         </div>
         <!-- Nav Bar -->
-        <nav style="display: flex; justify-content: space-between">
+        <nav style="display: flex; justify-content: space-between; position: fixed; width: 100%; z-index: 100;">
             <div style="display: flex; align-items: center">
                 <img
                     src="/assets/image/icon/icon_exit.svg"
@@ -199,9 +199,6 @@
                     "
                     @click="backHome"
                 />
-                <h1 id="enterCode" style="color: white">
-                    방 입장 코드: {{ enterCode }}
-                </h1>
             </div>
             <div style="display: flex; align-items: center">
                 <h1
@@ -351,7 +348,7 @@
                     style="
                         position: absolute;
                         left: 0px;
-                        width: 30px;
+                        width: 80px;
                         display: flex;
                         justify-content: end;
                     "
@@ -364,7 +361,7 @@
             <Transition name="right">
                 <div
                     class="toggleBtn"
-                    style="position: absolute; right: 0px; width: 30px"
+                    style="position: absolute; right: 0px; width: 80px"
                     @click="toggleRight()"
                     v-show="!isOpenRight"
                 >
@@ -838,6 +835,24 @@ export default {
         connection.close();
     },
     async mounted() {
+        let centerBox = document.getElementById("centerBox");
+        let rectLen = Math.min(
+            Math.max(380, Math.min(window.innerWidth, 1000)),
+            Math.max(380, Math.min(window.innerHeight, 1000))
+        );
+        let scale = rectLen / 820;
+        centerBox.style.scale = scale;
+        centerBox.style.top = 80 + 30 * scale + "px";
+        window.addEventListener("resize", () => {
+            let centerBox = document.getElementById("centerBox");
+            let rectLen = Math.min(
+                Math.max(380, Math.min(window.innerWidth, 1000)),
+                Math.max(380, Math.min(window.innerHeight, 1000))
+            );
+            let scale = rectLen / 820;
+            centerBox.style.scale = scale;
+            centerBox.style.top = 80 + 30 * scale + "px";
+        });
         document.addEventListener("click", (event) => {
             this.clickEvent(event);
         });
@@ -864,18 +879,18 @@ export default {
                 console.log("socket connect");
                 resolve(socket);
             });
-            socket.addEventListener("error", (error) => {
-                console.log("Websocket connect error");
-                console.log(error);
-                alert("게임 서버와의 연결이 종료되었습니다.");
-                location.href = "/";
-                reject(error);
-            });
-            socket.addEventListener("close", (event) => {
-                console.log("WebSocket connection closed:", event);
-                alert("게임 서버와의 연결이 종료되었습니다.");
-                location.href = "/";
-            });
+            // socket.addEventListener("error", (error) => {
+            //     console.log("Websocket connect error");
+            //     console.log(error);
+            //     alert("게임 서버와의 연결이 종료되었습니다.");
+            //     location.href = "/";
+            //     reject(error);
+            // });
+            // socket.addEventListener("close", (event) => {
+            //     console.log("WebSocket connection closed:", event);
+            //     alert("게임 서버와의 연결이 종료되었습니다.");
+            //     location.href = "/";
+            // });
         });
 
         messages = document.getElementById("messages");
@@ -914,6 +929,7 @@ export default {
                 content_tag.appendChild(text);
                 content_tag.setAttribute("class", "content_tag");
                 content_tag.style.width = "100%";
+                content_tag.style.fontSize = "1.5rem";
                 content_tag.style.overflowWrap = "anywhere";
                 const userid_tag = document.createElement("div");
                 userid_tag.appendChild(userid);
@@ -986,9 +1002,9 @@ export default {
                         const newFrame =
                             '<div id="' +
                             userid_str +
-                            '_frame" style="width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 30px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 30px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 1.5rem">' +
+                            '_frame" style="width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 50px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 50px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 3rem">' +
                             userid_str +
-                            '의 영상</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="/assets/image/game/user_blank.png" id="' +
+                            '</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="/assets/image/game/user_blank.png" id="' +
                             userid_str +
                             '" style="width: 95%;"/></div></div>';
                         leftBox.insertAdjacentHTML("beforeend", newFrame);
@@ -1061,6 +1077,8 @@ export default {
                     span_remove_word.style.textAlign = "right";
                     span_remove_word.style.width = "240px";
                     span_remove_word.style.wordBreak = "keep-all";
+                    span_remove_word.style.fontSize = "1.2rem";
+                    span_remove_word.style.color = "rgb(250, 50, 0)";
 
                     span_user_id.innerText = event_data.user;
                     span_user_input.innerText = event_data.answer;
@@ -1954,10 +1972,13 @@ button {
 }
 .containerBody {
     width: 100vw;
+    height: 100vh;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     overflow-x: hidden;
+    position: absolute;
+    left: 0;
 }
 
 .video-container {
@@ -1987,7 +2008,7 @@ button {
 
 .videoBar {
     width: 100%;
-    height: 30px;
+    height: 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1996,7 +2017,7 @@ button {
 .videoBarCover {
     box-sizing: border-box;
     width: 100%;
-    height: 30px;
+    height: 50px;
 
     display: flex;
     justify-content: center;
@@ -2112,7 +2133,7 @@ button {
 .blackBox {
     /* background-color: #000000; */
     color: rgb(255, 120, 0);
-    font-size: 1rem;
+    font-size: 2rem;
 }
 #scoreBoard {
     max-height: 240px;
@@ -2125,6 +2146,7 @@ button {
 #rightBox {
     position: absolute;
     right: 0;
+    top: 80px;
     width: 340px;
     max-height: 80vh;
     overflow-y: scoll;
@@ -2138,6 +2160,7 @@ button {
 #leftBox {
     position: absolute;
     left: 0px;
+    top: 80px;
     width: 340px;
     max-height: 80vh;
     overflow-y: scroll;
@@ -2150,11 +2173,11 @@ button {
 }
 
 #centerBox {
-    width: 100%;
-    max-width: fit-content;
-    max-height: fit-content;
+    width: fit-content;
+    height: fit-content;
     flex-direction: column;
-    position: relative;
+    position: absolute;
+    scale: 1;
 }
 #gameBox {
     width: 700px;
@@ -2174,7 +2197,7 @@ button {
 }
 .videoFrame:hover .hoverButton {
     z-index: 2;
-    top: 78px;
+    top: 142px;
     left: 20px;
     width: 300px;
     height: 242px;
@@ -2227,7 +2250,7 @@ button {
     right: 150px;
     top: 5%;
     width: 20vw;
-    min-width: 300px;
+    min-width: 320px;
     z-index: 30;
     border: 2px solid rgb(22, 255, 94);
 }
@@ -2235,7 +2258,7 @@ button {
 #playerHeader {
     box-sizing: border-box;
     width: 100%;
-    height: 30px;
+    height: 50px;
     cursor: move;
     z-index: 10;
     display: flex;
@@ -2451,7 +2474,7 @@ button {
     width: 15px;
 }
 span {
-    font-size: 1.2rem;
+    font-size: 3rem;
     margin: 2px;
 }
 
@@ -2461,6 +2484,7 @@ span {
     display: flex;
     justify-content: space-between;
     cursor: pointer;
+    top: 80px;
 }
 .toggleBtn > span {
     color: rgb(22, 255, 94);
