@@ -1080,8 +1080,12 @@ export default {
                     log_tab.style.margin = "0 2% 0 2%";
                     log_tab.style.color = event_data.color;
                     log_tab.id = "log_tab";
+                    span_user_input.style.wordBreak = "keep-all";
                     span_remove_word.style.textAlign = "right";
-                    span_remove_word.style.width = "240px";
+                    span_remove_word.style.width =
+                        335 -
+                        span_user_input.getBoundingClientRect().width +
+                        "px";
                     span_remove_word.style.wordBreak = "keep-all";
                     span_remove_word.style.fontSize = "1.2rem";
                     span_remove_word.style.color = event_data.color;
@@ -1339,32 +1343,37 @@ export default {
             }, 990);
         },
         answerPop(User, Answer, Color) {
-            Color ??= "#ffffff";
             const user = String(User).split("#")[0];
             const answer = String(Answer);
             const color = String(Color);
+
             const background = document.getElementById("body");
             const answerPop = document.createElement("div");
             const ruby = document.createElement("ruby");
             const rt = document.createElement("rt");
             const newTextOne = document.createTextNode(user);
             const newTextTwo = document.createTextNode(answer);
+            const rect = document
+                .getElementById(String(User) + "_frame")
+                .getBoundingClientRect();
             answerPop.appendChild(ruby);
             ruby.appendChild(newTextTwo);
             ruby.appendChild(rt);
             rt.appendChild(newTextOne);
-
             answerPop.setAttribute("id", "answerpopUp");
             answerPop.style.width = "fit-content";
+            answerPop.style.minWidth = "10px";
             answerPop.style.height = "fit-content";
             answerPop.style.background = "rgba(0,0,0,0.7)";
             answerPop.style.border = `${color} solid`;
-            answerPop.style.color = color; //"#ffffff";
+            answerPop.style.color = color;
             answerPop.style.borderRadius = "1rem";
-            answerPop.style.zIndex = "-1";
             answerPop.style.position = "absolute";
-            answerPop.style.left = 100 + "vw";
-            answerPop.style.bottom = 60 + "px";
+            answerPop.style.zIndex = 100;
+            // 정답 위치 지정 left;
+            answerPop.style.left =
+                rect.left + rect.width * this.isOpenLeft + "px";
+            answerPop.style.top = Math.max(rect.top + 100, 250) + "px";
             answerPop.style.fontSize = 3 + "rem";
             rt.style.fontSize = 1.5 + "rem";
             answerPop.style.opacity = 1;
@@ -1372,9 +1381,13 @@ export default {
             answerPop.style.paddingRight = 5 + "px";
             answerPop.style.paddingLeft = 5 + "px";
             answerPop.animate(
-                [{ opacity: 1 }, { transform: "translateX(-110vw)" }],
+                [
+                    { opacity: 0.75, transform: "scale(2)" },
+                    { opacity: 0.75, transform: "scale(2)" },
+                    { opacity: 0.1, transform: "translateX(50vw) scale(0.2)" },
+                ],
                 {
-                    duration: 5000,
+                    duration: 1000,
                     iteration: 1,
                     easing: "linear",
                 }
@@ -1382,7 +1395,7 @@ export default {
             background.appendChild(answerPop);
             setTimeout(function () {
                 answerPop.remove();
-            }, 5500);
+            }, 1000);
         },
         colored() {
             document.body.style.backgroundColor = "rgb(0, 0, 0)";
@@ -2038,7 +2051,7 @@ button {
 }
 .containerBody {
     width: 100vw;
-    height: fit-content;
+    height: 100vh;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

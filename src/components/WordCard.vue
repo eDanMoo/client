@@ -98,12 +98,7 @@ export default {
             startbondFlag: false,
             checkbondFlag: false,
             nullWarning: false,
-            audio_fail: null,
         };
-    },
-    mounted() {
-        this.audio_fail = new Audio("/assets/soundEffect/audio_fail.wav");
-        this.audio_fail.volume = 0.6;
     },
     methods: {
         onAfterEnter() {
@@ -260,7 +255,6 @@ export default {
             this.wordcard.sort((a, b) => a.id - b.id);
         },
         Warning() {
-            this.audio_fail.play();
             document.querySelector("#backGrd").animate(
                 [
                     // from keyframe
