@@ -946,16 +946,16 @@ export default {
                 if (userid_str == current_user) {
                     userid_tag.setAttribute("class", "userid_tag_right");
                     content_tag.style.textAlign = "end";
-                    content_tag.style.color = "rgb(255, 120, 0)";
+                    content_tag.style.color = event_data.color;
                     message.style.float = "right";
                     content_tag.style.float = "right";
-                    userid_tag.style.color = "rgb(200, 80, 255)";
+                    userid_tag.style.color = event_data.color;
                     userid_tag.style.backgroundColor = "userid_tag";
                     userid_tag.style.textAlign = "end";
                 } else {
                     userid_tag.setAttribute("class", "userid_tag_left");
-                    content_tag.style.color = "rgb(255, 255, 30)";
-                    userid_tag.style.color = "rgb(100, 255, 255)";
+                    content_tag.style.color = event_data.color;
+                    userid_tag.style.color = event_data.color;
                     message.style.float = "left";
                     content_tag.style.float = "left";
                 }
@@ -986,6 +986,7 @@ export default {
                     scoreTab.style.display = "flex";
                     scoreTab.style.justifyContent = "space-between";
                     scoreTab.style.margin = "0 2% 0 2%";
+                    scoreTab.style.color = event_data.color;
                     spanUserId.setAttribute("id", userid_str + "_score_user");
                     spanUserId.innerHTML = userid_str + "&nbsp";
                     spanUserId.setAttribute("class", "_score_user");
@@ -1077,12 +1078,13 @@ export default {
                     log_tab.style.display = "flex";
                     log_tab.style.justifyContent = "space-between";
                     log_tab.style.margin = "0 2% 0 2%";
+                    log_tab.style.color = event_data.color;
                     log_tab.id = "log_tab";
                     span_remove_word.style.textAlign = "right";
                     span_remove_word.style.width = "240px";
                     span_remove_word.style.wordBreak = "keep-all";
                     span_remove_word.style.fontSize = "1.2rem";
-                    span_remove_word.style.color = "rgb(250, 50, 0)";
+                    span_remove_word.style.color = event_data.color;
 
                     span_user_id.innerText = event_data.user;
                     span_user_input.innerText = event_data.answer;
