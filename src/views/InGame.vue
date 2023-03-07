@@ -1,7 +1,9 @@
 <template>
     <audio
-        src="/assets/soundEffect/audio_timetick.mp3"
-        id="time_ticking"
+        src="/assets/soundEffect/audio_chiling.mp3"
+        id="audio_chiling"
+        loop
+        volume="0.2"
     ></audio>
     <div class="space stars1" id="inGameContainer">
         <div class="starField" id="starField">
@@ -348,7 +350,7 @@
                 </div>
             </div>
         </div>
-        <div class="containerBody">
+        <div class="containerBody" id="containerBody">
             <!-- 영상 재생부 -->
             <Transition name="left">
                 <div
@@ -383,11 +385,11 @@
                         <span>영 상 통 신</span>
                         <span> &lt; </span>
                     </div>
-                    <div class="videoWindow">
+                    <div class="videoWindow" id="myVideo" style="order: 2">
                         <div class="videoBarCover">
                             <div class="videoBar">
                                 <span style="color: rgb(22, 255, 94)"
-                                    >내 영상
+                                    >{{ myID }} (나)
                                 </span>
                             </div>
                         </div>
@@ -837,6 +839,7 @@ export default {
             game_selected: 0,
             isCoop: false,
             isComp: false,
+            myID: "",
         };
     },
     watch: {
@@ -855,25 +858,10 @@ export default {
     },
     async mounted() {
         const user_id = this.$route.query.user_id;
-        let centerBox = document.getElementById("centerBox");
-        let rectLen = Math.min(
-            Math.max(380, Math.min(window.innerWidth, 1000)),
-            Math.max(380, Math.min(window.innerHeight - 180, 1000))
-        );
-        let scale = rectLen / 820;
-        centerBox.style.scale = scale;
-        window.addEventListener("resize", () => {
-            let centerBox = document.getElementById("centerBox");
-            let rectLen = Math.min(
-                Math.max(380, Math.min(window.innerWidth, 1000)),
-                Math.max(380, Math.min(window.innerHeight - 180, 1000))
-            );
-            let scale = rectLen / 820;
-            centerBox.style.scale = scale;
-        });
-        document.addEventListener("click", (event) => {
-            this.clickEvent(event);
-        });
+        this.myID = user_id;
+        this.changeSize();
+        window.addEventListener("resize", this.changeSize);
+        document.addEventListener("click", this.clickEvent);
         document.body.style.background =
             "radial-gradient(circle at bottom, rgb(10, 10, 60) 0, black 100%)";
         connection = await new Promise((resolve, reject) => {
@@ -888,7 +876,9 @@ export default {
             this.enterCode = room_name;
             uniqCode = this.getRandomInt(10000, 100000);
             current_user = user_id + "#" + uniqCode;
-
+            document
+                .getElementById("myVideo")
+                .setAttribute("id", current_user + "_frame");
             const socket = new WebSocket(
                 ws_scheme + "koword.link/ws/" + room_name
                 // "ws://127.0.0.1:8888/ws/" + room_name
@@ -897,18 +887,18 @@ export default {
                 console.log("socket connect");
                 resolve(socket);
             });
-            socket.addEventListener("error", (error) => {
-                console.log("Websocket connect error");
-                console.log(error);
-                alert("게임 서버와의 연결이 종료되었습니다.");
-                location.href = "/";
-                reject(error);
-            });
-            socket.addEventListener("close", (event) => {
-                console.log("WebSocket connection closed:", event);
-                alert("게임 서버와의 연결이 종료되었습니다.");
-                location.href = "/";
-            });
+            // socket.addEventListener("error", (error) => {
+            //     console.log("Websocket connect error");
+            //     console.log(error);
+            //     alert("게임 서버와의 연결이 종료되었습니다.");
+            //     location.href = "/";
+            //     reject(error);
+            // });
+            // socket.addEventListener("close", (event) => {
+            //     console.log("WebSocket connection closed:", event);
+            //     alert("게임 서버와의 연결이 종료되었습니다.");
+            //     location.href = "/";
+            // });
         });
 
         messages = document.getElementById("messages");
@@ -1020,7 +1010,7 @@ export default {
                         const newFrame =
                             '<div id="' +
                             userid_str +
-                            '_frame" style="width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 50px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 50px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 3rem">' +
+                            '_frame" style="order: 2; width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 50px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 50px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 3rem">' +
                             userid_str +
                             '</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="/assets/image/game/user_blank.png" id="' +
                             userid_str +
@@ -1032,15 +1022,11 @@ export default {
                 }
             } else if (event_data.type == "send_user_turn") {
                 const btn = document.getElementById("input_answer");
-                const audio = document.getElementById("time_ticking");
                 if (userid_str != current_user) {
                     btn.disabled = true;
-                    audio.play();
                     this.time = 12;
                 } else {
                     this.time = 12;
-                    audio.stop();
-                    audio.currentTime = 0;
                     btn.disabled = false;
                 }
             } else if (event_data.type == "delete_frame") {
@@ -1132,12 +1118,16 @@ export default {
                     this.send_user_turn();
                 }
             } else if (event_data.type == "turn_timer") {
+                document.getElementById(userid_str + "_frame").style.order = 1;
                 const answer_text_box = document.getElementById("input_answer");
                 if (userid_str == current_user) {
                     // 해당 턴이 내 턴이면 타이머 반영
 
                     answer_text_box.disabled = false;
-                    answer_text_box.focus();
+                    if (event_data.remain_time == 12) {
+                        answer_text_box.value = "";
+                        answer_text_box.focus();
+                    }
                     this.time = event_data.remain_time;
                     if (this.time == 0) {
                         this.send_user_turn();
@@ -1154,6 +1144,10 @@ export default {
                 this.isGameStarted = 0;
                 this.game_time = null;
                 this.ready_time = null;
+                const audio_applause = new Audio(
+                    "/assets/soundEffect/audio_applause.mp3"
+                );
+                audio_applause.play();
 
                 const log_tab = document.getElementById("logBoard");
                 log_tab.textContent = "";
@@ -1162,7 +1156,6 @@ export default {
                 for (const item of scoreValueList) {
                     item.innerText = 0;
                 }
-
                 const answer_text_box = document.getElementById("input_answer");
                 answer_text_box.disabled = true;
                 this.time = 12;
@@ -1191,6 +1184,11 @@ export default {
                 let ready_time = document.getElementById("ready_time");
                 switch (event_data.ready_time) {
                     case 3:
+                        const startBeep = new Audio(
+                            "/assets/soundEffect/audio_startbeeps.mp3"
+                        );
+                        startBeep.volume = 0.5;
+                        startBeep.play();
                         ready_time.animate(
                             [
                                 {
@@ -1284,6 +1282,23 @@ export default {
         this.colored();
     },
     methods: {
+        changeSize() {
+            let centerBox = document.getElementById("centerBox");
+            let rectLen = Math.min(
+                Math.max(
+                    380,
+                    Math.min(
+                        window.innerWidth -
+                            360 * (this.isOpenLeft + this.isOpenRight) -
+                            80 * (!this.isOpenLeft + !this.isOpenRight),
+                        1000
+                    )
+                ),
+                Math.max(380, Math.min(window.innerHeight - 180, 800))
+            );
+            let scale = rectLen / 820;
+            centerBox.style.scale = scale;
+        },
         clickEvent(event) {
             const x = event.clientX;
             const y = event.clientY;
@@ -1387,6 +1402,13 @@ export default {
         },
         /** 실제로 컴포넌트 가져오기 */
         async getComponent(game_mode) {
+            const audio_chiling = document.getElementById("audio_chiling");
+            const audio_waterdrop = new Audio(
+                "/assets/soundEffect/audio_waterdrop.mp3"
+            );
+            audio_waterdrop.volume=0.4;
+            audio_waterdrop.play();
+            audio_chiling.play();
             const component = await defineAsyncComponent(() =>
                 import(`../components/${game_mode}.vue`)
             );
@@ -1481,6 +1503,11 @@ export default {
             connection.send(jsonData);
         },
         toggleVideoCamera() {
+            const audio_oohwing = new Audio(
+                "/assets/soundEffect/audio_oohwing.mp3"
+            );
+            audio_oohwing.volume = 0.5;
+            audio_oohwing.play();
             if (!isStreaming) {
                 isStreaming = 1;
                 this.isStreaming = 1;
@@ -1535,41 +1562,62 @@ export default {
             width = parseFloat(width).toFixed(2);
             let widthStr = width + "%";
             el.style.width = widthStr;
+            const audio_tictac = new Audio(
+                "/assets/soundEffect/audio_tictac.mp3"
+            );
+            const audio_bleepshort = new Audio(
+                "/assets/soundEffect/audio_bleepshort.mp3"
+            );
+            const audio_bleeplast = new Audio(
+                "/assets/soundEffect/audio_bleeplast.mp3"
+            );
             switch (this.time) {
                 case 12:
+                    audio_tictac.play();
                     el.style.backgroundColor = "#42FF00";
                     break;
                 case 11:
+                    audio_tictac.play();
                     el.style.backgroundColor = "#80FF00";
                     break;
                 case 10:
+                    audio_tictac.play();
                     el.style.backgroundColor = "#9EFF00";
                     break;
                 case 9:
+                    audio_tictac.play();
                     el.style.backgroundColor = "#BDFF00";
                     break;
                 case 8:
+                    audio_tictac.play();
                     el.style.backgroundColor = "#DBFF00";
                     break;
                 case 7:
+                    audio_tictac.play();
                     el.style.backgroundColor = "#EBFF00";
                     break;
                 case 6:
+                    audio_tictac.play();
                     el.style.backgroundColor = "#FAFF00";
                     break;
                 case 5:
+                    audio_tictac.play();
                     el.style.backgroundColor = "#FFF500";
                     break;
                 case 4:
+                    audio_tictac.play();
                     el.style.backgroundColor = "#FFE600";
                     break;
                 case 3:
+                    audio_bleepshort.play();
                     el.style.backgroundColor = "#FFC700";
                     break;
                 case 2:
+                    audio_bleepshort.play();
                     el.style.backgroundColor = "#FF9900";
                     break;
                 case 1:
+                    audio_bleeplast.play();
                     el.style.backgroundColor = "#FF1F00";
                     break;
             }
@@ -1577,6 +1625,8 @@ export default {
         boardInit() {
             this.GameStart();
             const audio_start = new Audio("/assets/soundEffect/gameStart.mp3");
+            const audio_chiling = document.getElementById("audio_chiling");
+            audio_chiling.pause();
             audio_start.volume = 0.6;
             audio_start.play();
             this.isGameStarted = 1;
@@ -1610,6 +1660,7 @@ export default {
             });
             connection.send(jsonData);
             answer_text_box.value = "";
+            document.getElementById(this.myID + "_frame").style.order = 2;
         },
         GameStart() {
             const jsonData = JSON.stringify({
@@ -1731,11 +1782,11 @@ export default {
                 );
                 audio_tick.play();
             } else {
-                const audio_oohwing = new Audio(
-                    "/assets/soundEffect/audio_oohwing.mp3"
+                const audio_dong = new Audio(
+                    "/assets/soundEffect/audio_dong.mp3"
                 );
-                audio_oohwing.volume = 0.3;
-                audio_oohwing.play();
+                audio_dong.volume = 0.5;
+                audio_dong.play();
                 this.$refs.floatWindow.style.top = "5%";
                 this.$refs.floatWindow.style.right = "150px";
             }
@@ -1759,7 +1810,7 @@ export default {
             audio_home.volume = 0.6;
             audio_home.play();
             setTimeout(() => {
-                this.$router.push("/");
+                location.reload();
             }, 1500);
         },
         // Game End Pop
@@ -1775,6 +1826,7 @@ export default {
             audio_page.volume = 0.3;
             audio_page.play();
             this.isOpenRight = !this.isOpenRight;
+            this.changeSize();
         },
         /** 왼쪽 비디오 참가 여부 토글 */
         toggleLeft() {
@@ -1782,6 +1834,7 @@ export default {
             audio_page.volume = 0.3;
             audio_page.play();
             this.isOpenLeft = !this.isOpenLeft;
+            this.changeSize();
             this.blockVideo(this.isOpenLeft);
         },
         /** 비디오 창 접었을 시 서버에 내 비디오 상대에게서 지우라고 보내고 나는 상대들의 비디오 받지 않겠다 보내기 */
@@ -1983,7 +2036,7 @@ button {
 }
 .containerBody {
     width: 100vw;
-    height: 100vh;
+    height: fit-content;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -2015,6 +2068,7 @@ button {
     justify-items: center;
     flex-direction: column;
     border: 1px solid rgb(22, 255, 94);
+    position: relative;
 }
 
 .videoBar {
@@ -2178,6 +2232,8 @@ button {
     overflow-x: hidden;
     background-color: rgba(32, 32, 32, 0.7);
     z-index: 6;
+    display: flex;
+    flex-direction: column;
 }
 #leftBox::-webkit-scrollbar {
     display: none;
@@ -2207,8 +2263,8 @@ button {
 }
 .videoFrame:hover .hoverButton {
     z-index: 2;
-    top: 142px;
-    left: 20px;
+    top: 60px;
+    left: 19px;
     width: 300px;
     height: 242px;
     border: none;

@@ -558,7 +558,7 @@
             <div class="cubePannel" id="cubeBottom"></div>
         </div>
         <div class="picture">
-            <div class="picturePannel" id="pictureFront"></div>
+            <div class="picturePannel" id="pictureFront">K O W O R D</div>
             <div class="picturePannel" id="pictureBack"></div>
             <div class="picturePannel" id="pictureLeft"></div>
             <div class="picturePannel" id="pictureRight"></div>
@@ -695,10 +695,6 @@ export default {
             pannelT.style.width = rect.width + "px";
             pannelT.style.bottom = rect.height - 50 + "px";
         },
-
-        removeScrollListener() {
-            window.addEventListener("resize", this.updatePannel);
-        },
         updateTime() {
             let today = new Date();
             this.ymd = today.toLocaleDateString();
@@ -717,27 +713,19 @@ export default {
     },
     mounted() {
         document.body.style.background = "rgb(10, 45, 10)";
-        let pannelR = document.getElementById("monitorRightPannel");
-        let pannelL = document.getElementById("monitorLeftPannel");
-        let pannelT = document.getElementById("monitorTopPannel");
         this.bebeep = new Audio("/assets/soundEffect/audio_bebeep.mp3");
         this.bebeep.volume = 0.6;
-        let rect = document
-            .getElementById("outerComputer")
-            .getBoundingClientRect();
-        pannelR.style.left = rect.right - 200 + "px";
-        pannelR.style.height = rect.height + "px";
-        pannelL.style.height = rect.height + "px";
-        pannelT.style.width = rect.width + "px";
-        pannelT.style.bottom = rect.height - 50 + "px";
+        this.updatePannel();
         window.addEventListener("resize", this.updatePannel);
         setInterval(this.updateTime, 1000);
         this.workSound();
     },
     unmounted() {
         clearInterval();
-        this.removeScrollListener();
     },
+    beforeRouteLeave() {
+        window.removeEventListener("resize", this.updatePannel);
+    }
 };
 </script>
 
@@ -1270,7 +1258,7 @@ export default {
     background: rgba(32, 32, 32, 0.4);
 }
 #clockPannel {
-    width: 500px;
+    width: 700px;
     height: 250px;
     left: 20px;
     transform: translateZ(10px);
@@ -1291,7 +1279,7 @@ export default {
     text-shadow: -1px 0 #d0ffd2, 0 1px #d0ffd2, 1px 0 #d0ffd2, 0 -1px #d0ffd2;
 }
 #clockFront {
-    width: 500px;
+    width: 700px;
     height: 250px;
     left: 20px;
     transform: translateZ(20px);
@@ -1305,17 +1293,17 @@ export default {
 #clockRight {
     width: 40px;
     height: 250px;
-    left: 500px;
+    left: 700px;
     transform: rotateY(90deg);
 }
 #clockTop {
-    width: 500px;
+    width: 700px;
     height: 40px;
     left: 20px;
     transform: rotateX(90deg) translateZ(20px);
 }
 #clockBottom {
-    width: 500px;
+    width: 700px;
     height: 40px;
     left: 20px;
     top: 250px;
@@ -1450,13 +1438,21 @@ export default {
     border: 3px solid rgb(0, 0, 0);
     width: 1000px;
     height: 300px;
-    background: burlywood;
+    background: rgb(255, 235, 220);
+}
+@keyframes fontBlink {
+    0% {
+        color: rgb(0, 251, 255);
+    }
+    100% {
+        color: rgb(0, 94, 255);
+    }
 }
 #pictureFront {
     transform: translateZ(50px);
-}
-#pictureBack {
-    background: burlywood;
+    font-size: 150px;
+    text-align: center;
+    animation: fontBlink 2s alternate infinite;
 }
 #pictureLeft {
     width: 50px;

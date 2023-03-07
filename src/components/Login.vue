@@ -19,37 +19,41 @@
         <div id="alien"></div>
         <div id="loginbox">
             <div id="entrance">
-                <input
-                    id="input_room_id"
-                    type="text"
-                    v-model="room_code"
-                    placeholder="입장코드 입력(영문, 숫자)"
-                    :maxlength="6"
-                    oninput="javascript: 
-                    if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
-                        this.value = ''; 
-                        const modal = document.getElementById('modal-wrapper');
-                        modal.style.display = 'flex'; 
-                        document.getElementById('close_modal').focus();
-                                                } "
-                />
-                <input
-                    id="input_user_id"
-                    type="text"
-                    v-model="user_id"
-                    placeholder="닉네임 입력(영문, 숫자)"
-                    :maxlength="6"
-                    @keypress.enter="createPage"
-                    oninput="javascript: 
-                    if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
-
-                        this.value = ''; 
-                        const modal = document.getElementById('modal-wrapper');
-                        modal.style.display = 'flex'; 
-
-                        document.getElementById('close_modal').focus();
-                                                } "
-                />
+                <div class="input_wrapper">
+                    <input
+                        id="input_room_id"
+                        type="text"
+                        v-model="room_code"
+                        placeholder="입장코드 입력(영문, 숫자)"
+                        :maxlength="6"
+                        oninput="javascript: 
+                        if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
+                            this.value = ''; 
+                            const modal = document.getElementById('modal-wrapper');
+                            modal.style.display = 'flex'; 
+                            document.getElementById('close_modal').focus();
+                                                    } "
+                    />
+                </div>
+                <div class="input_wrapper">
+                    <input
+                        id="input_user_id"
+                        type="text"
+                        v-model="user_id"
+                        placeholder="닉네임 입력(영문, 숫자)"
+                        :maxlength="6"
+                        @keypress.enter="createPage"
+                        oninput="javascript: 
+                        if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
+    
+                            this.value = ''; 
+                            const modal = document.getElementById('modal-wrapper');
+                            modal.style.display = 'flex'; 
+    
+                            document.getElementById('close_modal').focus();
+                                                    } "
+                    />
+                </div>
                 <br />
                 <button
                     @click="createPage"
@@ -106,7 +110,7 @@ export default {
             logPos2: 0,
             logPos3: 0,
             logPos4: 0,
-            room_code: ""
+            room_code: "",
         };
     },
     methods: {
@@ -314,6 +318,21 @@ export default {
     align-items: center;
 }
 
+@media (max-width: 740px) {
+    #alien {
+        display: none;
+    }
+}
+@media (max-height: 800px) {
+    #alien {
+        display: none;
+    }
+}
+@media (max-width: 470px) {
+    br {
+        display: none;
+    }
+}
 #alien {
     position: absolute;
     top: 15%;
