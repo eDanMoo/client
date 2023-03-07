@@ -33,11 +33,11 @@
                 <span style="margin-left: 10px">음악 재생기</span>
                 <div
                     style="
-                        width: 30px;
-                        height: 30px;
+                        width: 45px;
+                        height: 50px;
                         text-align: center;
                         text-justify: center;
-                        font-size: 20px;
+                        font-size: 2rem;
                         cursor: pointer;
                     "
                     @click="closePlayer"
@@ -2261,8 +2261,8 @@ button {
     right: 150px;
     top: 5%;
     width: 20vw;
-    min-width: 320px;
-    z-index: 30;
+    min-width: 350px;
+    z-index: 150;
     border: 2px solid rgb(22, 255, 94);
 }
 
