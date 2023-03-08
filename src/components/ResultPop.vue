@@ -8,8 +8,8 @@
             <div class="modal__window align_center" id="scorePop">
                 <div class="modal_cover">
                     <div class="ranking padding">
-                        <span><b>순위</b></span
-                        ><br />
+                        <span><b>순위</b></span> <span v-if="msg.times != undefined" style="float: right">플레이 시간: {{ msg.times }} 초</span>
+                        <br />
                         <div class="rankingList scrollbar">
                             <div
                                 v-for="(user, index) in users"
