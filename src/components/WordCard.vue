@@ -55,6 +55,11 @@ export default {
                             this.newgameFlag = true;
                         }
                         if (message.moves[0].length > 0) {
+                            const audio_del = new Audio(
+                                "/assets/soundEffect/audio_del.mp3"
+                            );
+                            audio_del.volume = 0.25;
+                            audio_del.play();
                             this.answerCheck(message.moves);
                         } else {
                             // console.log("단어가 없는데");
@@ -158,7 +163,6 @@ export default {
         /** 화면에서 블럭 삭제 */
         delElem(command) {
             let info = Object.values(command);
-
             info.forEach((element) => {
                 this.wordcard[element[0]].show = false;
             });
@@ -255,6 +259,11 @@ export default {
             this.wordcard.sort((a, b) => a.id - b.id);
         },
         Warning() {
+            const audio_alert = new Audio(
+                "/assets/soundEffect/audio_alert.mp3"
+            );
+            audio_alert.volume = 0.3;
+            audio_alert.play();
             document.querySelector("#backGrd").animate(
                 [
                     // from keyframe
