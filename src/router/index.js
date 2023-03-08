@@ -27,5 +27,13 @@ const router = createRouter({
         },
     ],
 });
+router.beforeEach((to, from, next) => {
+    // handle redirection for non-existing routes
+    if (to.matched.length === 0) {
+        next("/");
+    } else {
+        next();
+    }
+});
 
 export default router;

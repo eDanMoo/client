@@ -725,7 +725,7 @@ export default {
     },
     beforeRouteLeave() {
         window.removeEventListener("resize", this.updatePannel);
-    }
+    },
 };
 </script>
 

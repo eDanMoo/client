@@ -200,7 +200,7 @@
             <div style="display: flex; align-items: center">
                 <img
                     src="/assets/image/icon/icon_exit.svg"
-                    alt=""
+                    alt="exit"
                     style="
                         width: 40px;
                         height: 40px;
@@ -309,7 +309,7 @@
                 </div>
                 <img
                     src="/assets/image/icon/icon_questionMark.png"
-                    alt=""
+                    alt="howto"
                     style="
                         width: 30px;
                         height: 45px;
@@ -334,7 +334,7 @@
                             margin-right: 10px;
                             cursor: pointer;
                         "
-                        alt=""
+                        alt="X"
                         @click="closeHowTo()"
                     />
                 </div>
@@ -385,7 +385,7 @@
                         <span>영 상 통 신</span>
                         <span> &lt; </span>
                     </div>
-                    <div class="videoWindow" id="myVideo" style="order: 2">
+                    <div class="videoWindow" id="myVideo" style="order: 9999">
                         <div class="videoBarCover">
                             <div class="videoBar">
                                 <span style="color: rgb(22, 255, 94)"
@@ -680,6 +680,7 @@ export default {
     },
     data() {
         return {
+            orderIndex: 9999,
             isOpenLeft: true,
             isOpenRight: true,
             data: null,
@@ -1004,16 +1005,17 @@ export default {
                 } else {
                     const subFrame = document.getElementById(userid_str);
                     if (subFrame) {
-                        subFrame.setAttribute("src", event_data.video);
+                        // subFrame.setAttribute("src", event_data.video);
+                        0;
                     } else {
                         connection.send(JSON.stringify(info_obj));
                         const leftBox = document.getElementById("leftBox");
                         const newFrame =
                             '<div id="' +
                             userid_str +
-                            '_frame" style="order: 2; width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 50px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 50px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 3rem">' +
-                            userid_str +
-                            '</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" src="/assets/image/game/user_blank.png" id="' +
+                            '_frame" style="order: 9999; width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 50px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 50px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 3rem">' +
+                            userid_str.split("#")[0] +
+                            '</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" alt="/assets/image/game/user_blank.png" src="/assets/image/game/user_blank.png" id="' +
                             userid_str +
                             '" style="width: 95%;"/></div></div>';
                         leftBox.insertAdjacentHTML("beforeend", newFrame);
@@ -1124,7 +1126,24 @@ export default {
                     this.send_user_turn();
                 }
             } else if (event_data.type == "turn_timer") {
-                document.getElementById(userid_str + "_frame").style.order = 1;
+                let turnNow = document.getElementById(userid_str + "_frame");
+                this.orderIndex -= 1;
+                turnNow.style.order = this.orderIndex;
+                turnNow.animate(
+                    [
+                        {
+                            boxShadow: "inset 0 0 100px rgba(22, 255, 94, 0.8)",
+                        },
+                        {
+                            boxShadow: "none",
+                        },
+                    ],
+                    {
+                        duration: 1000,
+                        iteration: 1,
+                        easing: "linear",
+                    }
+                );
                 const answer_text_box = document.getElementById("input_answer");
                 if (userid_str == current_user) {
                     // 해당 턴이 내 턴이면 타이머 반영
@@ -1133,6 +1152,10 @@ export default {
                     if (event_data.remain_time == 12) {
                         answer_text_box.value = "";
                         answer_text_box.focus();
+                        const audio_myturn = new Audio(
+                            "/assets/soundEffect/audio_myturn.mp3"
+                        );
+                        audio_myturn.play();
                     }
                     this.time = event_data.remain_time;
                     if (this.time == 0) {
@@ -1144,6 +1167,9 @@ export default {
                     answer_text_box.disabled = true;
                 }
             } else if (event_data.type == "finish") {
+                this.game_mode_text = "";
+                this.isComp = false;
+                this.isCoop = false;
                 this.game_over = event_data;
                 this.modalOpen();
                 this.delete_board = 1;
@@ -1343,10 +1369,12 @@ export default {
             }, 990);
         },
         answerPop(User, Answer, Color) {
+            const audio_input = new Audio(
+                "/assets/soundEffect/audio_input.mp3"
+            );
             const user = String(User).split("#")[0];
             const answer = String(Answer);
             const color = String(Color);
-
             const background = document.getElementById("body");
             const answerPop = document.createElement("div");
             const ruby = document.createElement("ruby");
@@ -1355,6 +1383,9 @@ export default {
             const newTextTwo = document.createTextNode(answer);
             const rect = document
                 .getElementById(String(User) + "_frame")
+                .getBoundingClientRect();
+            const boardRect = document
+                .getElementById("logBoard")
                 .getBoundingClientRect();
             answerPop.appendChild(ruby);
             ruby.appendChild(newTextTwo);
@@ -1380,11 +1411,22 @@ export default {
             answerPop.style.whiteSpace = "nowrap";
             answerPop.style.paddingRight = 5 + "px";
             answerPop.style.paddingLeft = 5 + "px";
+            let moveX =
+                parseInt(boardRect.left) -
+                parseInt(answerPop.style.left) +
+                "px";
+            let moveY =
+                parseInt(boardRect.top) - parseInt(answerPop.style.top) + "px";
+            console.log(moveX);
+            console.log(moveY);
             answerPop.animate(
                 [
                     { opacity: 0.75, transform: "scale(2)" },
                     { opacity: 0.75, transform: "scale(2)" },
-                    { opacity: 0.1, transform: "translateX(50vw) scale(0.2)" },
+                    {
+                        opacity: 0.1,
+                        transform: `translateX(${moveX}) translateY( ${moveY}) scale(0.2)`,
+                    },
                 ],
                 {
                     duration: 1000,
@@ -1393,6 +1435,7 @@ export default {
                 }
             );
             background.appendChild(answerPop);
+            audio_input.play();
             setTimeout(function () {
                 answerPop.remove();
             }, 1000);
@@ -1421,7 +1464,7 @@ export default {
             const audio_waterdrop = new Audio(
                 "/assets/soundEffect/audio_waterdrop.mp3"
             );
-            audio_waterdrop.volume=0.4;
+            audio_waterdrop.volume = 0.4;
             audio_waterdrop.play();
             audio_chiling.play();
             const component = await defineAsyncComponent(() =>
@@ -1586,6 +1629,8 @@ export default {
             const audio_bleeplast = new Audio(
                 "/assets/soundEffect/audio_bleeplast.mp3"
             );
+            audio_bleepshort.volume = 0.5;
+            audio_bleeplast.volume = 0.5;
             switch (this.time) {
                 case 12:
                     audio_tictac.play();
@@ -1646,6 +1691,7 @@ export default {
             audio_start.play();
             this.isGameStarted = 1;
             this.delete_board = 0;
+            this.orderIndex = 9999;
 
             const jsonData = JSON.stringify({
                 type: "game_server",
@@ -2077,7 +2123,7 @@ button {
 .videoWindow {
     box-sizing: border-box;
     width: 100%;
-    min-height: 300px;
+    min-height: fit-content;
     display: flex;
     align-items: center;
     justify-items: center;
