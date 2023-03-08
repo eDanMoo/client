@@ -1013,7 +1013,7 @@ export default {
                         const newFrame =
                             '<div id="' +
                             userid_str +
-                            '_frame" style="order: 9999; width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 50px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 50px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 3rem">' +
+                            '_frame" class="videoWindow" style="order: 9999; width: 340px; display: flex; align-items: center; justify-items: center; flex-direction: column; border: 1px solid rgb(22, 255, 94); box-sizing: border-box;"><div style="width: 100%; height: 50px; display: flex; justify-content: center; align-items: center; border: 1px solid rgb(22, 255, 94);"><div style="width: 90%; height: 50px; display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(22, 255, 94); font-size: 3rem">' +
                             userid_str.split("#")[0] +
                             '</span></div></div><div style="width: 300px; display: flex; flex-wrap: wrap; justify-content: center;"><img style="margin: 10px" alt="/assets/image/game/user_blank.png" src="/assets/image/game/user_blank.png" id="' +
                             userid_str +
@@ -1127,23 +1127,28 @@ export default {
                 }
             } else if (event_data.type == "turn_timer") {
                 let turnNow = document.getElementById(userid_str + "_frame");
-                this.orderIndex -= 1;
-                turnNow.style.order = this.orderIndex;
-                turnNow.animate(
-                    [
+                if (event_data.remain_time == 12) {
+                    this.orderIndex -= 1;
+                    turnNow.style.order = this.orderIndex;
+                }
+                if (0 < event_data.remain_time) {
+                    turnNow.animate(
+                        [
+                            {
+                                boxShadow:
+                                    "inset 0 0 100px rgba(22, 255, 94, 0.8)",
+                            },
+                            {
+                                boxShadow: "none",
+                            },
+                        ],
                         {
-                            boxShadow: "inset 0 0 100px rgba(22, 255, 94, 0.8)",
-                        },
-                        {
-                            boxShadow: "none",
-                        },
-                    ],
-                    {
-                        duration: 1000,
-                        iteration: 1,
-                        easing: "linear",
-                    }
-                );
+                            duration: 900,
+                            iteration: 1,
+                            easing: "linear",
+                        }
+                    );
+                }
                 const answer_text_box = document.getElementById("input_answer");
                 if (userid_str == current_user) {
                     // 해당 턴이 내 턴이면 타이머 반영
@@ -1170,6 +1175,13 @@ export default {
                 this.game_mode_text = "";
                 this.isComp = false;
                 this.isCoop = false;
+                this.orderIndex = 9999;
+
+                let windows = document.getElementsByClassName("videoWindow");
+                for (let i = 0; i < windows.length; i++) {
+                    windows[i].style.order = 9999;
+                }
+
                 this.game_over = event_data;
                 this.modalOpen();
                 this.delete_board = 1;
@@ -1689,8 +1701,6 @@ export default {
             audio_start.play();
             this.isGameStarted = 1;
             this.delete_board = 0;
-            this.orderIndex = 9999;
-
             const jsonData = JSON.stringify({
                 type: "game_server",
                 game_mode: this.game_mode_text,
@@ -1719,7 +1729,6 @@ export default {
             });
             connection.send(jsonData);
             answer_text_box.value = "";
-            document.getElementById(this.myID + "_frame").style.order = 2;
         },
         GameStart() {
             const jsonData = JSON.stringify({
