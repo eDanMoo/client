@@ -29,9 +29,9 @@
                         oninput="javascript: 
                         if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
                             this.value = ''; 
-                            const modal = document.getElementById('modal-wrapper');
-                            modal.style.display = 'flex'; 
-                            document.getElementById('close_modal').focus();
+                            // const modal = document.getElementById('modal-wrapper');
+                            // modal.style.display = 'flex'; 
+                            // document.getElementById('close_modal').focus();
                                                     } "
                     />
                 </div>
@@ -47,10 +47,10 @@
                         if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
     
                             this.value = ''; 
-                            const modal = document.getElementById('modal-wrapper');
-                            modal.style.display = 'flex'; 
+                            // const modal = document.getElementById('modal-wrapper');
+                            // modal.style.display = 'flex'; 
     
-                            document.getElementById('close_modal').focus();
+                            // document.getElementById('close_modal').focus();
                                                     } "
                     />
                 </div>
