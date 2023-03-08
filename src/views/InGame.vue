@@ -1417,8 +1417,6 @@ export default {
                 "px";
             let moveY =
                 parseInt(boardRect.top) - parseInt(answerPop.style.top) + "px";
-            console.log(moveX);
-            console.log(moveY);
             answerPop.animate(
                 [
                     { opacity: 0.75, transform: "scale(2)" },
