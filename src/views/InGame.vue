@@ -451,36 +451,54 @@
                                 />
                             </template> -->
                         </component>
-                        <button
-                            class="gameSelectButton"
-                            id="btnCompetition"
-                            @click="loadComponent('WordCard')"
-                            v-show="!isGameStarted"
-                            v-bind:class="{ gameSelected: isComp }"
-                        >
-                            경쟁
-                        </button>
-                        <button
-                            class="gameSelectButton"
-                            id="btnCoop"
-                            @click="loadComponent('CoOpGame')"
-                            v-show="!isGameStarted"
-                            v-bind:class="{ gameSelected: isCoop }"
-                        >
-                            협동
-                        </button>
-                        <!-- <WordCard
-                            :msg="wordUpdate"
-                            :delete_board="delete_board"
-                            @scriptCheck="scriptCheck"
-                        /> -->
-                        <button
-                            id="game_start"
-                            @click="boardInit()"
-                            v-show="!isGameStarted && game_selected"
-                        ></button>
-                        <div id="ready_time" v-show="ready_time">
-                            {{ ready_time }}
+                        <div id="selectWrapper" v-show="!isGameStarted">
+                            <div style="color: white; font-size: 1rem; margin: 2% 5%;">
+                                <span v-show="isComp" style="font-size: 1.5rem">
+                                    이 모드는 
+                                    <span style="color:palevioletred">경쟁모드</span>
+                                    입니다.<br/>
+                                    1. 테이블 위의 단어를 입력하면 1점만 획득합니다.<br/>
+                                    2. 유사도가 존재할 단어를 입력하여 고득점하세요!
+                                </span>
+                                <span v-show="isCoop" style="font-size: 1.5rem">
+                                    이 모드는
+                                    <span style="color:aqua">협동모드</span>
+                                    입니다.<br/>
+                                    1. 게임 내 단어로는 해당 단어를 없앨 수 없습니다.<br/>
+                                    2. 유사도가 존재할 단어를 입력해 생존하세요!
+                                </span>
+                            </div>
+                            <button
+                                class="gameSelectButton"
+                                id="btnCompetition"
+                                @click="loadComponent('WordCard')"
+                                v-show="!isGameStarted"
+                                v-bind:class="{ gameSelected: isComp }"
+                            >
+                                경쟁
+                            </button>
+                            <button
+                                class="gameSelectButton"
+                                id="btnCoop"
+                                @click="loadComponent('CoOpGame')"
+                                v-show="!isGameStarted"
+                                v-bind:class="{ gameSelected: isCoop }"
+                            >
+                                협동
+                            </button>
+                            <!-- <WordCard
+                                :msg="wordUpdate"
+                                :delete_board="delete_board"
+                                @scriptCheck="scriptCheck"
+                            /> -->
+                            <button
+                                id="game_start"
+                                @click="boardInit()"
+                                v-show="!isGameStarted && game_selected"
+                            ></button>
+                            <div id="ready_time" v-show="ready_time">
+                                {{ ready_time }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2259,7 +2277,7 @@ button {
     font-size: 2rem;
     position: absolute;
     left: 50%;
-    top: 70%;
+    top: 75%;
     z-index: 98;
     cursor: pointer;
     background-color: transparent;
@@ -3206,7 +3224,7 @@ span {
 .gameSelectButton {
     position: absolute;
     box-sizing: border-box;
-    top: 20%;
+    top: 25%;
     width: 40%;
     height: 40%;
     font-size: 4rem;
@@ -3230,5 +3248,12 @@ span {
     top: 35%;
     left: 50%;
     font-size: 8rem;
+}
+#selectWrapper {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
 }
 </style>
