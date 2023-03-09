@@ -653,7 +653,13 @@ let connection = "";
 let messages = "";
 const w = 300,
     h = 240;
-const constraints = { audio: false, video: true };
+const constraints = {
+    audio: false,
+    video: true,
+    width: 300,
+    height: 240,
+    frameRate: { max: 30 },
+};
 let video = "";
 let canvas = "";
 let ctx = "";
@@ -1319,6 +1325,7 @@ export default {
             navigator.mediaDevices.getUserMedia(constraints)
         ) {
             this.checkWebcam();
+            this.toggleVideoCamera();
         } else {
             console.log("getUserMedia not supported on this browser");
         }
@@ -1407,7 +1414,7 @@ export default {
             answerPop.style.width = "fit-content";
             answerPop.style.minWidth = "10px";
             answerPop.style.height = "fit-content";
-            answerPop.style.background = "rgba(0,0,0,0.7)";
+            answerPop.style.background = "rgb(0, 0, 0)";
             answerPop.style.border = `${color} solid`;
             answerPop.style.color = color;
             answerPop.style.borderRadius = "1rem";
@@ -1424,18 +1431,20 @@ export default {
             answerPop.style.paddingRight = 5 + "px";
             answerPop.style.paddingLeft = 5 + "px";
             let moveX =
-                parseInt(boardRect.left) -
-                parseInt(answerPop.style.left) +
+                (parseInt(boardRect.left) - parseInt(answerPop.style.left)) /
+                    2 +
                 "px";
             let moveY =
                 parseInt(boardRect.top) - parseInt(answerPop.style.top) + "px";
             answerPop.animate(
                 [
+                    { opacity: 1, transform: "scale(1)" },
+                    { opacity: 1, transform: "scale(1.5)" },
                     { opacity: 0.75, transform: "scale(2)" },
-                    { opacity: 0.75, transform: "scale(2)" },
+                    { opacity: 0.5, transform: "scale(2)" },
                     {
                         opacity: 0.1,
-                        transform: `translateX(${moveX}) translateY( ${moveY}) scale(0.2)`,
+                        transform: `translateX(${moveX}) translateY( ${moveY}) scale(0.5)`,
                     },
                 ],
                 {
@@ -1507,7 +1516,7 @@ export default {
                     this.myCam(constraints);
                     this.processImage();
                     isStreaming = 1;
-                    intervalVid = setInterval(this.sendImage, 100);
+                    intervalVid = setInterval(this.sendImage, 150);
                 } else {
                     console.log("User does not have a webcam");
                 }
@@ -1562,7 +1571,7 @@ export default {
             process_image = setTimeout(this.processImage, 1);
         },
         sendImage() {
-            const rawData = canvas.toDataURL("image/jpeg", 0.5);
+            const rawData = canvas.toDataURL("image/jpeg", 0.2);
             const jsonData = JSON.stringify({
                 type: "video",
                 video: rawData,
@@ -1580,7 +1589,7 @@ export default {
                 isStreaming = 1;
                 this.isStreaming = 1;
                 this.toggle_text = "카메라 비활성화";
-                intervalVid = setInterval(this.sendImage, 100);
+                intervalVid = setInterval(this.sendImage, 150);
                 this.processImage();
                 this.videoOn();
             } else {
