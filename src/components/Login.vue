@@ -28,10 +28,9 @@
                         :maxlength="6"
                         oninput="javascript: 
                         if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
-                            this.value = ''; 
-                            // const modal = document.getElementById('modal-wrapper');
-                            // modal.style.display = 'flex'; 
-                            // document.getElementById('close_modal').focus();
+                            let inputValue = this.value
+                            let deleteLast = inputValue.slice(0, -1)
+                            this.value = deleteLast; 
                                                     } "
                     />
                 </div>
@@ -45,12 +44,9 @@
                         @keypress.enter="createPage"
                         oninput="javascript: 
                         if ((/[^A-Za-z0-9]$/ig).test(this.value) == true) {
-    
-                            this.value = ''; 
-                            // const modal = document.getElementById('modal-wrapper');
-                            // modal.style.display = 'flex'; 
-    
-                            // document.getElementById('close_modal').focus();
+                            let inputValue = this.value
+                            let deleteLast = inputValue.slice(0, -1)
+                            this.value = deleteLast; 
                                                     } "
                     />
                 </div>
