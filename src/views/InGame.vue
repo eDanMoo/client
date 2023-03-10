@@ -1195,6 +1195,7 @@ export default {
                 this.game_mode_text = "";
                 this.isComp = false;
                 this.isCoop = false;
+                this.game_selected = 0;
                 this.orderIndex = 9999;
 
                 let windows = document.getElementsByClassName("videoWindow");
