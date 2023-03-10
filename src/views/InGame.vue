@@ -1132,8 +1132,6 @@ export default {
                     answer_text_box.disabled = false;
                 }
                 const game_start = document.getElementById("game_start");
-                const game_box = document.getElementById("game_box");
-                console.log(game_box);
                 game_start.style.display = "none";
                 this.isGameStarted = 1;
             } else if (event_data.type == "game_ing") {
