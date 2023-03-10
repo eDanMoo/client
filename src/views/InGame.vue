@@ -451,8 +451,7 @@
                                 />
                             </template> -->
                         </component>
-                        <div id="selectWrapper" v-show="!isGameStarted">
-                            <div style="color: white; font-size: 1rem; margin: 2% 5%;">
+                            <div id="selectWrapper" v-show="!isGameStarted" style="color: white; font-size: 1rem; margin: 2% 5%;">
                                 <span v-show="isComp" style="font-size: 1.5rem">
                                     이 모드는 
                                     <span style="color:palevioletred">경쟁모드</span>
@@ -499,7 +498,6 @@
                             <div id="ready_time" v-show="ready_time">
                                 {{ ready_time }}
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
