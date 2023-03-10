@@ -47,7 +47,7 @@ export default {
     watch: {
         msg(message) {
             if (message != null) {
-                try {
+
                     if (message.type == "check") {
                         // console.log(message);
                         if (message.moves.length === 5) {
@@ -77,11 +77,7 @@ export default {
                         this.startbondFlag = true;
                         this.$emit("scriptCheck", "init"); // table 생성 완료 시 서버에 턴 요청
                     }
-                } catch (err) {
-                    alert("테이블 정보 오류");
-                    console.log(err);
-                    console.log(message);
-                }
+
             }
         },
         delete_board(is_finish) {
@@ -176,7 +172,7 @@ export default {
         },
         addElem(command) {
             let info = Object.values(command);
-            try {
+
                 info[2].forEach((element, index) => {
                     this.wordcard[info[0][index][0]].id = element[1];
                     this.wordcard[info[0][index][0]].value = element[2];
@@ -185,15 +181,11 @@ export default {
                     this.wordcard[info[0][index][0]].posy =
                         mapinfo[element[1]].posY;
                 });
-            } catch (err) {
-                alert("추가 기능 에러");
-                console.log(err);
-                console.log(command);
-            }
+
         },
         newtable(command) {
             let info = Object.values(command);
-            try {
+
                 info[4].forEach((element, index) => {
                     this.wordcard[info[3][index][0]].id = element[1];
                     this.wordcard[info[3][index][0]].value = element[2];
@@ -202,11 +194,7 @@ export default {
                     this.wordcard[info[3][index][0]].posy =
                         mapinfo[element[1]].posY;
                 });
-            } catch {
-                alert("테이블 교체 기능 에러");
-                console.log(err);
-                console.log(command);
-            }
+
         },
         start(command) {
             let info = Object.values(command);
