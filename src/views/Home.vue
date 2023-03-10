@@ -361,6 +361,22 @@
                                         </div>
                                         <div class="iconTitle">CODEWARTS</div>
                                     </div>
+                                    <div
+                                        class="iconElem"
+                                        id="iconOnemin"
+                                        @click="openOnemin()"
+                                    >
+                                        <div class="iconWrapper">
+                                            <div
+                                                class="iconImage"
+                                                style="
+                                                    background-image: url('/assets/image/icon/icon_onemin.png');
+                                                    height: 52px;
+                                                "
+                                            ></div>
+                                        </div>
+                                        <div class="iconTitle">일분추억</div>
+                                    </div>
                                 </div>
                                 <WordRain ref="wordRain" />
                                 <Login ref="Login" />
@@ -657,6 +673,12 @@ export default {
             setTimeout(() => {
                 window.location.href = "https://codewarts.store/";
             }, 4200);
+        },
+        openOnemin() {
+            new Audio("/assets/soundEffect/audio_onemin.mp3").play();
+            setTimeout(() => {
+                // window.location.href = "https://onem1nutemem0ry.store/";
+            }, 3500);
         },
         powerOff() {
             this.isShutdown = false;
