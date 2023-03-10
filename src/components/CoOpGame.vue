@@ -19,6 +19,7 @@ export default {
                 () => props.msg,
                 async () => {
                     if (props.msg.type == "next") {
+                        let audio_block = new Audio('/assets/soundEffect/blockstart.mp3');
                         let status = props.msg.status;
                         if (status == "continue") {
                             let word = props.msg.word;
@@ -28,10 +29,8 @@ export default {
                             let fall = props.msg.fall * 63;
                             let current = -63;
                             let destination = current + fall;
-                            let color =
-                                colorSet[
-                                    Math.floor(Math.random() * colorSet.length)
-                                ];
+                            let color = get_color();
+
                             storeInWordSet(
                                 word,
                                 left,
@@ -41,19 +40,18 @@ export default {
                                 color
                             );
 
-                            let audio_block = new Audio('/assets/soundEffect/blockstart.mp3');
                             audio_block.play();
                         }
                     } else if (props.msg.type == "check") {
                         let remWords = props.msg.remWords;
                         let i = 0;
+                        let audio_remove = new Audio('/assets/soundEffect/blockremove.mp3');
                         // 목록에서 단어 삭제
                         for (i = 0; i < remWords.length; i++) {
+                            audio_remove.play();
                             let word = remWords[i];
                             removeWordInWordSet(word);
-
-                            let audio_remove = new Audio('/assets/soundEffect/blockremove.mp3');
-                            audio_remove.play();
+                            
                         }
                         // 남은 단어 옮기기
                         let moveInfo = props.msg.moveInfo;
@@ -96,29 +94,6 @@ export default {
             // ctx.scale(BLOCK_SIZE, BLOCK_SIZE);
 
             let wordSet = {};
-            const colorSet = [
-
-                ["#FFF100"], //노랑(Yellow Rose)
-                ["#FFBF00"], //주황(Fluorescent Orange)
-                ["#00F5FB"], //청록(Aqua)
-                ["#38FF12"], //연두(Neon Green)
-                ["#FF00E3"], //자두(Fuchsia)
-                ["#006FFF"], //파랑(Brandeis Blue)
-                ["#9600FF"], //보라(Electric Violet)
-
-                ["#FF0000"], //빨강(Red)
-                ["#FF77FD"], //약간진한분홍(Fuchsia Pink)
-                ["#FFA9FD"], //분홍(Rich Brilliant Lavender)
-                ["#F7FFFC"], //하늘(Waterspout)
-                ["#F7FFFC"], //하양(Mint Cream)
-                ["#F5F8A3"], //깔라만시(Calamansi)
-                ["#00A7FA"], //약간파랑(Vivid Cerulean)
-                ["#2D9A4D"], //초록(Sea Green)
-                ["#FFFA8D"], //파스텔 노랑(Pastel Yellow)
-                ["#8001DD"], //짙은 보라(French Violet)
-            ];
-
-            
 
             let drawWord = setInterval(() => {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -151,7 +126,28 @@ export default {
                         wordSet[wordSetKey[i]].current = current + 7;
                     }
                 }
-            }, 30);
+            }, 15);
+
+            function get_color() {
+            	// get random integer between 45 and 255 (inclusive)
+            	const getRandomInt = () => Math.floor(Math.random() * 211) + 45;
+            	let r = 0, g = 0, b = 0;
+            	// get rgb code
+            	while (true) {
+            		r = getRandomInt();
+            		g = getRandomInt();
+            		b = getRandomInt();
+            		if (r + g + b > 200) {
+            			break;
+            		}
+            	}
+            	// rgb to hex
+            	const hex = "#" + r.toString(16).padStart(2, "0")
+            					+ g.toString(16).padStart(2, "0")
+            					+ b.toString(16).padStart(2, "0");
+            	return hex;
+            }
+
 
             function setDestination(word, destination, fall) {
                 wordSet[word].destination = destination + fall * 63;
