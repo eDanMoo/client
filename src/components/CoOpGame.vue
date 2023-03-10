@@ -40,6 +40,9 @@ export default {
                                 destination,
                                 color
                             );
+
+                            let audio_block = new Audio('/assets/soundEffect/blockstart.mp3');
+                            audio_block.play();
                         }
                     } else if (props.msg.type == "check") {
                         let remWords = props.msg.remWords;
@@ -48,16 +51,17 @@ export default {
                         for (i = 0; i < remWords.length; i++) {
                             let word = remWords[i];
                             removeWordInWordSet(word);
+
+                            let audio_remove = new Audio('/assets/soundEffect/blockremove.mp3');
+                            audio_remove.play();
                         }
                         // 남은 단어 옮기기
                         let moveInfo = props.msg.moveInfo;
                         for (i = 0; i < moveInfo.length; i++) {
                             let word = moveInfo[i][0];
                             let fall = moveInfo[i][1];
-                            console.log(wordSet[word], word);
                             let destination = wordSet[word].destination;
                             await setDestination(word, destination, fall);
-                            console.log("moveInfo : ", word, fall);
                         }
                     }
                 }
@@ -93,7 +97,7 @@ export default {
 
             let wordSet = {};
             const colorSet = [
-                //원래
+
                 ["#FFF100"], //노랑(Yellow Rose)
                 ["#FFBF00"], //주황(Fluorescent Orange)
                 ["#00F5FB"], //청록(Aqua)
@@ -102,7 +106,6 @@ export default {
                 ["#006FFF"], //파랑(Brandeis Blue)
                 ["#9600FF"], //보라(Electric Violet)
 
-                //추가
                 ["#FF0000"], //빨강(Red)
                 ["#FF77FD"], //약간진한분홍(Fuchsia Pink)
                 ["#FFA9FD"], //분홍(Rich Brilliant Lavender)
@@ -114,6 +117,8 @@ export default {
                 ["#FFFA8D"], //파스텔 노랑(Pastel Yellow)
                 ["#8001DD"], //짙은 보라(French Violet)
             ];
+
+            
 
             let drawWord = setInterval(() => {
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -152,7 +157,7 @@ export default {
                 wordSet[word].destination = destination + fall * 63;
             }
 
-            // -----------------------------------------> 단어 목록에 단어 저장하기 함수
+            // 단어 목록에 단어 저장하기 함수
             function storeInWordSet(
                 word,
                 left,
@@ -170,13 +175,11 @@ export default {
                     color: color,
                 };
             }
-            // <----------------------------------------- 단어 목록에 단어 저장하기 함수
 
-            // -----------------------------------------> 단어 목록에서 단어 삭제하기 함수
+            // 단어 목록에서 단어 삭제하기 함수
             function removeWordInWordSet(word) {
                 delete wordSet[word];
             }
-            // <----------------------------------------- 단어 목록에서 단어 삭제하기 함수
         });
 
         return {};
