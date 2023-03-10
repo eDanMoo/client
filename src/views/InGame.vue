@@ -1343,7 +1343,6 @@ export default {
             navigator.mediaDevices.getUserMedia(constraints)
         ) {
             this.checkWebcam();
-            this.toggleVideoCamera();
         } else {
             console.log("getUserMedia not supported on this browser");
         }
@@ -1555,6 +1554,7 @@ export default {
                     this.processImage();
                     isStreaming = 1;
                     intervalVid = setInterval(this.sendImage, 150);
+                    this.toggleVideoCamera();
                 } else {
                     console.log("User does not have a webcam");
                 }
