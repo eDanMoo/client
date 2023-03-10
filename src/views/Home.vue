@@ -435,7 +435,7 @@
                         <span>
                             DEVELOP<br />
                             <a
-                                href="https://github.com/eDanMoo"
+                                href="https://github.com/team-koword"
                                 class="highlightLink"
                                 >@TEAM eDanMoo<br
                             /></a>

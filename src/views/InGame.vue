@@ -873,7 +873,7 @@ export default {
         },
         wordUpdate(msg) {
             if (msg.type == "check") {
-                this.answerPop(msg.user, msg.answer, msg.color);
+                this.callAnswerPop(msg.user, msg.answer, msg.color, msg.remWords);
             }
         },
     },
@@ -1343,7 +1343,6 @@ export default {
             navigator.mediaDevices.getUserMedia(constraints)
         ) {
             this.checkWebcam();
-            this.toggleVideoCamera();
         } else {
             console.log("getUserMedia not supported on this browser");
         }
@@ -1405,7 +1404,7 @@ export default {
                 laser.remove();
             }, 990);
         },
-        answerPop(User, Answer, Color) {
+        callAnswerPop(User, Answer, Color, remWords) {
             const audio_input = new Audio(
                 "/assets/soundEffect/audio_input.mp3"
             );
@@ -1458,8 +1457,8 @@ export default {
                 [
                     { opacity: 1, transform: "scale(1)" },
                     { opacity: 1, transform: "scale(1.5)" },
-                    { opacity: 0.75, transform: "scale(2)" },
-                    { opacity: 0.5, transform: "scale(2)" },
+                    { opacity: 0.75, transform: "scale(1)" },
+                    { opacity: 0.5, transform: "scale(1)" },
                     {
                         opacity: 0.1,
                         transform: `translateX(${moveX}) translateY( ${moveY}) scale(0.5)`,
@@ -1476,6 +1475,26 @@ export default {
             setTimeout(function () {
                 answerPop.remove();
             }, 1000);
+            if (0 < remWords.length) {
+                let removeSpan = document.createElement("span");
+                removeSpan.innerHTML = user + "<br/>";
+                for (let i = 0; i < remWords.length; i++) {
+                    removeSpan.innerHTML = removeSpan.innerHTML + remWords[i] + "<br/>";
+                }
+                const gameBox = document.getElementById("gameBox");
+                const gameBoxRect = gameBox.getClientRects()[0];
+                removeSpan.style.position = "absolute";
+                removeSpan.style.fontSize = "2rem";
+                removeSpan.style.left = gameBoxRect.right + 10 + "px";
+                removeSpan.style.background = "rgb(0, 0, 0)";
+                removeSpan.style.top = gameBoxRect.top + 5 + "px";
+                removeSpan.style.color = `${color}`;
+                removeSpan.style.border = `${color} solid`;
+                background.appendChild(removeSpan);
+                setTimeout(() => {
+                    removeSpan.remove();
+                }, 3000);
+            }
         },
         colored() {
             document.body.style.backgroundColor = "rgb(0, 0, 0)";
@@ -1535,6 +1554,7 @@ export default {
                     this.processImage();
                     isStreaming = 1;
                     intervalVid = setInterval(this.sendImage, 150);
+                    this.toggleVideoCamera();
                 } else {
                     console.log("User does not have a webcam");
                 }
