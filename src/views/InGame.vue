@@ -1473,7 +1473,7 @@ export default {
             }, 1000);
             if (0 < remWords.length) {
                 let removeSpan = document.createElement("span");
-                removeSpan.innerHTML = user + "<br/>";
+                removeSpan.innerHTML = answer + "<br/><br/>";
                 for (let i = 0; i < remWords.length; i++) {
                     removeSpan.innerHTML = removeSpan.innerHTML + remWords[i] + "<br/>";
                 }
@@ -1489,7 +1489,7 @@ export default {
                 background.appendChild(removeSpan);
                 setTimeout(() => {
                     removeSpan.remove();
-                }, 3000);
+                }, 2500);
             }
         },
         colored() {
